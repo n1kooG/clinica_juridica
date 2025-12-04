@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Causas{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div>
+        <h1>Causas</h1>
+        <p class="lead">Seguimiento de causas y consultas jurídicas tramitadas por la clínica universitaria.</p>
+    </div>
+    <div>
+        <a href="{% url 'gestion:causa_crear' %}" class="btn-primary">Nueva causa</a>
+    </div>
+</div>
+
+<div class="panel-card">
+    <div class="panel-card-header">
+        <div>
+            <h3>Listado de causas</h3>
+            <div class="muted-note">{{ causas.count }} causas activas · Datos ficticios para uso académico</div>
+        </div>
+        <div style="text-align:right">
+            <input class="search-input" type="text" placeholder="Buscar por código, persona o materia...">
+        </div>
+    </div>
+
+    <div class="panel-card-body">
+        <div class="filters" style="margin-bottom:12px">
+            <button class="filter-pill active">Activas</button>
+            <button class="filter-pill">Todas</button>
+            <button class="filter-pill">Archivadas</button>
+        </div>
+
+        <table class="causas-table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Persona principal</th>
+                    <th>Materia</th>
+                    <th>Asignación</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for c in causas %}
+                <tr>
+                    <td class="code-cell">{{ c.rit|default:c.ruc|default:c.pk }}</td>
+                    <td>
+                        <div class="name-primary">{{ c.caratula }}</div>
+                        <div class="name-secondary">{{ c.tribunal }}</div>
+                    </td>
+                    <td>
+                        <div class="name-primary">{{ c.materia }}</div>
+                        <div class="name-secondary">{{ c.caratula }}</div>
+                    </td>
+                    <td>
+                        <div>Est.: {% if c.responsable %}{{ c.responsable.get_full_name|default:c.responsable.username }}{% else %}Por asignar{% endif %}</div>
+                        <div class="name-secondary">Abg.: {% if c.responsable %}{{ c.responsable.get_full_name|default:c.responsable.username }}{% else %}Por asignar{% endif %}</div>
+                    </td>
+                    <td>
+                        {% if c.estado == 'En trámite' or c.estado == 'En tramitación' or c.estado == 'En seguimiento' %}
+                            <span class="status-badge green">{{ c.estado }}</span>
+                        {% elif c.estado == 'Pendiente revisión' or c.estado == 'Pendiente' %}
+                            <span class="status-badge orange">{{ c.estado }}</span>
+                        {% elif c.estado == 'Archivada' or c.estado == 'Archivado' %}
+                            <span class="status-badge gray">{{ c.estado }}</span>
+                        {% else %}
+                            <span class="status-badge blue">{{ c.estado }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="col-actions"><a href="{% url 'gestion:causa_detalle' c.pk %}">Ver causa</a></td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="6">No hay causas registradas.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <p class="muted-note">Esta sección permite practicar el registro y seguimiento de causas reales, sin exponer datos sensibles.</p>
+    </div>
+</div>
+{% endblock %}

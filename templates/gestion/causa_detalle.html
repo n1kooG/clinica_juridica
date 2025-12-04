@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Detalle causa{% endblock %}
+
+{% block content %}
+<h1>Detalle de causa</h1>
+<div class="card">
+    <h2>{{ causa.caratula }}</h2>
+    <p><strong>Tribunal:</strong> {{ causa.tribunal }}</p>
+    <p><strong>Materia:</strong> {{ causa.materia }}</p>
+    <p><strong>Estado:</strong> {{ causa.estado }}</p>
+    <p><strong>RIT:</strong> {{ causa.rit }} | <strong>RUC:</strong> {{ causa.ruc }}</p>
+    <p><strong>Responsable:</strong> {{ causa.responsable }}</p>
+</div>
+
+<h2>Personas asociadas</h2>
+<a href="{% url 'gestion:causa_persona_crear' %}" class="btn-primary">Asociar persona</a>
+<table>
+    <tr>
+        <th>Persona</th><th>Rol</th>
+    </tr>
+    {% for rel in relaciones %}
+    <tr>
+        <td>{{ rel.persona }}</td>
+        <td>{{ rel.rol_en_causa }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="2">No hay personas asociadas a esta causa.</td></tr>
+    {% endfor %}
+</table>
+
+<h2>Audiencias</h2>
+<a href="{% url 'gestion:audiencia_crear' %}" class="btn-primary">Nueva audiencia</a>
+<table>
+    <tr>
+        <th>Fecha y hora</th><th>Tipo</th><th>Lugar</th>
+    </tr>
+    {% for a in audiencias %}
+    <tr>
+        <td>{{ a.fecha_hora }}</td>
+        <td>{{ a.tipo }}</td>
+        <td>{{ a.lugar }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3">No hay audiencias asociadas a esta causa.</td></tr>
+    {% endfor %}
+</table>
+
+<h2>Documentos</h2>
+<a href="{% url 'gestion:documento_crear' %}" class="btn-primary">Subir documento</a>
+<table>
+    <tr>
+        <th>Título</th><th>Tipo</th><th>Fecha subida</th><th>Usuario</th>
+    </tr>
+    {% for d in documentos %}
+    <tr>
+        <td>{{ d.titulo }}</td>
+        <td>{{ d.tipo }}</td>
+        <td>{{ d.fecha_subida }}</td>
+        <td>{{ d.usuario }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">No hay documentos asociados a esta causa.</td></tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Búsqueda{% endblock %}
+
+{% block content %}
+<h1>Búsqueda</h1>
+<form method="get">
+    <input type="text" name="q" value="{{ query }}" placeholder="Buscar por carátula, RIT, RUC o persona">
+    <button type="submit" class="btn-primary">Buscar</button>
+</form>
+
+{% if query %}
+    <h2>Resultados en causas</h2>
+    <ul>
+    {% for c in causas %}
+        <li><a href="{% url 'gestion:causa_detalle' c.pk %}">{{ c }}</a></li>
+    {% empty %}
+        <li>Sin resultados en causas.</li>
+    {% endfor %}
+    </ul>
+
+    <h2>Resultados en personas</h2>
+    <ul>
+    {% for p in personas %}
+        <li>{{ p }}</li>
+    {% empty %}
+        <li>Sin resultados en personas.</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

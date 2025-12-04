@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Persona{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>{{ titulo|default:'Nueva persona' }}</h1>
+        <p class="lead">Registra una nueva persona para poder asociarla luego a causas, agenda y documentos de la clínica jurídica.</p>
+    </div>
+    <div>
+        <span class="form-tag">Formulario básico</span>
+    </div>
+</div>
+
+<div class="form-card">
+    <form method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="inline-error">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <div class="form-section">
+            <h4>Datos de identificación</h4>
+            <p class="muted-note">Completa la información principal de la persona. Puedes editar estos datos más adelante si es necesario.</p>
+
+            <div class="form-grid">
+                <div class="form-field">
+                    <label>RUT / RUN</label>
+                    {{ form.run }}
+                    {% if form.run.errors %}
+                        <div class="inline-error">{{ form.run.errors }}</div>
+                    {% endif %}
+                    <div class="form-help">Usar formato con puntos y guion.</div>
+                </div>
+
+                <div class="form-field">
+                    <label>Teléfono</label>
+                    {{ form.telefono }}
+                    {% if form.telefono.errors %}
+                        <div class="inline-error">{{ form.telefono.errors }}</div>
+                    {% endif %}
+                    <div class="form-help">Idealmente número de celular de contacto.</div>
+                </div>
+
+                <div class="form-field">
+                    <label>Nombre</label>
+                    {{ form.nombres }}
+                    {% if form.nombres.errors %}
+                        <div class="inline-error">{{ form.nombres.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-field">
+                    <label>Apellido</label>
+                    {{ form.apellidos }}
+                    {% if form.apellidos.errors %}
+                        <div class="inline-error">{{ form.apellidos.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-field full">
+                    <label>Correo electrónico</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="inline-error">{{ form.email.errors }}</div>
+                    {% endif %}
+                    <div class="form-help">Se usará para recordatorios y envío de información.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Guardar persona</button>
+            <a href="{% url 'gestion:personas_lista' %}" class="btn-link">Cancelar</a>
+            <div class="muted-note small" style="margin-left:16px">Los datos ingresados son solo para fines académicos dentro del proyecto universitario. No se almacenan casos reales.</div>
+        </div>
+    </form>
+</div>
+{% endblock %}

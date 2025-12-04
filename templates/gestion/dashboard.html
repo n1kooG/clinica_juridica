@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Panel principal</h1>
+        <p class="lead">Resumen rápido de causas, personas y audiencias registradas en la clínica jurídica.</p>
+    </div>
+    <div class="header-actions">
+        <nav class="crumbs">&nbsp;</nav>
+    </div>
+</div>
+
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-title">Total de causas</div>
+        <div class="stat-value">{{ total_causas }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-title">Total de personas</div>
+        <div class="stat-value">{{ total_personas }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-title">Total de audiencias</div>
+        <div class="stat-value">{{ total_audiencias }}</div>
+    </div>
+</div>
+
+<div class="panel-list">
+    <section class="panel-card">
+        <div class="panel-card-header">
+            <h3>Causas recientes</h3>
+            <a class="panel-action" href="{% url 'gestion:causas_lista' %}">Ver todas</a>
+        </div>
+        <div class="panel-card-body">
+            <ul class="simple-list">
+            {% for causa in causas_recientes %}
+                <li>• <a href="{% url 'gestion:causa_detalle' causa.pk %}">{{ causa }}</a></li>
+            {% empty %}
+                <li>No hay causas registradas.</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    <section class="panel-card">
+        <div class="panel-card-header">
+            <h3>Personas recientes</h3>
+            <a class="panel-action" href="{% url 'gestion:persona_crear' %}">Nueva persona</a>
+        </div>
+        <div class="panel-card-body">
+            <ul class="simple-list">
+            {% for persona in personas_recientes %}
+                <li>• {{ persona }}</li>
+            {% empty %}
+                <li>No hay personas registradas.</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    <section class="panel-card">
+        <div class="panel-card-header">
+            <h3>Audiencias recientes</h3>
+            <a class="panel-action" href="{% url 'gestion:audiencias_lista' %}">Programar audiencia</a>
+        </div>
+        <div class="panel-card-body">
+            <ul class="simple-list">
+            {% for audiencia in audiencias_recientes %}
+                <li>• {{ audiencia }}</li>
+            {% empty %}
+                <li>No hay audiencias registradas.</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    <p class="muted-note">Este panel es parte del proyecto de sistema de gestión para la Clínica Jurídica universitaria. Los datos son de prueba para fines académicos.</p>
+</div>
+{% endblock %}

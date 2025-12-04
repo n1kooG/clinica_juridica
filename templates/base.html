@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Clínica Jurídica{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="bg-main">
+    <header>
+        <nav class="topbar">
+            <div class="logo">Sistema Clínica Jurídica</div>
+            <div class="user-info">
+                {% if user.is_authenticated %}
+                    {{ user.get_full_name|default:user.username }} |
+                    <a href="{% url 'cuentas:perfil' %}">Perfil</a> |
+                    <a href="{% url 'logout' %}">Cerrar sesión</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Iniciar sesión</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    <div class="layout">
+        {% if user.is_authenticated %}
+        <aside class="sidebar">
+            <ul>
+                <li><a href="{% url 'gestion:dashboard' %}">Inicio</a></li>
+                <li><a href="{% url 'gestion:personas_lista' %}">Personas</a></li>
+                <li><a href="{% url 'gestion:causas_lista' %}">Causas</a></li>
+                <li><a href="{% url 'gestion:audiencias_lista' %}">Agenda</a></li>
+                <li><a href="{% url 'gestion:documentos_lista' %}">Documentos</a></li>
+                <li><a href="{% url 'gestion:buscar' %}">Búsqueda</a></li>
+            </ul>
+        </aside>
+        {% endif %}
+        <main class="content">
+            {% comment %} Mensajes del sistema (notificaciones) {% endcomment %}
+            <div id="messages">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                            {{ message }}
+                            <button class="alert-close" aria-label="Cerrar">&times;</button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    <script src="{% static 'js/forms.js' %}"></script>
+</body>
+</html>

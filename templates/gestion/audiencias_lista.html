@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Agenda{% endblock %}
+
+{% block content %}
+<h1>Agenda (Audiencias y Entrevistas)</h1>
+<a href="{% url 'gestion:audiencia_crear' %}" class="btn-primary">Nueva audiencia</a>
+<table>
+    <tr>
+        <th>Causa</th><th>Tipo</th><th>Fecha y hora</th><th>Lugar</th>
+    </tr>
+    {% for a in audiencias %}
+    <tr>
+        <td>{{ a.causa }}</td>
+        <td>{{ a.tipo }}</td>
+        <td>{{ a.fecha_hora }}</td>
+        <td>{{ a.lugar }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">No hay audiencias registradas.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}
