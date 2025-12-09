@@ -3,52 +3,97 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Clínica Jurídica{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-main">
-    <header>
-        <nav class="topbar">
-            <div class="logo">Sistema Clínica Jurídica</div>
-            <div class="user-info">
-                {% if user.is_authenticated %}
-                    {{ user.get_full_name|default:user.username }} |
-                    <a href="{% url 'cuentas:perfil' %}">Perfil</a> |
-                    <a href="{% url 'logout' %}">Cerrar sesión</a>
-                {% else %}
-                    <a href="{% url 'login' %}">Iniciar sesión</a>
-                {% endif %}
-            </div>
-        </nav>
-    </header>
-    <div class="layout">
-        {% if user.is_authenticated %}
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
         <aside class="sidebar">
-            <ul>
-                <li><a href="{% url 'gestion:dashboard' %}">Inicio</a></li>
-                <li><a href="{% url 'gestion:personas_lista' %}">Personas</a></li>
-                <li><a href="{% url 'gestion:causas_lista' %}">Causas</a></li>
-                <li><a href="{% url 'gestion:audiencias_lista' %}">Agenda</a></li>
-                <li><a href="{% url 'gestion:documentos_lista' %}">Documentos</a></li>
-                <li><a href="{% url 'gestion:buscar' %}">Búsqueda</a></li>
-            </ul>
-        </aside>
-        {% endif %}
-        <main class="content">
-            {% comment %} Mensajes del sistema (notificaciones) {% endcomment %}
-            <div id="messages">
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-                            {{ message }}
-                            <button class="alert-close" aria-label="Cerrar">&times;</button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
+            <div class="sidebar-header">
+                <h1 class="sidebar-title">Sistema Clínica Jurídica</h1>
+                <p class="sidebar-subtitle">Proyecto de cátedra 2025</p>
             </div>
+            
+            {% if user.is_authenticated %}
+            <nav class="sidebar-nav">
+                <a href="{% url 'gestion:dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <i class="fas fa-home"></i> Inicio
+                </a>
+                <a href="{% url 'gestion:personas_lista' %}" class="nav-item {% if 'persona' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fas fa-users"></i> Personas
+                </a>
+                <a href="{% url 'gestion:causas_lista' %}" class="nav-item {% if 'causa' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fas fa-folder-open"></i> Causas
+                </a>
+                <a href="{% url 'gestion:audiencias_lista' %}" class="nav-item {% if 'audiencia' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fas fa-calendar-alt"></i> Agenda
+                </a>
+                <a href="{% url 'gestion:documentos_lista' %}" class="nav-item {% if 'documento' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fas fa-file-alt"></i> Documentos
+                </a>
+                <a href="{% url 'gestion:buscar' %}" class="nav-item {% if request.resolver_match.url_name == 'buscar' %}active{% endif %}">
+                    <i class="fas fa-search"></i> Búsqueda
+                </a>
+                <a href="{% url 'gestion:calendario' %}" class="nav-item {% if request.resolver_match.url_name == 'calendario' %}active{% endif %}">
+                    <i class="fas fa-calendar"></i> Calendario
+                </a>
+                
+                {% if user.perfil.rol == 'ADMIN' or user.perfil.rol == 'DIRECTOR' or user.perfil.rol == 'SUPERVISOR' %}
+                <a href="{% url 'gestion:reportes' %}" class="nav-item {% if 'reporte' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fas fa-chart-bar"></i> Reportes
+                </a>
+                {% endif %}
+                
+                {% if user.perfil.rol == 'ADMIN' or user.perfil.rol == 'DIRECTOR' %}
+                <a href="{% url 'gestion:auditoria_lista' %}" class="nav-item {% if 'auditoria' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fas fa-history"></i> Auditoría
+                </a>
+                {% endif %}
+            </nav>
+            
+            <div class="sidebar-footer">
+                Universidad San Sebastián
+            </div>
+            {% endif %}
+        </aside>
 
-            {% block content %}{% endblock %}
-        </main>
+        <!-- Main content -->
+        <div class="main-wrapper">
+            <!-- Top bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <span class="topbar-section">{% block section_title %}{% endblock %}</span>
+                </div>
+                <div class="topbar-right">
+                    {% if user.is_authenticated %}
+                        <span class="user-name">{{ user.username }}</span>
+                        <a href="{% url 'cuentas:perfil' %}" class="topbar-link">Perfil</a>
+                        <a href="{% url 'logout' %}" class="topbar-link">Cerrar sesión</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="topbar-link">Iniciar sesión</a>
+                    {% endif %}
+                </div>
+            </header>
+
+            <!-- Content area -->
+            <main class="content">
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                        <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
     </div>
     <script src="{% static 'js/forms.js' %}"></script>
 </body>

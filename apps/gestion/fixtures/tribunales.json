@@ -1,0 +1,614 @@
+[
+    {
+        "model": "gestion.tribunal",
+        "pk": 1,
+        "fields": {
+            "nombre": "Corte de Apelaciones de Santiago",
+            "tipo": "CORTE_AP",
+            "region": "RM",
+            "ciudad": "Santiago",
+            "direccion": "Compañía 1140",
+            "comuna": "Santiago",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 2,
+        "fields": {
+            "nombre": "1° Juzgado de Familia de Santiago",
+            "tipo": "JUZ_FAMILIA",
+            "region": "RM",
+            "ciudad": "Santiago",
+            "direccion": "General Mackenna 1477",
+            "comuna": "Santiago",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 3,
+        "fields": {
+            "nombre": "2° Juzgado de Familia de Santiago",
+            "tipo": "JUZ_FAMILIA",
+            "region": "RM",
+            "ciudad": "Santiago",
+            "direccion": "General Mackenna 1477",
+            "comuna": "Santiago",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 4,
+        "fields": {
+            "nombre": "3° Juzgado de Familia de Santiago",
+            "tipo": "JUZ_FAMILIA",
+            "region": "RM",
+            "ciudad": "Santiago",
+            "direccion": "General Mackenna 1477",
+            "comuna": "Santiago",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 5,
+        "fields": {
+            "nombre": "4° Juzgado de Familia de Santiago",
+            "tipo": "JUZ_FAMILIA",
+            "region": "RM",
+            "ciudad": "Santiago",
+            "direccion": "General Mackenna 1477, piso 6",
+            "comuna": "Santiago",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 6,
+        "fields": {
+            "nombre": "1° Juzgado de Familia de San Miguel",
+            "tipo": "JUZ_FAMILIA",
+            "region": "RM",
+            "ciudad": "San Miguel",
+            "direccion": "Gran Avenida José Miguel Carrera 5811",
+            "comuna": "San Miguel",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 7,
+        "fields": {
+            "nombre": "2° Juzgado de Familia de San Miguel",
+            "tipo": "JUZ_FAMILIA",
+            "region": "RM",
+            "ciudad": "San Miguel",
+            "direccion": "Gran Avenida José Miguel Carrera 5811",
+            "comuna": "San Miguel",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 8,
+        "fields": {
+            "nombre": "Juzgado de Familia de Puente Alto",
+            "tipo": "JUZ_FAMILIA",
+            "region": "RM",
+            "ciudad": "Puente Alto",
+            "comuna": "Puente Alto",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 9,
+        "fields": {
+            "nombre": "1° Juzgado de Letras del Trabajo de Santiago",
+            "tipo": "JUZ_LABORAL",
+            "region": "RM",
+            "ciudad": "Santiago",
+            "comuna": "Santiago",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 10,
+        "fields": {
+            "nombre": "2° Juzgado de Letras del Trabajo de Santiago",
+            "tipo": "JUZ_LABORAL",
+            "region": "RM",
+            "ciudad": "Santiago",
+            "comuna": "Santiago",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 11,
+        "fields": {
+            "nombre": "Juzgado de Letras del Trabajo de San Miguel",
+            "tipo": "JUZ_LABORAL",
+            "region": "RM",
+            "ciudad": "San Miguel",
+            "direccion": "Gran Avenida José Miguel Carrera 5811",
+            "comuna": "San Miguel",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 12,
+        "fields": {
+            "nombre": "Juzgado de Letras del Trabajo de Puente Alto",
+            "tipo": "JUZ_LABORAL",
+            "region": "RM",
+            "ciudad": "Puente Alto",
+            "comuna": "Puente Alto",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 13,
+        "fields": {
+            "nombre": "Juzgado de Cobranza Laboral y Previsional de Santiago",
+            "tipo": "JUZ_COBRANZA",
+            "region": "RM",
+            "ciudad": "Santiago",
+            "comuna": "Santiago",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 14,
+        "fields": {
+            "nombre": "1° Juzgado de Garantía de Santiago",
+            "tipo": "JUZ_GARANTIA",
+            "region": "RM",
+            "ciudad": "Santiago",
+            "direccion": "Av. Pedro Montt 1606",
+            "comuna": "Santiago",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 15,
+        "fields": {
+            "nombre": "2° Juzgado de Garantía de Santiago",
+            "tipo": "JUZ_GARANTIA",
+            "region": "RM",
+            "ciudad": "Santiago",
+            "direccion": "Av. Pedro Montt 1606",
+            "comuna": "Santiago",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 16,
+        "fields": {
+            "nombre": "Juzgado de Garantía de Puente Alto",
+            "tipo": "JUZ_GARANTIA",
+            "region": "RM",
+            "ciudad": "Puente Alto",
+            "comuna": "Puente Alto",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 17,
+        "fields": {
+            "nombre": "1° Tribunal de Juicio Oral en lo Penal de Santiago",
+            "tipo": "TOP",
+            "region": "RM",
+            "ciudad": "Santiago",
+            "direccion": "Av. Pedro Montt 1606",
+            "comuna": "Santiago",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 18,
+        "fields": {
+            "nombre": "1° Juzgado Civil de Santiago",
+            "tipo": "JUZ_CIVIL",
+            "region": "RM",
+            "ciudad": "Santiago",
+            "comuna": "Santiago",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 19,
+        "fields": {
+            "nombre": "Juzgado de Policía Local de Providencia",
+            "tipo": "JPL",
+            "region": "RM",
+            "ciudad": "Providencia",
+            "comuna": "Providencia",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 20,
+        "fields": {
+            "nombre": "Juzgado de Policía Local de Recoleta",
+            "tipo": "JPL",
+            "region": "RM",
+            "ciudad": "Recoleta",
+            "comuna": "Recoleta",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 21,
+        "fields": {
+            "nombre": "Corte de Apelaciones de Concepción",
+            "tipo": "CORTE_AP",
+            "region": "BIOBIO",
+            "ciudad": "Concepción",
+            "direccion": "Barros Arana 554",
+            "comuna": "Concepción",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 22,
+        "fields": {
+            "nombre": "Juzgado de Familia de Concepción",
+            "tipo": "JUZ_FAMILIA",
+            "region": "BIOBIO",
+            "ciudad": "Concepción",
+            "comuna": "Concepción",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 23,
+        "fields": {
+            "nombre": "Juzgado de Familia de Talcahuano",
+            "tipo": "JUZ_FAMILIA",
+            "region": "BIOBIO",
+            "ciudad": "Talcahuano",
+            "comuna": "Talcahuano",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 24,
+        "fields": {
+            "nombre": "Juzgado de Familia de Los Ángeles",
+            "tipo": "JUZ_FAMILIA",
+            "region": "BIOBIO",
+            "ciudad": "Los Ángeles",
+            "comuna": "Los Ángeles",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 25,
+        "fields": {
+            "nombre": "Juzgado de Letras del Trabajo de Concepción",
+            "tipo": "JUZ_LABORAL",
+            "region": "BIOBIO",
+            "ciudad": "Concepción",
+            "comuna": "Concepción",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 26,
+        "fields": {
+            "nombre": "Juzgado de Letras del Trabajo de Los Ángeles",
+            "tipo": "JUZ_LABORAL",
+            "region": "BIOBIO",
+            "ciudad": "Los Ángeles",
+            "comuna": "Los Ángeles",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 27,
+        "fields": {
+            "nombre": "Juzgado de Garantía de Concepción",
+            "tipo": "JUZ_GARANTIA",
+            "region": "BIOBIO",
+            "ciudad": "Concepción",
+            "comuna": "Concepción",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 28,
+        "fields": {
+            "nombre": "Juzgado de Garantía de Talcahuano",
+            "tipo": "JUZ_GARANTIA",
+            "region": "BIOBIO",
+            "ciudad": "Talcahuano",
+            "comuna": "Talcahuano",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 29,
+        "fields": {
+            "nombre": "Tribunal de Juicio Oral en lo Penal de Concepción",
+            "tipo": "TOP",
+            "region": "BIOBIO",
+            "ciudad": "Concepción",
+            "comuna": "Concepción",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 30,
+        "fields": {
+            "nombre": "1° Juzgado Civil de Concepción",
+            "tipo": "JUZ_CIVIL",
+            "region": "BIOBIO",
+            "ciudad": "Concepción",
+            "comuna": "Concepción",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 31,
+        "fields": {
+            "nombre": "Juzgado de Policía Local de Concepción",
+            "tipo": "JPL",
+            "region": "BIOBIO",
+            "ciudad": "Concepción",
+            "comuna": "Concepción",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 32,
+        "fields": {
+            "nombre": "Corte de Apelaciones de Valdivia",
+            "tipo": "CORTE_AP",
+            "region": "LOS_RIOS",
+            "ciudad": "Valdivia",
+            "comuna": "Valdivia",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 33,
+        "fields": {
+            "nombre": "Juzgado de Familia de Valdivia",
+            "tipo": "JUZ_FAMILIA",
+            "region": "LOS_RIOS",
+            "ciudad": "Valdivia",
+            "comuna": "Valdivia",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 34,
+        "fields": {
+            "nombre": "Juzgado de Letras del Trabajo de Valdivia",
+            "tipo": "JUZ_LABORAL",
+            "region": "LOS_RIOS",
+            "ciudad": "Valdivia",
+            "comuna": "Valdivia",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 35,
+        "fields": {
+            "nombre": "Juzgado de Garantía de Valdivia",
+            "tipo": "JUZ_GARANTIA",
+            "region": "LOS_RIOS",
+            "ciudad": "Valdivia",
+            "comuna": "Valdivia",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 36,
+        "fields": {
+            "nombre": "Tribunal de Juicio Oral en lo Penal de Valdivia",
+            "tipo": "TOP",
+            "region": "LOS_RIOS",
+            "ciudad": "Valdivia",
+            "comuna": "Valdivia",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 37,
+        "fields": {
+            "nombre": "Juzgado de Letras de Valdivia",
+            "tipo": "JUZ_CIVIL",
+            "region": "LOS_RIOS",
+            "ciudad": "Valdivia",
+            "comuna": "Valdivia",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 38,
+        "fields": {
+            "nombre": "Juzgado de Policía Local de Valdivia",
+            "tipo": "JPL",
+            "region": "LOS_RIOS",
+            "ciudad": "Valdivia",
+            "comuna": "Valdivia",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 39,
+        "fields": {
+            "nombre": "Corte de Apelaciones de Puerto Montt",
+            "tipo": "CORTE_AP",
+            "region": "LOS_LAGOS",
+            "ciudad": "Puerto Montt",
+            "comuna": "Puerto Montt",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 40,
+        "fields": {
+            "nombre": "Juzgado de Familia de Puerto Montt",
+            "tipo": "JUZ_FAMILIA",
+            "region": "LOS_LAGOS",
+            "ciudad": "Puerto Montt",
+            "comuna": "Puerto Montt",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 41,
+        "fields": {
+            "nombre": "Juzgado de Familia de Osorno",
+            "tipo": "JUZ_FAMILIA",
+            "region": "LOS_LAGOS",
+            "ciudad": "Osorno",
+            "comuna": "Osorno",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 42,
+        "fields": {
+            "nombre": "Juzgado de Familia de Castro",
+            "tipo": "JUZ_FAMILIA",
+            "region": "LOS_LAGOS",
+            "ciudad": "Castro",
+            "comuna": "Castro",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 43,
+        "fields": {
+            "nombre": "Juzgado de Letras del Trabajo de Puerto Montt",
+            "tipo": "JUZ_LABORAL",
+            "region": "LOS_LAGOS",
+            "ciudad": "Puerto Montt",
+            "comuna": "Puerto Montt",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 44,
+        "fields": {
+            "nombre": "Juzgado de Letras del Trabajo de Osorno",
+            "tipo": "JUZ_LABORAL",
+            "region": "LOS_LAGOS",
+            "ciudad": "Osorno",
+            "comuna": "Osorno",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 45,
+        "fields": {
+            "nombre": "Juzgado de Garantía de Puerto Montt",
+            "tipo": "JUZ_GARANTIA",
+            "region": "LOS_LAGOS",
+            "ciudad": "Puerto Montt",
+            "comuna": "Puerto Montt",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 46,
+        "fields": {
+            "nombre": "Juzgado de Garantía de Osorno",
+            "tipo": "JUZ_GARANTIA",
+            "region": "LOS_LAGOS",
+            "ciudad": "Osorno",
+            "comuna": "Osorno",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 47,
+        "fields": {
+            "nombre": "Tribunal de Juicio Oral en lo Penal de Puerto Montt",
+            "tipo": "TOP",
+            "region": "LOS_LAGOS",
+            "ciudad": "Puerto Montt",
+            "comuna": "Puerto Montt",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 48,
+        "fields": {
+            "nombre": "Juzgado de Letras de Puerto Montt",
+            "tipo": "JUZ_CIVIL",
+            "region": "LOS_LAGOS",
+            "ciudad": "Puerto Montt",
+            "comuna": "Puerto Montt",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 49,
+        "fields": {
+            "nombre": "Juzgado de Letras de Osorno",
+            "tipo": "JUZ_CIVIL",
+            "region": "LOS_LAGOS",
+            "ciudad": "Osorno",
+            "comuna": "Osorno",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tribunal",
+        "pk": 50,
+        "fields": {
+            "nombre": "Juzgado de Policía Local de Puerto Montt",
+            "tipo": "JPL",
+            "region": "LOS_LAGOS",
+            "ciudad": "Puerto Montt",
+            "comuna": "Puerto Montt",
+            "activo": true
+        }
+    }
+]

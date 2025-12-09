@@ -1,11 +1,140 @@
 {% extends 'base.html' %}
-{% block title %}Causa{% endblock %}
+{% block title %}{% if causa %}Editar causa{% else %}Nueva causa{% endif %}{% endblock %}
+{% block section_title %}Causas{% endblock %}
 
 {% block content %}
-<h1>{{ titulo }}</h1>
-<form method="post">
+<div class="page-header-simple">
+    <div class="breadcrumb">
+        <a href="{% url 'gestion:causas_lista' %}">Causas</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>{% if causa %}Editar causa{% else %}Nueva causa{% endif %}</span>
+    </div>
+    <h1 class="page-title">{% if causa %}Editar causa{% else %}Nueva causa{% endif %}</h1>
+    <p class="page-subtitle">
+        {% if causa %}
+            Actualiza los datos de la causa
+        {% else %}
+            Registra los datos principales para el seguimiento de la causa
+        {% endif %}
+    </p>
+</div>
+
+<form method="post" class="form-layout">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn-primary">Guardar</button>
+    
+    <!-- Identificación de la causa -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Identificación de la causa</h2>
+            <p class="form-card-subtitle">Datos básicos para individualizar la causa en el sistema</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">RIT</label>
+                    <input type="text" name="rit" value="{{ form.rit.value|default:'' }}" 
+                           class="form-input" placeholder="C-1234-2025">
+                    {% if form.rit.errors %}<span class="form-error">{{ form.rit.errors.0 }}</span>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">RUC</label>
+                    <input type="text" name="ruc" value="{{ form.ruc.value|default:'' }}" 
+                           class="form-input" placeholder="2500123456-7">
+                    {% if form.ruc.errors %}<span class="form-error">{{ form.ruc.errors.0 }}</span>{% endif %}
+                </div>
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label">Carátula</label>
+                <input type="text" name="caratula" value="{{ form.caratula.value|default:'' }}" 
+                       class="form-input" placeholder="Pérez con González">
+                {% if form.caratula.errors %}<span class="form-error">{{ form.caratula.errors.0 }}</span>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Clasificación -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Clasificación</h2>
+            <p class="form-card-subtitle">Tribunal, materia, estado y responsable de la causa</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Tribunal</label>
+                    <select name="tribunal" class="form-input">
+                        <option value="">Selecciona tribunal</option>
+                        {% for tribunal in tribunales %}
+                            <option value="{{ tribunal.pk }}" {% if form.tribunal.value|stringformat:"i" == tribunal.pk|stringformat:"i" %}selected{% endif %}>
+                                {{ tribunal.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.tribunal.errors %}<span class="form-error">{{ form.tribunal.errors.0 }}</span>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Materia</label>
+                    <select name="materia" class="form-input">
+                        <option value="">Selecciona materia</option>
+                        {% for materia in materias %}
+                            <option value="{{ materia.pk }}" {% if form.materia.value|stringformat:"i" == materia.pk|stringformat:"i" %}selected{% endif %}>
+                                {{ materia.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.materia.errors %}<span class="form-error">{{ form.materia.errors.0 }}</span>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select name="estado" class="form-input">
+                        <option value="">Selecciona estado</option>
+                        {% for estado in estados %}
+                            <option value="{{ estado.pk }}" {% if form.estado.value|stringformat:"i" == estado.pk|stringformat:"i" %}selected{% endif %}>
+                                {{ estado.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.estado.errors %}<span class="form-error">{{ form.estado.errors.0 }}</span>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Responsable</label>
+                    <select name="responsable" class="form-input">
+                        <option value="">Selecciona responsable</option>
+                        {% for user in responsables %}
+                            <option value="{{ user.pk }}" {% if form.responsable.value|stringformat:"i" == user.pk|stringformat:"i" %}selected{% endif %}>
+                                {{ user.get_full_name|default:user.username }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Información adicional</h2>
+            <p class="form-card-subtitle">Notas descriptivas y observaciones internas sobre la causa</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-group full-width">
+                <label class="form-label">Descripción del caso</label>
+                <textarea name="descripcion" class="form-input form-textarea" 
+                          placeholder="Describe brevemente los antecedentes y el contexto del caso">{{ form.descripcion.value|default:'' }}</textarea>
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label">Observaciones internas</label>
+                <textarea name="observaciones" class="form-input form-textarea" 
+                          placeholder="Notas internas para el equipo de la clínica jurídica">{{ form.observaciones.value|default:'' }}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer fijo -->
+    <div class="form-footer">
+        <a href="{% url 'gestion:causas_lista' %}" class="btn-secondary">Cancelar</a>
+        <button type="submit" class="btn-primary">Guardar</button>
+    </div>
 </form>
 {% endblock %}

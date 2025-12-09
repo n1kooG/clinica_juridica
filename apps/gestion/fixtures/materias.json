@@ -1,0 +1,382 @@
+[
+    {
+        "model": "gestion.materia",
+        "pk": 1,
+        "fields": {
+            "nombre": "Divorcio",
+            "tipo_tribunal": "JUZ_FAMILIA",
+            "descripcion": "Disolución del vínculo matrimonial",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 2,
+        "fields": {
+            "nombre": "Pensión de alimentos",
+            "tipo_tribunal": "JUZ_FAMILIA",
+            "descripcion": "Demanda o modificación de pensión alimenticia",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 3,
+        "fields": {
+            "nombre": "Cuidado personal",
+            "tipo_tribunal": "JUZ_FAMILIA",
+            "descripcion": "Determinación de custodia de hijos",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 4,
+        "fields": {
+            "nombre": "Relación directa y regular",
+            "tipo_tribunal": "JUZ_FAMILIA",
+            "descripcion": "Régimen de visitas",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 5,
+        "fields": {
+            "nombre": "Violencia intrafamiliar",
+            "tipo_tribunal": "JUZ_FAMILIA",
+            "descripcion": "Casos de VIF y medidas de protección",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 6,
+        "fields": {
+            "nombre": "Medidas de protección",
+            "tipo_tribunal": "JUZ_FAMILIA",
+            "descripcion": "Protección de niños, niñas y adolescentes",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 7,
+        "fields": {
+            "nombre": "Adopción",
+            "tipo_tribunal": "JUZ_FAMILIA",
+            "descripcion": "Procesos de adopción",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 8,
+        "fields": {
+            "nombre": "Filiación",
+            "tipo_tribunal": "JUZ_FAMILIA",
+            "descripcion": "Reconocimiento o impugnación de paternidad/maternidad",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 9,
+        "fields": {
+            "nombre": "Guardas",
+            "tipo_tribunal": "JUZ_FAMILIA",
+            "descripcion": "Designación de guardadores",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 10,
+        "fields": {
+            "nombre": "Despido injustificado",
+            "tipo_tribunal": "JUZ_LABORAL",
+            "descripcion": "Demanda por despido sin causa legal",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 11,
+        "fields": {
+            "nombre": "Cobro de prestaciones",
+            "tipo_tribunal": "JUZ_LABORAL",
+            "descripcion": "Cobro de remuneraciones, indemnizaciones y otros beneficios",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 12,
+        "fields": {
+            "nombre": "Tutela laboral",
+            "tipo_tribunal": "JUZ_LABORAL",
+            "descripcion": "Vulneración de derechos fundamentales en el trabajo",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 13,
+        "fields": {
+            "nombre": "Accidente del trabajo",
+            "tipo_tribunal": "JUZ_LABORAL",
+            "descripcion": "Demandas por accidentes laborales",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 14,
+        "fields": {
+            "nombre": "Enfermedad profesional",
+            "tipo_tribunal": "JUZ_LABORAL",
+            "descripcion": "Demandas por enfermedades derivadas del trabajo",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 15,
+        "fields": {
+            "nombre": "Prácticas antisindicales",
+            "tipo_tribunal": "JUZ_LABORAL",
+            "descripcion": "Denuncias por vulneración de libertad sindical",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 16,
+        "fields": {
+            "nombre": "Nulidad del despido",
+            "tipo_tribunal": "JUZ_LABORAL",
+            "descripcion": "Despido sin pago de cotizaciones previsionales",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 17,
+        "fields": {
+            "nombre": "Cobranza laboral",
+            "tipo_tribunal": "JUZ_COBRANZA",
+            "descripcion": "Cobro ejecutivo de deudas laborales",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 18,
+        "fields": {
+            "nombre": "Cobranza previsional",
+            "tipo_tribunal": "JUZ_COBRANZA",
+            "descripcion": "Cobro de cotizaciones previsionales impagas",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 19,
+        "fields": {
+            "nombre": "Hurto",
+            "tipo_tribunal": "JUZ_GARANTIA",
+            "descripcion": "Apropiación de cosa ajena sin violencia",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 20,
+        "fields": {
+            "nombre": "Robo",
+            "tipo_tribunal": "JUZ_GARANTIA",
+            "descripcion": "Apropiación con fuerza o violencia",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 21,
+        "fields": {
+            "nombre": "Lesiones",
+            "tipo_tribunal": "JUZ_GARANTIA",
+            "descripcion": "Delitos de lesiones corporales",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 22,
+        "fields": {
+            "nombre": "Amenazas",
+            "tipo_tribunal": "JUZ_GARANTIA",
+            "descripcion": "Delito de amenazas",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 23,
+        "fields": {
+            "nombre": "Estafa",
+            "tipo_tribunal": "JUZ_GARANTIA",
+            "descripcion": "Delitos de estafa y fraude",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 24,
+        "fields": {
+            "nombre": "Tráfico de drogas",
+            "tipo_tribunal": "JUZ_GARANTIA",
+            "descripcion": "Delitos de la Ley 20.000",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 25,
+        "fields": {
+            "nombre": "Delitos sexuales",
+            "tipo_tribunal": "JUZ_GARANTIA",
+            "descripcion": "Abuso sexual, violación y otros delitos sexuales",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 26,
+        "fields": {
+            "nombre": "Homicidio",
+            "tipo_tribunal": "TOP",
+            "descripcion": "Delitos contra la vida",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 27,
+        "fields": {
+            "nombre": "Robo con violencia",
+            "tipo_tribunal": "TOP",
+            "descripcion": "Robo con intimidación o violencia en las personas",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 28,
+        "fields": {
+            "nombre": "Cobro de pesos",
+            "tipo_tribunal": "JUZ_CIVIL",
+            "descripcion": "Cobro de deudas en dinero",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 29,
+        "fields": {
+            "nombre": "Juicio ejecutivo",
+            "tipo_tribunal": "JUZ_CIVIL",
+            "descripcion": "Cobro con título ejecutivo",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 30,
+        "fields": {
+            "nombre": "Arrendamiento",
+            "tipo_tribunal": "JUZ_CIVIL",
+            "descripcion": "Conflictos de arriendos, desahucios, terminación",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 31,
+        "fields": {
+            "nombre": "Indemnización de perjuicios",
+            "tipo_tribunal": "JUZ_CIVIL",
+            "descripcion": "Demandas por daños y perjuicios",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 32,
+        "fields": {
+            "nombre": "Comodato precario",
+            "tipo_tribunal": "JUZ_CIVIL",
+            "descripcion": "Restitución de inmueble en comodato",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 33,
+        "fields": {
+            "nombre": "Infracciones de tránsito",
+            "tipo_tribunal": "JPL",
+            "descripcion": "Multas y sanciones por infracciones de tránsito",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 34,
+        "fields": {
+            "nombre": "Ley del consumidor",
+            "tipo_tribunal": "JPL",
+            "descripcion": "Reclamos por derechos del consumidor",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 35,
+        "fields": {
+            "nombre": "Ordenanzas municipales",
+            "tipo_tribunal": "JPL",
+            "descripcion": "Infracciones a ordenanzas locales",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 36,
+        "fields": {
+            "nombre": "Recurso de apelación",
+            "tipo_tribunal": "CORTE_AP",
+            "descripcion": "Apelación contra resoluciones de tribunales inferiores",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 37,
+        "fields": {
+            "nombre": "Recurso de protección",
+            "tipo_tribunal": "CORTE_AP",
+            "descripcion": "Acción constitucional de protección",
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.materia",
+        "pk": 38,
+        "fields": {
+            "nombre": "Recurso de amparo",
+            "tipo_tribunal": "CORTE_AP",
+            "descripcion": "Acción constitucional de amparo",
+            "activo": true
+        }
+    }
+]

@@ -1,72 +1,85 @@
 {% extends 'base.html' %}
 {% block title %}Personas{% endblock %}
+{% block section_title %}Personas{% endblock %}
 
 {% block content %}
-<div class="content-header">
-    <div>
-        <h1>Personas</h1>
-        <p class="lead">Gestión de personas vinculadas a consultas y causas de la clínica jurídica universitaria.</p>
+<div class="page-header-flex">
+    <div class="page-header-content">
+        <h1 class="page-title">Personas</h1>
+        <p class="page-subtitle">Gestión de personas vinculadas a consultas y causas</p>
     </div>
-    <div>
-        <a href="{% url 'gestion:persona_crear' %}" class="btn-primary">Nueva persona</a>
-    </div>
+    {% if puede_crear %}
+    <a href="{% url 'gestion:persona_crear' %}" class="btn-primary">
+        <i class="fas fa-user-plus"></i> Nueva persona
+    </a>
+    {% endif %}
 </div>
 
-<div class="panel-card">
-    <div class="panel-card-header">
-        <div>
-            <h3>Listado general</h3>
-            <div class="muted-note">{{ personas.count }} personas registradas · Datos de ejemplo de la cátedra</div>
+<div class="list-card">
+    <div class="list-card-header">
+        <div class="list-card-title">
+            <span class="title-text">Listado general</span>
+            <span class="title-count">{{ personas.count }} personas registradas</span>
         </div>
-        <div style="text-align:right">
-            <input class="search-input" type="text" placeholder="Buscar por nombre, RUN o correo...">
+        <div class="list-card-search">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Buscar por nombre o RUN" class="search-input" id="searchInput">
         </div>
     </div>
 
-    <div class="panel-card-body">
-        <div class="filters" style="margin-bottom:12px">
-            <button class="filter-pill active">Activos</button>
-            <button class="filter-pill">Todos</button>
-        </div>
-
-        <table class="people-table">
+    <div class="list-card-body">
+        <table class="list-table">
             <thead>
                 <tr>
-                    <th class="col-run">RUN</th>
-                    <th class="col-name">Nombre completo</th>
-                    <th class="col-contact">Contacto</th>
-                    <th class="col-role">Rol en el sistema</th>
-                    <th class="col-actions">Acciones</th>
+                    <th>RUN</th>
+                    <th>Nombre completo</th>
+                    <th>Contacto</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tableBody">
             {% for p in personas %}
                 <tr>
-                    <td class="col-run">{{ p.run }}</td>
-                    <td class="col-name">
-                        <div class="name-primary">{{ p.nombres }} {{ p.apellidos }}</div>
-                        <div class="name-secondary">{{ p.descripcion|default:'' }}</div>
+                    <td class="cell-code">{{ p.run }}</td>
+                    <td class="cell-name">{{ p.nombres }} {{ p.apellidos }}</td>
+                    <td class="cell-contact">
+                        <div class="contact-email">{{ p.email|default:"-" }}</div>
+                        <div class="contact-phone">{{ p.telefono|default:"" }}</div>
                     </td>
-                    <td class="col-contact">
-                        <div>{{ p.email }}</div>
-                        <div class="name-secondary">{{ p.telefono }}</div>
-                    </td>
-                    <td class="col-role">
-                        {% if p.rol %}
-                        <span class="badge">{{ p.rol }}</span>
+                    <td>
+                        {% if p.tipo_persona == 'ATENDIDO' %}
+                            <span class="role-badge role-representada">Representada</span>
+                        {% elif p.tipo_persona == 'CONTRAPARTE' %}
+                            <span class="role-badge role-contraparte">Contraparte</span>
+                        {% elif p.tipo_persona == 'TESTIGO' %}
+                            <span class="role-badge role-testigo">Testigo</span>
                         {% else %}
-                        <span class="badge muted">--</span>
+                            <span class="role-badge role-tercero">{{ p.get_tipo_persona_display }}</span>
                         {% endif %}
                     </td>
-                    <td class="col-actions"><a href="{% url 'gestion:persona_editar' p.pk %}">Ver ficha</a></td>
+                    <td>
+                        <a href="{% url 'gestion:persona_detalle' p.pk %}" class="action-link">Ver ficha</a>
+                    </td>
                 </tr>
             {% empty %}
-                <tr><td colspan="5">No hay personas registradas.</td></tr>
+                <tr>
+                    <td colspan="5" class="empty-table">No hay personas registradas.</td>
+                </tr>
             {% endfor %}
             </tbody>
         </table>
-
-        <p class="muted-note">Esta vista es solo de referencia académica y puede adaptarse a los requerimientos de la clínica real.</p>
     </div>
 </div>
+
+<script>
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#tableBody tr');
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+</script>
 {% endblock %}

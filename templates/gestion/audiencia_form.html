@@ -1,11 +1,171 @@
 {% extends 'base.html' %}
-{% block title %}Audiencia{% endblock %}
+{% block title %}{% if audiencia %}Editar audiencia{% else %}Nueva audiencia{% endif %}{% endblock %}
+{% block section_title %}Agenda{% endblock %}
 
 {% block content %}
-<h1>{{ titulo }}</h1>
-<form method="post">
+<div class="page-header-simple">
+    <div class="breadcrumb">
+        <a href="{% url 'gestion:audiencias_lista' %}">Agenda</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>{% if audiencia %}Editar audiencia{% else %}Nueva audiencia{% endif %}</span>
+    </div>
+    <h1 class="page-title">{% if audiencia %}Editar audiencia{% else %}Nueva audiencia{% endif %}</h1>
+    <p class="page-subtitle">
+        {% if audiencia %}
+            Actualiza los datos del evento programado
+        {% else %}
+            Registra una nueva audiencia o evento en el sistema
+        {% endif %}
+    </p>
+</div>
+
+<form method="post" class="form-layout">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn-primary">Guardar</button>
+    
+    <!-- Información del evento -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Información del evento</h2>
+            <p class="form-card-subtitle">Datos principales de la audiencia o reunión</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-group full-width">
+                <label class="form-label">Causa asociada</label>
+                <select name="causa" class="form-input" required>
+                    <option value="">Selecciona una causa</option>
+                    {% for c in causas %}
+                        <option value="{{ c.pk }}" {% if form.causa.value|stringformat:"i" == c.pk|stringformat:"i" or causa_preseleccionada|stringformat:"i" == c.pk|stringformat:"i" %}selected{% endif %}>
+                            {{ c.caratula }} {% if c.rit %}(RIT: {{ c.rit }}){% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
+                {% if form.causa.errors %}<span class="form-error">{{ form.causa.errors.0 }}</span>{% endif %}
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Tipo de evento</label>
+                    <select name="tipo_evento" class="form-input" required>
+                        <option value="">Selecciona tipo</option>
+                        {% for value, label in form.tipo_evento.field.choices %}
+                            {% if value %}
+                            <option value="{{ value }}" {% if form.tipo_evento.value == value %}selected{% endif %}>{{ label }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    {% if form.tipo_evento.errors %}<span class="form-error">{{ form.tipo_evento.errors.0 }}</span>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select name="estado" class="form-input">
+                        <option value="PROGRAMADA" {% if form.estado.value == 'PROGRAMADA' %}selected{% endif %}>Programada</option>
+                        <option value="CONFIRMADA" {% if form.estado.value == 'CONFIRMADA' %}selected{% endif %}>Confirmada</option>
+                        <option value="REALIZADA" {% if form.estado.value == 'REALIZADA' %}selected{% endif %}>Realizada</option>
+                        <option value="SUSPENDIDA" {% if form.estado.value == 'SUSPENDIDA' %}selected{% endif %}>Suspendida</option>
+                        <option value="REPROGRAMADA" {% if form.estado.value == 'REPROGRAMADA' %}selected{% endif %}>Reprogramada</option>
+                        <option value="CANCELADA" {% if form.estado.value == 'CANCELADA' %}selected{% endif %}>Cancelada</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fecha y lugar -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Fecha y lugar</h2>
+            <p class="form-card-subtitle">Cuándo y dónde se realizará el evento</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Fecha y hora</label>
+                    <input type="datetime-local" name="fecha_hora" value="{{ form.fecha_hora.value|date:'Y-m-d\TH:i' }}" 
+                           class="form-input" required>
+                    {% if form.fecha_hora.errors %}<span class="form-error">{{ form.fecha_hora.errors.0 }}</span>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Duración estimada (minutos)</label>
+                    <input type="number" name="duracion_estimada" value="{{ form.duracion_estimada.value|default:'60' }}" 
+                           class="form-input" placeholder="60">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Lugar</label>
+                    <input type="text" name="lugar" value="{{ form.lugar.value|default:'' }}" 
+                           class="form-input" placeholder="Juzgado de Familia de Santiago">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Sala</label>
+                    <input type="text" name="sala" value="{{ form.sala.value|default:'' }}" 
+                           class="form-input" placeholder="Sala 3">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Asistencia (solo para edición y estado realizada) -->
+    {% if audiencia %}
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Registro de asistencia</h2>
+            <p class="form-card-subtitle">Completar cuando la audiencia haya sido realizada</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-grid">
+                <div class="form-checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="asistio_cliente" {% if form.asistio_cliente.value %}checked{% endif %}>
+                        <span>¿Asistió el cliente?</span>
+                    </label>
+                </div>
+                <div class="form-checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="asistio_estudiante" {% if form.asistio_estudiante.value %}checked{% endif %}>
+                        <span>¿Asistió el estudiante?</span>
+                    </label>
+                </div>
+                <div class="form-checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="asistio_supervisor" {% if form.asistio_supervisor.value %}checked{% endif %}>
+                        <span>¿Asistió el supervisor?</span>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label">Resultado de la audiencia</label>
+                <textarea name="resultado" class="form-input form-textarea" 
+                          placeholder="Describe el resultado o resolución de la audiencia">{{ form.resultado.value|default:'' }}</textarea>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Observaciones -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Observaciones</h2>
+            <p class="form-card-subtitle">Notas adicionales sobre el evento</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-group full-width">
+                <label class="form-label">Observaciones</label>
+                <textarea name="observaciones" class="form-input form-textarea" 
+                          placeholder="Notas internas para el equipo">{{ form.observaciones.value|default:'' }}</textarea>
+            </div>
+            {% if audiencia %}
+            <div class="form-group full-width">
+                <label class="form-label">Motivo de suspensión</label>
+                <textarea name="motivo_suspension" class="form-input form-textarea" 
+                          placeholder="Completar si la audiencia fue suspendida">{{ form.motivo_suspension.value|default:'' }}</textarea>
+                <span class="form-hint">Completar solo si el estado es "Suspendida"</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer fijo -->
+    <div class="form-footer">
+        <a href="{% url 'gestion:audiencias_lista' %}" class="btn-secondary">Cancelar</a>
+        <button type="submit" class="btn-primary">Guardar</button>
+    </div>
 </form>
 {% endblock %}

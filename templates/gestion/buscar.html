@@ -2,29 +2,224 @@
 {% block title %}Búsqueda{% endblock %}
 
 {% block content %}
-<h1>Búsqueda</h1>
-<form method="get">
-    <input type="text" name="q" value="{{ query }}" placeholder="Buscar por carátula, RIT, RUC o persona">
-    <button type="submit" class="btn-primary">Buscar</button>
-</form>
+<div class="content-header">
+    <div>
+        <h1>Búsqueda avanzada</h1>
+        <p class="lead">Busca causas, personas, audiencias y documentos.</p>
+    </div>
+</div>
 
-{% if query %}
-    <h2>Resultados en causas</h2>
-    <ul>
-    {% for c in causas %}
-        <li><a href="{% url 'gestion:causa_detalle' c.pk %}">{{ c }}</a></li>
-    {% empty %}
-        <li>Sin resultados en causas.</li>
-    {% endfor %}
-    </ul>
+<div class="panel-card" style="margin-bottom: 20px;">
+    <div class="panel-card-body">
+        <form method="get" class="busqueda-form">
+            <div class="busqueda-principal">
+                <input type="text" name="q" value="{{ query }}" placeholder="Buscar por nombre, RUT, carátula, RIT..." class="form-input busqueda-input">
+                <button type="submit" class="btn-primary">Buscar</button>
+            </div>
+            
+            <div class="busqueda-filtros">
+                <div class="filtro-grupo">
+                    <label>Buscar en:</label>
+                    <select name="tipo" class="form-input">
+                        <option value="todo" {% if tipo == 'todo' %}selected{% endif %}>Todo</option>
+                        <option value="causas" {% if tipo == 'causas' %}selected{% endif %}>Solo causas</option>
+                        <option value="personas" {% if tipo == 'personas' %}selected{% endif %}>Solo personas</option>
+                        <option value="audiencias" {% if tipo == 'audiencias' %}selected{% endif %}>Solo audiencias</option>
+                        <option value="documentos" {% if tipo == 'documentos' %}selected{% endif %}>Solo documentos</option>
+                    </select>
+                </div>
+                
+                <div class="filtro-grupo">
+                    <label>Estado:</label>
+                    <select name="estado" class="form-input">
+                        <option value="">Todos</option>
+                        {% for e in estados %}
+                        <option value="{{ e.pk }}" {% if filtros.estado == e.pk|stringformat:"i" %}selected{% endif %}>{{ e.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filtro-grupo">
+                    <label>Materia:</label>
+                    <select name="materia" class="form-input">
+                        <option value="">Todas</option>
+                        {% for m in materias %}
+                        <option value="{{ m.pk }}" {% if filtros.materia == m.pk|stringformat:"i" %}selected{% endif %}>{{ m.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filtro-grupo">
+                    <label>Desde:</label>
+                    <input type="date" name="fecha_desde" value="{{ filtros.fecha_desde }}" class="form-input">
+                </div>
+                
+                <div class="filtro-grupo">
+                    <label>Hasta:</label>
+                    <input type="date" name="fecha_hasta" value="{{ filtros.fecha_hasta }}" class="form-input">
+                </div>
+            </div>
+            
+            {% if query or filtros.estado or filtros.materia or filtros.fecha_desde or filtros.fecha_hasta %}
+            <div style="margin-top: 10px;">
+                <a href="{% url 'gestion:buscar' %}" class="btn-link">Limpiar filtros</a>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
 
-    <h2>Resultados en personas</h2>
-    <ul>
-    {% for p in personas %}
-        <li>{{ p }}</li>
-    {% empty %}
-        <li>Sin resultados en personas.</li>
-    {% endfor %}
-    </ul>
+{% if total_resultados > 0 %}
+<div class="muted-note" style="margin-bottom: 15px;">
+    {{ total_resultados }} resultado{% if total_resultados != 1 %}s{% endif %} encontrado{% if total_resultados != 1 %}s{% endif %}
+</div>
 {% endif %}
+
+{% if causas %}
+<div class="panel-card" style="margin-bottom: 20px;">
+    <div class="panel-card-header">
+        <h3>Causas ({{ causas|length }})</h3>
+    </div>
+    <div class="panel-card-body">
+        <table class="causas-table">
+            <thead>
+                <tr>
+                    <th>RIT/RUC</th>
+                    <th>Carátula</th>
+                    <th>Tribunal</th>
+                    <th>Materia</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for c in causas %}
+                <tr>
+                    <td>{{ c.rit|default:c.ruc|default:"-" }}</td>
+                    <td>{{ c.caratula }}</td>
+                    <td>{{ c.tribunal }}</td>
+                    <td>{{ c.materia }}</td>
+                    <td><span class="status-badge {{ c.estado.color }}">{{ c.estado.nombre }}</span></td>
+                    <td><a href="{% url 'gestion:causa_detalle' c.pk %}">Ver</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% if personas %}
+<div class="panel-card" style="margin-bottom: 20px;">
+    <div class="panel-card-header">
+        <h3>Personas ({{ personas|length }})</h3>
+    </div>
+    <div class="panel-card-body">
+        <table class="causas-table">
+            <thead>
+                <tr>
+                    <th>RUN</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Tipo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for p in personas %}
+                <tr>
+                    <td>{{ p.run }}</td>
+                    <td>{{ p.nombres }} {{ p.apellidos }}</td>
+                    <td>{{ p.email|default:"-" }}</td>
+                    <td>{{ p.telefono|default:"-" }}</td>
+                    <td>{{ p.get_tipo_persona_display }}</td>
+                    <td><a href="{% url 'gestion:persona_editar' p.pk %}">Ver</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% if audiencias %}
+<div class="panel-card" style="margin-bottom: 20px;">
+    <div class="panel-card-header">
+        <h3>Audiencias ({{ audiencias|length }})</h3>
+    </div>
+    <div class="panel-card-body">
+        <table class="causas-table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+                    <th>Causa</th>
+                    <th>Lugar</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for a in audiencias %}
+                <tr>
+                    <td>{{ a.fecha_hora|date:"d/m/Y H:i" }}</td>
+                    <td>{{ a.get_tipo_evento_display }}</td>
+                    <td><a href="{% url 'gestion:causa_detalle' a.causa.pk %}">{{ a.causa.caratula }}</a></td>
+                    <td>{{ a.lugar|default:"-" }}</td>
+                    <td>{{ a.get_estado_display }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% if documentos %}
+<div class="panel-card" style="margin-bottom: 20px;">
+    <div class="panel-card-header">
+        <h3>Documentos ({{ documentos|length }})</h3>
+    </div>
+    <div class="panel-card-body">
+        <table class="causas-table">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Tipo</th>
+                    <th>Causa</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for d in documentos %}
+                <tr>
+                    <td>{{ d.titulo }}</td>
+                    <td>{{ d.tipo }}</td>
+                    <td><a href="{% url 'gestion:causa_detalle' d.causa.pk %}">{{ d.causa.caratula }}</a></td>
+                    <td>{{ d.fecha_subida|date:"d/m/Y" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% if query and total_resultados == 0 %}
+<div class="panel-card">
+    <div class="panel-card-body" style="text-align: center; padding: 40px;">
+        <p style="font-size: 18px; color: #666;">No se encontraron resultados para "{{ query }}"</p>
+        <p class="muted-note">Intenta con otros términos o ajusta los filtros.</p>
+    </div>
+</div>
+{% endif %}
+
+{% if not query and not filtros.estado and not filtros.materia and not filtros.fecha_desde and not filtros.fecha_hasta %}
+<div class="panel-card">
+    <div class="panel-card-body" style="text-align: center; padding: 40px;">
+        <p style="font-size: 18px; color: #666;">Ingresa un término de búsqueda o aplica filtros</p>
+    </div>
+</div>
+{% endif %}
+
 {% endblock %}

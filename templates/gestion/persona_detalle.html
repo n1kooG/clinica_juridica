@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% block title %}{{ persona.nombres }} {{ persona.apellidos }}{% endblock %}
+{% block section_title %}Personas{% endblock %}
+
+{% block content %}
+<div class="page-header-with-actions">
+    <div class="page-header-left">
+        <div class="breadcrumb">
+            <a href="{% url 'gestion:personas_lista' %}">Personas</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Ficha de persona</span>
+        </div>
+        <h1 class="page-title">Ficha de persona</h1>
+        <p class="page-subtitle">Visualiza y edita los datos principales de la persona</p>
+    </div>
+    <div class="page-header-actions">
+        <a href="{% url 'gestion:personas_lista' %}" class="btn-secondary">Volver a listado</a>
+        {% if puede_editar %}
+        <a href="{% url 'gestion:persona_editar' persona.pk %}" class="btn-primary">Editar persona</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="detail-layout">
+    <div class="detail-main">
+        <!-- Datos personales -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Datos personales</h2>
+                    <p class="card-subtitle">Información básica de identificación y contacto</p>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">RUT</span>
+                        <span class="detail-value">{{ persona.run }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Tipo de persona</span>
+                        <span class="detail-value">{{ persona.get_tipo_persona_display }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Nombre(s)</span>
+                        <span class="detail-value">{{ persona.nombres }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Apellido(s)</span>
+                        <span class="detail-value">{{ persona.apellidos }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Correo electrónico</span>
+                        <span class="detail-value">{{ persona.email|default:"(sin registrar)" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Teléfono</span>
+                        <span class="detail-value">{{ persona.telefono|default:"(sin registrar)" }}</span>
+                    </div>
+                    <div class="detail-field full-width">
+                        <span class="detail-label">Dirección</span>
+                        <span class="detail-value">
+                            {% if persona.direccion %}
+                                {{ persona.direccion }}{% if persona.comuna %}, {{ persona.comuna }}{% endif %}
+                            {% else %}
+                                (sin registrar)
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="detail-field full-width">
+                        <span class="detail-label">Observaciones</span>
+                        <span class="detail-value {% if not persona.observaciones %}muted{% endif %}">
+                            {{ persona.observaciones|default:"Sin observaciones registradas." }}
+                        </span>
+                    </div>
+                </div>
+                <div class="detail-footer">
+                    Creado: {{ persona.fecha_registro|date:"d F Y, H:i" }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Situación y perfil -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Situación y perfil</h2>
+                    <p class="card-subtitle">Datos que ayudan a priorizar y clasificar la atención</p>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">Género</span>
+                        <span class="detail-value">{{ persona.get_genero_display }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Estado civil</span>
+                        <span class="detail-value">{{ persona.get_estado_civil_display }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Nacionalidad</span>
+                        <span class="detail-value">{{ persona.nacionalidad|default:"Chilena" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Ocupación</span>
+                        <span class="detail-value">{{ persona.ocupacion|default:"(sin registrar)" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">¿Es vulnerable?</span>
+                        <span class="detail-value">
+                            {% if persona.es_vulnerable %}
+                                Sí{% if persona.vulnerabilidad %}, {{ persona.vulnerabilidad|truncatewords:10 }}{% endif %}
+                            {% else %}
+                                No
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Estado</span>
+                        <span class="detail-value">
+                            {% if persona.activo %}
+                                Activa en programa
+                            {% else %}
+                                Inactiva
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-sidebar">
+        <!-- Causas vinculadas -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Causas vinculadas</h2>
+                    <p class="card-subtitle">Causas donde participa esta persona</p>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if causas_vinculadas %}
+                <div class="causa-list">
+                    {% for rel in causas_vinculadas %}
+                    <div class="causa-item">
+                        <div class="causa-item-header">
+                            <a href="{% url 'gestion:causa_detalle' rel.causa.pk %}" class="causa-item-title">
+                                {% if rel.causa.ruc %}RUC {{ rel.causa.ruc }}{% endif %} {{ rel.causa.caratula|truncatewords:4 }}
+                            </a>
+                            <span class="status-badge {{ rel.causa.estado.color }}">{{ rel.causa.estado.nombre }}</span>
+                        </div>
+                        <div class="causa-item-meta">
+                            {% if rel.rol_en_causa == 'Demandante' or rel.rol_en_causa == 'Solicitante' %}
+                                <span class="role-badge role-representada">Representada</span>
+                            {% elif rel.rol_en_causa == 'Demandado' %}
+                                <span class="role-badge role-contraparte">Contraparte</span>
+                            {% else %}
+                                <span class="role-badge role-tercero">{{ rel.rol_en_causa }}</span>
+                            {% endif %}
+                            <span class="causa-item-tribunal">{{ rel.causa.tribunal|default:"" }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="empty-message">No hay causas vinculadas a esta persona.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Datos de contacto rápidos -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Datos de contacto rápidos</h2>
+                    <p class="card-subtitle">Canales principales para coordinar audiencias</p>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="contact-quick">
+                    <div class="contact-quick-item">
+                        <span class="contact-quick-label">Correo principal</span>
+                        <span class="contact-quick-value">{{ persona.email|default:"(sin registrar)" }}</span>
+                    </div>
+                    <div class="contact-quick-item">
+                        <span class="contact-quick-label">Teléfono</span>
+                        <span class="contact-quick-value">{{ persona.telefono|default:"(sin registrar)" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actividad sobre la ficha -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Actividad sobre la ficha</h2>
+                    <p class="card-subtitle">Registro básico de acciones recientes</p>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if actividad %}
+                <div class="activity-list">
+                    {% for log in actividad %}
+                    <div class="activity-item">
+                        <div class="activity-title">
+                            {% if log.accion == 'CREAR' %}
+                                Creación de ficha de persona
+                            {% elif log.accion == 'EDITAR' %}
+                                Actualización de datos de contacto
+                            {% else %}
+                                {{ log.get_accion_display }}
+                            {% endif %}
+                        </div>
+                        <div class="activity-meta">
+                            Por: {{ log.usuario.username|default:"Sistema" }} • {{ log.fecha|timesince }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="empty-message">Sin actividad registrada.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

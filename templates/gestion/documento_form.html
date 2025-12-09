@@ -1,11 +1,160 @@
 {% extends 'base.html' %}
-{% block title %}Documento{% endblock %}
+{% block title %}{% if documento %}Editar documento{% else %}Subir documento{% endif %}{% endblock %}
+{% block section_title %}Documentos{% endblock %}
 
 {% block content %}
-<h1>{{ titulo }}</h1>
-<form method="post" enctype="multipart/form-data">
+<div class="page-header-simple">
+    <div class="breadcrumb">
+        <a href="{% url 'gestion:documentos_lista' %}">Documentos</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>{% if documento %}Editar documento{% else %}Subir documento{% endif %}</span>
+    </div>
+    <h1 class="page-title">{% if documento %}Editar documento{% else %}Subir documento{% endif %}</h1>
+    <p class="page-subtitle">
+        {% if documento %}
+            Actualiza la información del documento
+        {% else %}
+            Carga un nuevo documento asociado a una causa
+        {% endif %}
+    </p>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="form-layout">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn-primary">Guardar</button>
+    
+    <!-- Información del documento -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Información del documento</h2>
+            <p class="form-card-subtitle">Datos básicos para identificar el documento</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-group full-width">
+                <label class="form-label">Causa asociada</label>
+                <select name="causa" class="form-input" required>
+                    <option value="">Selecciona una causa</option>
+                    {% for c in causas %}
+                        <option value="{{ c.pk }}" {% if form.causa.value|stringformat:"i" == c.pk|stringformat:"i" or causa_preseleccionada|stringformat:"i" == c.pk|stringformat:"i" %}selected{% endif %}>
+                            {{ c.caratula }} {% if c.rit %}(RIT: {{ c.rit }}){% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
+                {% if form.causa.errors %}<span class="form-error">{{ form.causa.errors.0 }}</span>{% endif %}
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Tipo de documento</label>
+                    <select name="tipo" class="form-input">
+                        <option value="">Selecciona tipo</option>
+                        {% for tipo in tipos_documento %}
+                            <option value="{{ tipo.pk }}" {% if form.tipo.value|stringformat:"i" == tipo.pk|stringformat:"i" %}selected{% endif %}>
+                                {{ tipo.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select name="estado" class="form-input">
+                        <option value="BORRADOR" {% if form.estado.value == 'BORRADOR' %}selected{% endif %}>Borrador</option>
+                        <option value="FINAL" {% if form.estado.value == 'FINAL' or not form.estado.value %}selected{% endif %}>Final</option>
+                        <option value="ANULADO" {% if form.estado.value == 'ANULADO' %}selected{% endif %}>Anulado</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label">Título del documento</label>
+                <input type="text" name="titulo" value="{{ form.titulo.value|default:'' }}" 
+                       class="form-input" placeholder="Ej: Demanda principal, Contestación, Sentencia" required>
+                {% if form.titulo.errors %}<span class="form-error">{{ form.titulo.errors.0 }}</span>{% endif %}
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label">Descripción</label>
+                <textarea name="descripcion" class="form-input form-textarea" 
+                          placeholder="Descripción breve del contenido del documento">{{ form.descripcion.value|default:'' }}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Archivo -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Archivo</h2>
+            <p class="form-card-subtitle">Selecciona el archivo a subir</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-group full-width">
+                <label class="form-label">Archivo</label>
+                <div class="file-upload-area">
+                    <input type="file" name="archivo" id="archivo" class="file-input" {% if not documento %}required{% endif %}>
+                    <label for="archivo" class="file-upload-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Haz clic para seleccionar un archivo</span>
+                        <span class="file-hint">PDF, DOC, DOCX, JPG, PNG (máx. 10MB)</span>
+                    </label>
+                    <span class="file-name" id="fileName"></span>
+                </div>
+                {% if documento and documento.archivo %}
+                <div class="current-file">
+                    <span>Archivo actual: </span>
+                    <a href="{{ documento.archivo.url }}" target="_blank">{{ documento.archivo.name|truncatewords:5 }}</a>
+                </div>
+                {% endif %}
+                {% if form.archivo.errors %}<span class="form-error">{{ form.archivo.errors.0 }}</span>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Metadatos judiciales -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Metadatos judiciales</h2>
+            <p class="form-card-subtitle">Información adicional para documentos judiciales (opcional)</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Folio</label>
+                    <input type="number" name="folio" value="{{ form.folio.value|default:'' }}" 
+                           class="form-input" placeholder="Número de folio">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fecha de emisión</label>
+                    <input type="date" name="fecha_emision" value="{{ form.fecha_emision.value|default:'' }}" 
+                           class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Número de documento</label>
+                    <input type="text" name="numero_documento" value="{{ form.numero_documento.value|default:'' }}" 
+                           class="form-input" placeholder="Rol, oficio, resolución">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Emisor</label>
+                    <input type="text" name="emisor" value="{{ form.emisor.value|default:'' }}" 
+                           class="form-input" placeholder="Tribunal o institución emisora">
+                </div>
+            </div>
+            <div class="form-checkbox-group" style="margin-top: 16px;">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="es_confidencial" {% if form.es_confidencial.value %}checked{% endif %}>
+                    <span>¿Es documento confidencial?</span>
+                </label>
+                <span class="form-hint">Los documentos confidenciales solo serán visibles para usuarios autorizados</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer fijo -->
+    <div class="form-footer">
+        <a href="{% url 'gestion:documentos_lista' %}" class="btn-secondary">Cancelar</a>
+        <button type="submit" class="btn-primary">Guardar</button>
+    </div>
 </form>
+
+<script>
+document.getElementById('archivo').addEventListener('change', function() {
+    const fileName = this.files[0] ? this.files[0].name : '';
+    document.getElementById('fileName').textContent = fileName;
+});
+</script>
 {% endblock %}

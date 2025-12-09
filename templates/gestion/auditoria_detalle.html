@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Detalle de Log{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div>
+        <h1>Detalle de Log #{{ log.pk }}</h1>
+        <p class="lead">{{ log.fecha|date:"d/m/Y H:i:s" }}</p>
+    </div>
+    <div>
+        <a href="{% url 'gestion:auditoria_lista' %}" class="btn-link">← Volver a logs</a>
+    </div>
+</div>
+
+<div class="panel-card" style="margin-bottom: 20px;">
+    <div class="panel-card-header">
+        <h3>Información general</h3>
+    </div>
+    <div class="panel-card-body">
+        <p><strong>Usuario:</strong> {{ log.usuario.get_full_name|default:log.usuario.username|default:"Sistema" }}</p>
+        <p><strong>Acción:</strong> {{ log.get_accion_display }}</p>
+        <p><strong>Modelo:</strong> {{ log.get_modelo_display }}</p>
+        <p><strong>Objeto ID:</strong> {{ log.objeto_id|default:"-" }}</p>
+        <p><strong>Objeto:</strong> {{ log.objeto_repr|default:"-" }}</p>
+        <p><strong>Descripción:</strong> {{ log.descripcion|default:"-" }}</p>
+        <p><strong>IP:</strong> {{ log.ip_address|default:"-" }}</p>
+        <p><strong>User Agent:</strong> {{ log.user_agent|default:"-"|truncatewords:20 }}</p>
+    </div>
+</div>
+
+{% if log.datos_anteriores %}
+<div class="panel-card" style="margin-bottom: 20px;">
+    <div class="panel-card-header">
+        <h3>Datos anteriores</h3>
+    </div>
+    <div class="panel-card-body">
+        <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 13px;">{{ log.datos_anteriores|pprint }}</pre>
+    </div>
+</div>
+{% endif %}
+
+{% if log.datos_nuevos %}
+<div class="panel-card">
+    <div class="panel-card-header">
+        <h3>Datos nuevos</h3>
+    </div>
+    <div class="panel-card-body">
+        <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 13px;">{{ log.datos_nuevos|pprint }}</pre>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

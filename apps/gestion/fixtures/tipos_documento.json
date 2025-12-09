@@ -1,0 +1,206 @@
+[
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 1,
+        "fields": {
+            "nombre": "Resolución",
+            "categoria": "JUDICIAL_ENTRADA",
+            "descripcion": "Resolución emitida por el tribunal",
+            "requiere_folio": true,
+            "requiere_fecha_emision": true,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 2,
+        "fields": {
+            "nombre": "Sentencia",
+            "categoria": "JUDICIAL_ENTRADA",
+            "descripcion": "Sentencia definitiva del tribunal",
+            "requiere_folio": true,
+            "requiere_fecha_emision": true,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 3,
+        "fields": {
+            "nombre": "Notificación",
+            "categoria": "JUDICIAL_ENTRADA",
+            "descripcion": "Notificación judicial",
+            "requiere_folio": true,
+            "requiere_fecha_emision": true,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 4,
+        "fields": {
+            "nombre": "Oficio",
+            "categoria": "JUDICIAL_ENTRADA",
+            "descripcion": "Oficio recibido del tribunal",
+            "requiere_folio": true,
+            "requiere_fecha_emision": true,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 5,
+        "fields": {
+            "nombre": "Acta de audiencia",
+            "categoria": "JUDICIAL_ENTRADA",
+            "descripcion": "Acta de audiencia realizada",
+            "requiere_folio": true,
+            "requiere_fecha_emision": true,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 6,
+        "fields": {
+            "nombre": "Certificado",
+            "categoria": "JUDICIAL_ENTRADA",
+            "descripcion": "Certificado emitido por el tribunal",
+            "requiere_folio": true,
+            "requiere_fecha_emision": true,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 7,
+        "fields": {
+            "nombre": "Demanda",
+            "categoria": "JUDICIAL_SALIDA",
+            "descripcion": "Demanda presentada al tribunal",
+            "requiere_folio": false,
+            "requiere_fecha_emision": false,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 8,
+        "fields": {
+            "nombre": "Contestación",
+            "categoria": "JUDICIAL_SALIDA",
+            "descripcion": "Contestación a la demanda",
+            "requiere_folio": false,
+            "requiere_fecha_emision": false,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 9,
+        "fields": {
+            "nombre": "Escrito",
+            "categoria": "JUDICIAL_SALIDA",
+            "descripcion": "Escrito presentado al tribunal",
+            "requiere_folio": false,
+            "requiere_fecha_emision": false,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 10,
+        "fields": {
+            "nombre": "Recurso",
+            "categoria": "JUDICIAL_SALIDA",
+            "descripcion": "Recurso procesal (apelación, reposición, etc.)",
+            "requiere_folio": false,
+            "requiere_fecha_emision": false,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 11,
+        "fields": {
+            "nombre": "Informe de estudiante",
+            "categoria": "INTERNO",
+            "descripcion": "Informe elaborado por el estudiante",
+            "requiere_folio": false,
+            "requiere_fecha_emision": false,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 12,
+        "fields": {
+            "nombre": "Acta de reunión",
+            "categoria": "INTERNO",
+            "descripcion": "Acta de reunión interna del equipo",
+            "requiere_folio": false,
+            "requiere_fecha_emision": false,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 13,
+        "fields": {
+            "nombre": "Consentimiento firmado",
+            "categoria": "INTERNO",
+            "descripcion": "Documento de consentimiento del cliente",
+            "requiere_folio": false,
+            "requiere_fecha_emision": false,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 14,
+        "fields": {
+            "nombre": "Ficha de atención",
+            "categoria": "INTERNO",
+            "descripcion": "Ficha de atención al cliente",
+            "requiere_folio": false,
+            "requiere_fecha_emision": false,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 15,
+        "fields": {
+            "nombre": "Documento probatorio",
+            "categoria": "PRUEBA",
+            "descripcion": "Documento aportado como prueba",
+            "requiere_folio": false,
+            "requiere_fecha_emision": false,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 16,
+        "fields": {
+            "nombre": "Certificado médico",
+            "categoria": "PRUEBA",
+            "descripcion": "Certificado médico como prueba",
+            "requiere_folio": false,
+            "requiere_fecha_emision": true,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.tipodocumento",
+        "pk": 17,
+        "fields": {
+            "nombre": "Informe pericial",
+            "categoria": "PRUEBA",
+            "descripcion": "Informe de perito",
+            "requiere_folio": false,
+            "requiere_fecha_emision": true,
+            "activo": true
+        }
+    }
+]

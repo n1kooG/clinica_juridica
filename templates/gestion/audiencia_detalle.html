@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% block title %}Audiencia - {{ audiencia.causa.caratula }}{% endblock %}
+{% block section_title %}Agenda{% endblock %}
+
+{% block content %}
+<div class="page-header-with-actions">
+    <div class="page-header-left">
+        <div class="breadcrumb">
+            <a href="{% url 'gestion:audiencias_lista' %}">Agenda</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Detalle de audiencia</span>
+        </div>
+        <h1 class="page-title">{{ audiencia.get_tipo_evento_display }}</h1>
+        <p class="page-subtitle">{{ audiencia.causa.caratula }} · {{ audiencia.fecha_hora|date:"d F Y, H:i" }} hrs</p>
+    </div>
+    <div class="page-header-actions">
+        <a href="{% url 'gestion:audiencias_lista' %}" class="btn-secondary">Volver</a>
+        {% if puede_editar %}
+        <a href="{% url 'gestion:audiencia_editar' audiencia.pk %}" class="btn-primary">Editar audiencia</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="detail-layout">
+    <div class="detail-main">
+        <!-- Información del evento -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Información del evento</h2>
+            </div>
+            <div class="card-body">
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">Tipo de evento</span>
+                        <span class="detail-value">{{ audiencia.get_tipo_evento_display }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Estado</span>
+                        <span class="detail-value">
+                            {% if audiencia.estado == 'PROGRAMADA' %}
+                                <span class="status-badge status-orange">Programada</span>
+                            {% elif audiencia.estado == 'CONFIRMADA' %}
+                                <span class="status-badge status-blue">Confirmada</span>
+                            {% elif audiencia.estado == 'REALIZADA' %}
+                                <span class="status-badge status-green">Realizada</span>
+                            {% elif audiencia.estado == 'SUSPENDIDA' %}
+                                <span class="status-badge status-red">Suspendida</span>
+                            {% else %}
+                                <span class="status-badge status-gray">{{ audiencia.get_estado_display }}</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Fecha</span>
+                        <span class="detail-value">{{ audiencia.fecha_hora|date:"l d F Y" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Hora</span>
+                        <span class="detail-value">{{ audiencia.fecha_hora|time:"H:i" }} hrs</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Lugar</span>
+                        <span class="detail-value">{{ audiencia.lugar|default:"(sin especificar)" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Sala</span>
+                        <span class="detail-value">{{ audiencia.sala|default:"(sin especificar)" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Duración estimada</span>
+                        <span class="detail-value">{{ audiencia.duracion_estimada|default:"60" }} minutos</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Creado por</span>
+                        <span class="detail-value">{{ audiencia.creado_por.get_full_name|default:audiencia.creado_por.username|default:"Sistema" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Causa asociada -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Causa asociada</h2>
+            </div>
+            <div class="card-body">
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">Carátula</span>
+                        <span class="detail-value">
+                            <a href="{% url 'gestion:causa_detalle' audiencia.causa.pk %}">{{ audiencia.causa.caratula }}</a>
+                        </span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">RIT / RUC</span>
+                        <span class="detail-value">{{ audiencia.causa.rit|default:audiencia.causa.ruc|default:"-" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Tribunal</span>
+                        <span class="detail-value">{{ audiencia.causa.tribunal|default:"-" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Materia</span>
+                        <span class="detail-value">{{ audiencia.causa.materia|default:"-" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asistencia (si realizada) -->
+        {% if audiencia.estado == 'REALIZADA' %}
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Registro de asistencia</h2>
+            </div>
+            <div class="card-body">
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">¿Asistió el cliente?</span>
+                        <span class="detail-value">{% if audiencia.asistio_cliente %}Sí{% else %}No{% endif %}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">¿Asistió el estudiante?</span>
+                        <span class="detail-value">{% if audiencia.asistio_estudiante %}Sí{% else %}No{% endif %}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">¿Asistió el supervisor?</span>
+                        <span class="detail-value">{% if audiencia.asistio_supervisor %}Sí{% else %}No{% endif %}</span>
+                    </div>
+                </div>
+                {% if audiencia.resultado %}
+                <div class="detail-field full-width" style="margin-top: 16px;">
+                    <span class="detail-label">Resultado</span>
+                    <span class="detail-value">{{ audiencia.resultado }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Motivo de suspensión (si aplica) -->
+        {% if audiencia.estado == 'SUSPENDIDA' and audiencia.motivo_suspension %}
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Motivo de suspensión</h2>
+            </div>
+            <div class="card-body">
+                <p>{{ audiencia.motivo_suspension }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Observaciones -->
+        {% if audiencia.observaciones %}
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Observaciones</h2>
+            </div>
+            <div class="card-body">
+                <p>{{ audiencia.observaciones }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="detail-sidebar">
+        <!-- Resumen -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Resumen</h2>
+            </div>
+            <div class="card-body">
+                <div class="summary-list">
+                    <div class="summary-item">
+                        <span class="summary-label">Estado</span>
+                        <span class="summary-value">
+                            {% if audiencia.estado == 'PROGRAMADA' %}
+                                <span class="status-badge status-orange">Programada</span>
+                            {% elif audiencia.estado == 'CONFIRMADA' %}
+                                <span class="status-badge status-blue">Confirmada</span>
+                            {% elif audiencia.estado == 'REALIZADA' %}
+                                <span class="status-badge status-green">Realizada</span>
+                            {% elif audiencia.estado == 'SUSPENDIDA' %}
+                                <span class="status-badge status-red">Suspendida</span>
+                            {% else %}
+                                <span class="status-badge status-gray">{{ audiencia.get_estado_display }}</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Fecha</span>
+                        <span class="summary-value">{{ audiencia.fecha_hora|date:"d/m/Y" }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Hora</span>
+                        <span class="summary-value">{{ audiencia.fecha_hora|time:"H:i" }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Recordatorio</span>
+                        <span class="summary-value">{% if audiencia.recordatorio_enviado %}Enviado{% else %}Pendiente{% endif %}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fechas del sistema -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Información del registro</h2>
+            </div>
+            <div class="card-body">
+                <div class="contact-quick">
+                    <div class="contact-quick-item">
+                        <span class="contact-quick-label">Fecha de creación</span>
+                        <span class="contact-quick-value">{{ audiencia.fecha_creacion|date:"d/m/Y H:i" }}</span>
+                    </div>
+                    <div class="contact-quick-item">
+                        <span class="contact-quick-label">Última modificación</span>
+                        <span class="contact-quick-value">{{ audiencia.fecha_modificacion|date:"d/m/Y H:i"|default:"Sin modificar" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

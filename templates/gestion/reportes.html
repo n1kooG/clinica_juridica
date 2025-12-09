@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% block title %}Reportes{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Reportes</h1>
+    <p class="page-description">Genera reportes y exporta información del sistema.</p>
+</div>
+
+<!-- Filtros -->
+<div class="card" style="margin-bottom: 20px;">
+    <div class="card-header">
+        <h2 class="card-title">Filtros del reporte</h2>
+    </div>
+    <div class="card-body">
+        <form method="get" class="filtros-form">
+            <div class="filtros-grid">
+                <div class="filtro-grupo">
+                    <label>Estado</label>
+                    <select name="estado" class="form-input">
+                        <option value="">Todos</option>
+                        {% for e in estados %}
+                        <option value="{{ e.pk }}" {% if filtros.estado == e.pk|stringformat:"i" %}selected{% endif %}>{{ e.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filtro-grupo">
+                    <label>Materia</label>
+                    <select name="materia" class="form-input">
+                        <option value="">Todas</option>
+                        {% for m in materias %}
+                        <option value="{{ m.pk }}" {% if filtros.materia == m.pk|stringformat:"i" %}selected{% endif %}>{{ m.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filtro-grupo">
+                    <label>Tribunal</label>
+                    <select name="tribunal" class="form-input">
+                        <option value="">Todos</option>
+                        {% for t in tribunales %}
+                        <option value="{{ t.pk }}" {% if filtros.tribunal == t.pk|stringformat:"i" %}selected{% endif %}>{{ t.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filtro-grupo">
+                    <label>Responsable</label>
+                    <select name="responsable" class="form-input">
+                        <option value="">Todos</option>
+                        {% for r in responsables %}
+                        <option value="{{ r.pk }}" {% if filtros.responsable == r.pk|stringformat:"i" %}selected{% endif %}>{{ r.get_full_name|default:r.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filtro-grupo">
+                    <label>Fecha desde</label>
+                    <input type="date" name="fecha_desde" value="{{ filtros.fecha_desde }}" class="form-input">
+                </div>
+                
+                <div class="filtro-grupo">
+                    <label>Fecha hasta</label>
+                    <input type="date" name="fecha_hasta" value="{{ filtros.fecha_hasta }}" class="form-input">
+                </div>
+            </div>
+            
+            <div class="filtros-actions">
+                <button type="submit" class="btn-primary">Aplicar filtros</button>
+                <a href="{% url 'gestion:reportes' %}" class="btn-secondary">Limpiar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Resumen -->
+<div class="card" style="margin-bottom: 20px;">
+    <div class="card-header">
+        <h2 class="card-title">Resumen del reporte</h2>
+        <div class="card-actions">
+            <a href="{% url 'gestion:exportar_causas_excel' %}?{{ request.GET.urlencode }}" class="btn-primary">
+                📥 Exportar a Excel
+            </a>
+            <a href="{% url 'gestion:exportar_causas_pdf' %}?{{ request.GET.urlencode }}" class="btn-secondary">
+                📄 Exportar a PDF
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="resumen-grid">
+            <div class="resumen-item">
+                <span class="resumen-valor">{{ total }}</span>
+                <span class="resumen-label">Total de causas</span>
+            </div>
+            {% for estado, cantidad in por_estado.items %}
+            <div class="resumen-item">
+                <span class="resumen-valor">{{ cantidad }}</span>
+                <span class="resumen-label">{{ estado }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Vista previa -->
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Vista previa (máximo 100 registros)</h2>
+    </div>
+    <div class="card-body" style="overflow-x: auto;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>RIT</th>
+                    <th>Carátula</th>
+                    <th>Tribunal</th>
+                    <th>Materia</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for c in causas %}
+                <tr>
+                    <td>{{ c.rit|default:"-" }}</td>
+                    <td>{{ c.caratula|truncatewords:5 }}</td>
+                    <td>{{ c.tribunal|default:"-" }}</td>
+                    <td>{{ c.materia|default:"-" }}</td>
+                    <td><span class="status-badge {{ c.estado.color }}">{{ c.estado.nombre }}</span></td>
+                    <td>{{ c.responsable.get_full_name|default:"-" }}</td>
+                    <td>{{ c.fecha_creacion|date:"d/m/Y" }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 40px; color: var(--gray-500);">
+                        No hay causas que coincidan con los filtros seleccionados.
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

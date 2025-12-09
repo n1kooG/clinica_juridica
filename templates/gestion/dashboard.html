@@ -1,81 +1,176 @@
 {% extends 'base.html' %}
-{% block title %}Inicio{% endblock %}
+{% block title %}Dashboard{% endblock %}
+{% block section_title %}Inicio{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <div>
-        <h1>Panel principal</h1>
-        <p class="lead">Resumen rápido de causas, personas y audiencias registradas en la clínica jurídica.</p>
+<div class="page-header-simple">
+    <h1 class="page-title">Panel principal</h1>
+    <p class="page-subtitle">Resumen de causas, personas y audiencias de la clínica jurídica universitaria.</p>
+</div>
+
+<!-- KPIs -->
+<div class="kpi-row">
+    <div class="kpi-card">
+        <span class="kpi-label">Causas activas</span>
+        <span class="kpi-value">{{ causas_activas|default:total_causas }}</span>
+        <div class="kpi-footer">
+            <span class="kpi-detail">En tramitación</span>
+            <a href="{% url 'gestion:causas_lista' %}" class="kpi-link">+{{ causas_mes }} esta semana</a>
+        </div>
     </div>
-    <div class="header-actions">
-        <nav class="crumbs">&nbsp;</nav>
+
+    <div class="kpi-card">
+        <span class="kpi-label">Causas finalizadas</span>
+        <span class="kpi-value">{{ causas_finalizadas|default:0 }}</span>
+        <div class="kpi-footer">
+            <span class="kpi-detail">Tasa de cierre</span>
+            <span class="kpi-secondary">{{ tasa_cierre|default:0 }}%</span>
+        </div>
+    </div>
+
+    <div class="kpi-card">
+        <span class="kpi-label">Próximas audiencias</span>
+        <span class="kpi-value">{{ proximas_audiencias|length }}</span>
+        <div class="kpi-footer">
+            <span class="kpi-detail">Próximos 7 días</span>
+            {% if proximas_audiencias %}
+            <a href="{% url 'gestion:calendario' %}" class="kpi-link">Ver agenda</a>
+            {% else %}
+            <span class="kpi-secondary">Sin audiencias</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="kpi-card">
+        <span class="kpi-label">Personas registradas</span>
+        <span class="kpi-value">{{ total_personas }}</span>
+        <div class="kpi-footer">
+            <span class="kpi-detail">Altas del mes</span>
+            <span class="kpi-secondary">{{ personas_mes|default:total_personas }}</span>
+        </div>
     </div>
 </div>
 
-<div class="stats-row">
-    <div class="stat-card">
-        <div class="stat-title">Total de causas</div>
-        <div class="stat-value">{{ total_causas }}</div>
+<!-- Estadísticas por estado -->
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">Estadísticas por estado de causa</h2>
+            <p class="card-subtitle">Distribución simple para entender la carga de trabajo.</p>
+        </div>
+        <a href="{% url 'gestion:causas_lista' %}" class="card-action">Ir a causas</a>
     </div>
-    <div class="stat-card">
-        <div class="stat-title">Total de personas</div>
-        <div class="stat-value">{{ total_personas }}</div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-title">Total de audiencias</div>
-        <div class="stat-value">{{ total_audiencias }}</div>
+    <div class="card-body">
+        <div class="stats-bars">
+            {% for item in causas_por_estado %}
+            {% if item.count > 0 or forloop.counter <= 3 %}
+            <div class="stat-row">
+                <span class="stat-label">{{ item.estado.nombre }}</span>
+                <div class="stat-bar-container">
+                    <div class="stat-bar stat-bar-{{ item.estado.color }}" style="width: {{ item.porcentaje }}%"></div>
+                </div>
+                <span class="stat-percent">{{ item.porcentaje }}%</span>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
     </div>
 </div>
 
-<div class="panel-list">
-    <section class="panel-card">
-        <div class="panel-card-header">
-            <h3>Causas recientes</h3>
-            <a class="panel-action" href="{% url 'gestion:causas_lista' %}">Ver todas</a>
+<!-- Grid de dos columnas -->
+<div class="dashboard-grid">
+    <!-- Causas recientes -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Causas recientes</h2>
+            <a href="{% url 'gestion:causas_lista' %}" class="card-action">Ver todas</a>
         </div>
-        <div class="panel-card-body">
-            <ul class="simple-list">
-            {% for causa in causas_recientes %}
-                <li>• <a href="{% url 'gestion:causa_detalle' causa.pk %}">{{ causa }}</a></li>
-            {% empty %}
-                <li>No hay causas registradas.</li>
-            {% endfor %}
+        <div class="card-body">
+            {% if causas_recientes %}
+            <ul class="dashboard-list">
+                {% for c in causas_recientes %}
+                <li>
+                    <span class="list-bullet">•</span>
+                    <a href="{% url 'gestion:causa_detalle' c.pk %}">{{ c.caratula|truncatewords:4 }}</a>
+                    <span class="list-detail">· {{ c.estado.nombre }}</span>
+                </li>
+                {% endfor %}
             </ul>
+            {% else %}
+            <p class="empty-message">No hay causas registradas.</p>
+            {% endif %}
         </div>
-    </section>
+    </div>
 
-    <section class="panel-card">
-        <div class="panel-card-header">
-            <h3>Personas recientes</h3>
-            <a class="panel-action" href="{% url 'gestion:persona_crear' %}">Nueva persona</a>
+    <!-- Personas recientes -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Personas recientes</h2>
+            <a href="{% url 'gestion:persona_crear' %}" class="card-action">Nueva persona</a>
         </div>
-        <div class="panel-card-body">
-            <ul class="simple-list">
-            {% for persona in personas_recientes %}
-                <li>• {{ persona }}</li>
-            {% empty %}
-                <li>No hay personas registradas.</li>
-            {% endfor %}
+        <div class="card-body">
+            {% if personas_recientes %}
+            <ul class="dashboard-list">
+                {% for p in personas_recientes %}
+                <li>
+                    <span class="list-bullet">•</span>
+                    <a href="{% url 'gestion:persona_detalle' p.pk %}">{{ p.nombres|lower }} {{ p.apellidos|lower }}</a>
+                    <span class="list-detail">· {{ p.run }} · {{ p.get_tipo_persona_display }}</span>
+                </li>
+                {% endfor %}
             </ul>
+            {% else %}
+            <p class="empty-message">No hay personas registradas.</p>
+            {% endif %}
         </div>
-    </section>
+    </div>
 
-    <section class="panel-card">
-        <div class="panel-card-header">
-            <h3>Audiencias recientes</h3>
-            <a class="panel-action" href="{% url 'gestion:audiencias_lista' %}">Programar audiencia</a>
+    <!-- Audiencias próximas -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Audiencias próximas</h2>
+            <a href="{% url 'gestion:calendario' %}" class="card-action">Ver agenda completa</a>
         </div>
-        <div class="panel-card-body">
-            <ul class="simple-list">
-            {% for audiencia in audiencias_recientes %}
-                <li>• {{ audiencia }}</li>
-            {% empty %}
-                <li>No hay audiencias registradas.</li>
-            {% endfor %}
+        <div class="card-body">
+            {% if proximas_audiencias %}
+            <ul class="dashboard-list">
+                {% for a in proximas_audiencias %}
+                <li>
+                    <span class="list-bullet">•</span>
+                    <span class="list-date">{{ a.fecha_hora|date:"d/m" }} {{ a.fecha_hora|time:"H:i" }}</span>
+                    <a href="{% url 'gestion:causa_detalle' a.causa.pk %}">{{ a.causa.caratula|truncatewords:3 }}</a>
+                </li>
+                {% endfor %}
             </ul>
+            {% else %}
+            <p class="empty-message">No hay audiencias en los próximos días.</p>
+            {% endif %}
         </div>
-    </section>
+    </div>
 
-    <p class="muted-note">Este panel es parte del proyecto de sistema de gestión para la Clínica Jurídica universitaria. Los datos son de prueba para fines académicos.</p>
+    <!-- Actividad reciente -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Actividad reciente</h2>
+            {% if request.user.perfil.rol == 'ADMIN' or request.user.perfil.rol == 'DIRECTOR' %}
+            <a href="{% url 'gestion:auditoria_lista' %}" class="card-action">Ver historial</a>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            {% if actividad_reciente %}
+            <ul class="dashboard-list">
+                {% for log in actividad_reciente|slice:":5" %}
+                <li>
+                    <span class="list-bullet">•</span>
+                    <span class="list-detail">{{ log.usuario.username|default:"Sistema" }} {{ log.get_accion_display|lower }}</span>
+                    <span class="list-meta">· {{ log.fecha|timesince }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="empty-message">No hay actividad reciente.</p>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endblock %}

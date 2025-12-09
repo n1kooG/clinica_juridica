@@ -1,23 +1,93 @@
 {% extends 'base.html' %}
 {% block title %}Documentos{% endblock %}
+{% block section_title %}Documentos{% endblock %}
 
 {% block content %}
-<h1>Documentos</h1>
-<a href="{% url 'gestion:documento_crear' %}" class="btn-primary">Subir documento</a>
-<table>
-    <tr>
-        <th>Título</th><th>Tipo</th><th>Causa</th><th>Usuario</th><th>Fecha subida</th>
-    </tr>
-    {% for d in documentos %}
-    <tr>
-        <td>{{ d.titulo }}</td>
-        <td>{{ d.tipo }}</td>
-        <td>{{ d.causa }}</td>
-        <td>{{ d.usuario }}</td>
-        <td>{{ d.fecha_subida }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="5">No hay documentos registrados.</td></tr>
-    {% endfor %}
-</table>
+<div class="page-header-flex">
+    <div class="page-header-content">
+        <h1 class="page-title">Documentos</h1>
+        <p class="page-subtitle">Gestión documental de las causas de la clínica jurídica</p>
+    </div>
+    {% if puede_crear %}
+    <a href="{% url 'gestion:documento_crear' %}" class="btn-primary">
+        <i class="fas fa-upload"></i> Subir documento
+    </a>
+    {% endif %}
+</div>
+
+<div class="list-card">
+    <div class="list-card-header">
+        <div class="list-card-title">
+            <span class="title-text">Listado de documentos</span>
+            <span class="title-count">{{ documentos.count }} documentos registrados</span>
+        </div>
+        <div class="list-card-search">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Buscar por título o causa" class="search-input" id="searchInput">
+        </div>
+    </div>
+
+    <div class="list-card-filters">
+        <a href="?filtro=todos" class="filter-pill {% if filtro == 'todos' or not filtro %}active{% endif %}">Todos</a>
+        <a href="?filtro=judicial_entrada" class="filter-pill {% if filtro == 'judicial_entrada' %}active{% endif %}">Entrada judicial</a>
+        <a href="?filtro=judicial_salida" class="filter-pill {% if filtro == 'judicial_salida' %}active{% endif %}">Salida judicial</a>
+        <a href="?filtro=interno" class="filter-pill {% if filtro == 'interno' %}active{% endif %}">Internos</a>
+    </div>
+
+    <div class="list-card-body">
+        <table class="list-table">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Tipo</th>
+                    <th>Causa</th>
+                    <th>Fecha</th>
+                    <th>Subido por</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            {% for d in documentos %}
+                <tr>
+                    <td class="cell-name">
+                        {{ d.titulo|truncatewords:5 }}
+                        {% if d.es_confidencial %}
+                        <span class="badge-confidencial" title="Documento confidencial">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td>{{ d.tipo|default:"-" }}</td>
+                    <td>
+                        <a href="{% url 'gestion:causa_detalle' d.causa.pk %}">{{ d.causa.caratula|truncatewords:3 }}</a>
+                    </td>
+                    <td>{{ d.fecha_subida|date:"d/m/Y" }}</td>
+                    <td>{{ d.usuario.username|default:"-" }}</td>
+                    <td class="cell-actions">
+                        {% if d.archivo %}
+                        <a href="{{ d.archivo.url }}" class="action-link" target="_blank">Descargar</a>
+                        {% endif %}
+                        <a href="{% url 'gestion:documento_detalle' d.pk %}" class="action-link">Ver</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" class="empty-table">No hay documentos registrados.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#tableBody tr');
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+</script>
 {% endblock %}

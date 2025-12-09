@@ -1,11 +1,87 @@
 {% extends 'base.html' %}
-{% block title %}Asociar persona{% endblock %}
+{% block title %}Asociar persona a causa{% endblock %}
+{% block section_title %}Causas{% endblock %}
 
 {% block content %}
-<h1>{{ titulo }}</h1>
-<form method="post">
+<div class="page-header-simple">
+    <div class="breadcrumb">
+        <a href="{% url 'gestion:causas_lista' %}">Causas</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>Asociar persona</span>
+    </div>
+    <h1 class="page-title">Asociar persona a causa</h1>
+    <p class="page-subtitle">Vincula una persona existente a una causa con su rol correspondiente</p>
+</div>
+
+<form method="post" class="form-layout">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn-primary">Guardar</button>
+    
+    <!-- Vinculación -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Vinculación</h2>
+            <p class="form-card-subtitle">Selecciona la causa, persona y el rol que tendrá</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-group full-width">
+                <label class="form-label">Causa</label>
+                <select name="causa" class="form-input" required>
+                    <option value="">Selecciona una causa</option>
+                    {% for c in causas %}
+                        <option value="{{ c.pk }}" {% if form.causa.value|stringformat:"i" == c.pk|stringformat:"i" or causa_preseleccionada|stringformat:"i" == c.pk|stringformat:"i" %}selected{% endif %}>
+                            {{ c.caratula }} {% if c.rit %}(RIT: {{ c.rit }}){% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
+                {% if form.causa.errors %}<span class="form-error">{{ form.causa.errors.0 }}</span>{% endif %}
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label">Persona</label>
+                <select name="persona" class="form-input" required>
+                    <option value="">Selecciona una persona</option>
+                    {% for p in personas %}
+                        <option value="{{ p.pk }}" {% if form.persona.value|stringformat:"i" == p.pk|stringformat:"i" %}selected{% endif %}>
+                            {{ p.nombres }} {{ p.apellidos }} ({{ p.run }})
+                        </option>
+                    {% endfor %}
+                </select>
+                {% if form.persona.errors %}<span class="form-error">{{ form.persona.errors.0 }}</span>{% endif %}
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label">Rol en la causa</label>
+                <select name="rol_en_causa" class="form-input" required>
+                    <option value="">Selecciona el rol</option>
+                    <option value="Demandante" {% if form.rol_en_causa.value == 'Demandante' %}selected{% endif %}>Demandante</option>
+                    <option value="Demandado" {% if form.rol_en_causa.value == 'Demandado' %}selected{% endif %}>Demandado</option>
+                    <option value="Solicitante" {% if form.rol_en_causa.value == 'Solicitante' %}selected{% endif %}>Solicitante</option>
+                    <option value="Requerido" {% if form.rol_en_causa.value == 'Requerido' %}selected{% endif %}>Requerido</option>
+                    <option value="Querellante" {% if form.rol_en_causa.value == 'Querellante' %}selected{% endif %}>Querellante</option>
+                    <option value="Querellado" {% if form.rol_en_causa.value == 'Querellado' %}selected{% endif %}>Querellado</option>
+                    <option value="Testigo" {% if form.rol_en_causa.value == 'Testigo' %}selected{% endif %}>Testigo</option>
+                    <option value="Perito" {% if form.rol_en_causa.value == 'Perito' %}selected{% endif %}>Perito</option>
+                    <option value="Tercero" {% if form.rol_en_causa.value == 'Tercero' %}selected{% endif %}>Tercero</option>
+                </select>
+                {% if form.rol_en_causa.errors %}<span class="form-error">{{ form.rol_en_causa.errors.0 }}</span>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Nota informativa -->
+    <div class="info-box">
+        <div class="info-box-icon">
+            <i class="fas fa-info-circle"></i>
+        </div>
+        <div class="info-box-content">
+            <p><strong>¿La persona no existe?</strong></p>
+            <p>Si la persona que buscas no está en la lista, primero debes registrarla en el sistema.</p>
+            <a href="{% url 'gestion:persona_crear' %}" class="info-box-link">Ir a crear persona</a>
+        </div>
+    </div>
+
+    <!-- Footer fijo -->
+    <div class="form-footer">
+        <a href="{% url 'gestion:causas_lista' %}" class="btn-secondary">Cancelar</a>
+        <button type="submit" class="btn-primary">Guardar</button>
+    </div>
 </form>
 {% endblock %}

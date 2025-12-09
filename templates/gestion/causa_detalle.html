@@ -1,66 +1,288 @@
 {% extends 'base.html' %}
-{% block title %}Detalle causa{% endblock %}
+{% load gestion_tags %}
+{% block title %}{{ causa.caratula }}{% endblock %}
+{% block section_title %}Causas{% endblock %}
 
 {% block content %}
-<h1>Detalle de causa</h1>
-<div class="card">
-    <h2>{{ causa.caratula }}</h2>
-    <p><strong>Tribunal:</strong> {{ causa.tribunal }}</p>
-    <p><strong>Materia:</strong> {{ causa.materia }}</p>
-    <p><strong>Estado:</strong> {{ causa.estado }}</p>
-    <p><strong>RIT:</strong> {{ causa.rit }} | <strong>RUC:</strong> {{ causa.ruc }}</p>
-    <p><strong>Responsable:</strong> {{ causa.responsable }}</p>
+<div class="page-header-with-actions">
+    <div class="page-header-left">
+        <div class="breadcrumb">
+            <a href="{% url 'gestion:causas_lista' %}">Causas</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Detalle</span>
+        </div>
+        <h1 class="page-title">{{ causa.caratula }}</h1>
+        <p class="page-subtitle">{{ causa.tribunal|default:"Sin tribunal" }} · Materia: {{ causa.materia|default:"No especificada" }}</p>
+    </div>
+    <div class="page-header-actions">
+        <a href="{% url 'gestion:causas_lista' %}" class="btn-secondary">Volver</a>
+        <a href="{% url 'gestion:causa_linea_tiempo' causa.pk %}" class="btn-primary">Línea de tiempo</a>
+    </div>
 </div>
 
-<h2>Personas asociadas</h2>
-<a href="{% url 'gestion:causa_persona_crear' %}" class="btn-primary">Asociar persona</a>
-<table>
-    <tr>
-        <th>Persona</th><th>Rol</th>
-    </tr>
-    {% for rel in relaciones %}
-    <tr>
-        <td>{{ rel.persona }}</td>
-        <td>{{ rel.rol_en_causa }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="2">No hay personas asociadas a esta causa.</td></tr>
-    {% endfor %}
-</table>
+<div class="detail-layout">
+    <div class="detail-main">
+        <!-- Información general -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Información general</h2>
+            </div>
+            <div class="card-body">
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">RIT</span>
+                        <span class="detail-value">{{ causa.rit|default:"(sin registrar)" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">RUC</span>
+                        <span class="detail-value">{{ causa.ruc|default:"(sin registrar)" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Tribunal</span>
+                        <span class="detail-value">{{ causa.tribunal|default:"(sin registrar)" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Materia</span>
+                        <span class="detail-value">{{ causa.materia|default:"(sin registrar)" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Estado</span>
+                        <span class="detail-value">
+                            {% if causa.estado %}
+                            <span class="status-badge status-{{ causa.estado.color }}">{{ causa.estado.nombre }}</span>
+                            {% else %}
+                            (sin estado)
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Responsable</span>
+                        <span class="detail-value">{{ causa.responsable.get_full_name|default:"(sin asignar)" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Fecha de creación</span>
+                        <span class="detail-value">{{ causa.fecha_creacion|date:"d F Y" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Última actualización</span>
+                        <span class="detail-value">{{ causa.fecha_actualizacion|date:"d F Y"|default:"Sin actualizar" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<h2>Audiencias</h2>
-<a href="{% url 'gestion:audiencia_crear' %}" class="btn-primary">Nueva audiencia</a>
-<table>
-    <tr>
-        <th>Fecha y hora</th><th>Tipo</th><th>Lugar</th>
-    </tr>
-    {% for a in audiencias %}
-    <tr>
-        <td>{{ a.fecha_hora }}</td>
-        <td>{{ a.tipo }}</td>
-        <td>{{ a.lugar }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="3">No hay audiencias asociadas a esta causa.</td></tr>
-    {% endfor %}
-</table>
+        <!-- Personas asociadas -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Personas asociadas</h2>
+                    <p class="card-subtitle">Personas que participan en la causa con distintos roles</p>
+                </div>
+                <a href="{% url 'gestion:causa_persona_crear' %}?causa={{ causa.pk }}" class="btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Asociar persona
+                </a>
+            </div>
+            <div class="card-body card-body-table">
+                {% if personas_asociadas %}
+                <table class="inner-table">
+                    <thead>
+                        <tr>
+                            <th>Persona</th>
+                            <th>RUN</th>
+                            <th>Rol en la causa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for rel in personas_asociadas %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'gestion:persona_detalle' rel.persona.pk %}">
+                                    {{ rel.persona.nombres }} {{ rel.persona.apellidos }}
+                                </a>
+                            </td>
+                            <td class="cell-code">{{ rel.persona.run }}</td>
+                            <td>{{ rel.rol_en_causa }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="empty-message">No hay personas asociadas a esta causa.</p>
+                {% endif %}
+            </div>
+        </div>
 
-<h2>Documentos</h2>
-<a href="{% url 'gestion:documento_crear' %}" class="btn-primary">Subir documento</a>
-<table>
-    <tr>
-        <th>Título</th><th>Tipo</th><th>Fecha subida</th><th>Usuario</th>
-    </tr>
-    {% for d in documentos %}
-    <tr>
-        <td>{{ d.titulo }}</td>
-        <td>{{ d.tipo }}</td>
-        <td>{{ d.fecha_subida }}</td>
-        <td>{{ d.usuario }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="4">No hay documentos asociados a esta causa.</td></tr>
-    {% endfor %}
-</table>
+        <!-- Audiencias -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Audiencias</h2>
+                    <p class="card-subtitle">Audiencias programadas y realizadas asociadas a la causa</p>
+                </div>
+                <a href="{% url 'gestion:audiencia_crear' %}?causa={{ causa.pk }}" class="btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Nueva audiencia
+                </a>
+            </div>
+            <div class="card-body card-body-table">
+                {% if audiencias %}
+                <table class="inner-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha / hora</th>
+                            <th>Tipo</th>
+                            <th>Lugar</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for a in audiencias %}
+                        <tr>
+                            <td>{{ a.fecha_hora|date:"d F Y, H:i" }}</td>
+                            <td>{{ a.get_tipo_evento_display }}</td>
+                            <td>{{ a.lugar|default:"-" }}</td>
+                            <td>
+                                {% if a.estado == 'PROGRAMADA' %}
+                                    <span class="status-badge status-orange">Programada</span>
+                                {% elif a.estado == 'CONFIRMADA' %}
+                                    <span class="status-badge status-blue">Confirmada</span>
+                                {% elif a.estado == 'REALIZADA' %}
+                                    <span class="status-badge status-gray">Realizada</span>
+                                {% elif a.estado == 'SUSPENDIDA' %}
+                                    <span class="status-badge status-red">Suspendida</span>
+                                {% else %}
+                                    <span class="status-badge status-gray">{{ a.get_estado_display }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="empty-message">No hay audiencias registradas para esta causa.</p>
+                {% endif %}
+            </div>
+        </div>
 
+        <!-- Documentos -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Documentos</h2>
+                    <p class="card-subtitle">Escritos, oficios y otros documentos cargados a la causa</p>
+                </div>
+                <a href="{% url 'gestion:documento_crear' %}?causa={{ causa.pk }}" class="btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Subir documento
+                </a>
+            </div>
+            <div class="card-body card-body-table">
+                {% if documentos %}
+                <table class="inner-table">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Tipo</th>
+                            <th>Fecha</th>
+                            <th>Subido por</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for d in documentos %}
+                        <tr>
+                            <td>{{ d.titulo }}</td>
+                            <td>{{ d.tipo|default:"-" }}</td>
+                            <td>{{ d.fecha_subida|date:"d F Y" }}</td>
+                            <td>{{ d.usuario.username|default:"-" }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="empty-message">No hay documentos cargados para esta causa.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-sidebar">
+        <!-- Resumen de estado -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Resumen de estado</h2>
+                    <p class="card-subtitle">Situación actual y datos clave de seguimiento</p>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="summary-list">
+                    <div class="summary-item">
+                        <span class="summary-label">Estado actual</span>
+                        <span class="summary-value">
+                            {% if causa.estado %}
+                            <span class="status-badge status-{{ causa.estado.color }}">{{ causa.estado.nombre }}</span>
+                            {% else %}
+                            -
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Próxima audiencia</span>
+                        <span class="summary-value">{{ proxima_audiencia.fecha_hora|date:"d F Y"|default:"Sin programar" }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Días desde ingreso</span>
+                        <span class="summary-value">{{ dias_desde_ingreso }} días</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Alumno responsable</span>
+                        <span class="summary-value">{{ causa.responsable.get_full_name|default:"Sin asignar" }}</span>
+                    </div>
+                </div>
+                
+                <div class="summary-tags">
+                    {% if causa.materia %}
+                    <span class="tag">{{ causa.materia }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Actividad reciente -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Actividad reciente</h2>
+                    <p class="card-subtitle">Registro de acciones realizadas sobre la causa</p>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if actividad %}
+                <div class="activity-list">
+                    {% for log in actividad %}
+                    <div class="activity-item">
+                        <div class="activity-title">
+                            {% if log.accion == 'CREAR' %}
+                                Se creó la causa en el sistema
+                            {% elif log.accion == 'EDITAR' %}
+                                Se actualizó información de la causa
+                            {% elif log.accion == 'CAMBIO_ESTADO' %}
+                                Se actualizó el estado
+                            {% elif log.accion == 'SUBIR_DOC' %}
+                                Se subió documento "{{ log.descripcion|truncatewords:3 }}"
+                            {% else %}
+                                {{ log.get_accion_display }}
+                            {% endif %}
+                        </div>
+                        <div class="activity-meta">
+                            {{ log.usuario.username|default:"Sistema" }} • {{ log.fecha|timesince }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="empty-message">Sin actividad registrada.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

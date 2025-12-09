@@ -1,22 +1,107 @@
 {% extends 'base.html' %}
 {% block title %}Agenda{% endblock %}
+{% block section_title %}Agenda{% endblock %}
 
 {% block content %}
-<h1>Agenda (Audiencias y Entrevistas)</h1>
-<a href="{% url 'gestion:audiencia_crear' %}" class="btn-primary">Nueva audiencia</a>
-<table>
-    <tr>
-        <th>Causa</th><th>Tipo</th><th>Fecha y hora</th><th>Lugar</th>
-    </tr>
-    {% for a in audiencias %}
-    <tr>
-        <td>{{ a.causa }}</td>
-        <td>{{ a.tipo }}</td>
-        <td>{{ a.fecha_hora }}</td>
-        <td>{{ a.lugar }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="4">No hay audiencias registradas.</td></tr>
-    {% endfor %}
-</table>
+<div class="page-header-flex">
+    <div class="page-header-content">
+        <h1 class="page-title">Agenda</h1>
+        <p class="page-subtitle">Audiencias y eventos programados de la clínica jurídica</p>
+    </div>
+    {% if puede_crear %}
+    <a href="{% url 'gestion:audiencia_crear' %}" class="btn-primary">
+        <i class="fas fa-plus"></i> Nueva audiencia
+    </a>
+    {% endif %}
+</div>
+
+<div class="list-card">
+    <div class="list-card-header">
+        <div class="list-card-title">
+            <span class="title-text">Listado de audiencias</span>
+            <span class="title-count">{{ audiencias.count }} audiencias registradas</span>
+        </div>
+        <div class="list-card-search">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Buscar por causa o lugar" class="search-input" id="searchInput">
+        </div>
+    </div>
+
+    <div class="list-card-filters">
+        <a href="?filtro=proximas" class="filter-pill {% if filtro == 'proximas' or not filtro %}active{% endif %}">Próximas</a>
+        <a href="?filtro=todas" class="filter-pill {% if filtro == 'todas' %}active{% endif %}">Todas</a>
+        <a href="?filtro=realizadas" class="filter-pill {% if filtro == 'realizadas' %}active{% endif %}">Realizadas</a>
+        <a href="?filtro=suspendidas" class="filter-pill {% if filtro == 'suspendidas' %}active{% endif %}">Suspendidas</a>
+    </div>
+
+    <div class="list-card-body">
+        <table class="list-table">
+            <thead>
+                <tr>
+                    <th>Fecha / Hora</th>
+                    <th>Tipo</th>
+                    <th>Causa</th>
+                    <th>Lugar</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            {% for a in audiencias %}
+                <tr>
+                    <td>
+                        <div class="cell-datetime">
+                            <span class="datetime-date">{{ a.fecha_hora|date:"d M Y" }}</span>
+                            <span class="datetime-time">{{ a.fecha_hora|time:"H:i" }} hrs</span>
+                        </div>
+                    </td>
+                    <td>{{ a.get_tipo_evento_display }}</td>
+                    <td>
+                        <a href="{% url 'gestion:causa_detalle' a.causa.pk %}">{{ a.causa.caratula|truncatewords:4 }}</a>
+                    </td>
+                    <td>{{ a.lugar|default:"-" }}{% if a.sala %}, {{ a.sala }}{% endif %}</td>
+                    <td>
+                        {% if a.estado == 'PROGRAMADA' %}
+                            <span class="status-badge status-orange">Programada</span>
+                        {% elif a.estado == 'CONFIRMADA' %}
+                            <span class="status-badge status-blue">Confirmada</span>
+                        {% elif a.estado == 'REALIZADA' %}
+                            <span class="status-badge status-green">Realizada</span>
+                        {% elif a.estado == 'SUSPENDIDA' %}
+                            <span class="status-badge status-red">Suspendida</span>
+                        {% elif a.estado == 'REPROGRAMADA' %}
+                            <span class="status-badge status-yellow">Reprogramada</span>
+                        {% elif a.estado == 'CANCELADA' %}
+                            <span class="status-badge status-gray">Cancelada</span>
+                        {% else %}
+                            <span class="status-badge status-gray">{{ a.get_estado_display }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="cell-actions">
+                        <a href="{% url 'gestion:audiencia_detalle' a.pk %}" class="action-link">Ver</a>
+                        {% if puede_editar %}
+                        <a href="{% url 'gestion:audiencia_editar' a.pk %}" class="action-link">Editar</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" class="empty-table">No hay audiencias registradas.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#tableBody tr');
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+</script>
 {% endblock %}

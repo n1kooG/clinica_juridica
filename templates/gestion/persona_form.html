@@ -1,78 +1,237 @@
 {% extends 'base.html' %}
-{% block title %}Persona{% endblock %}
+{% block title %}{% if persona %}Editar persona{% else %}Nueva persona{% endif %}{% endblock %}
+{% block section_title %}Personas{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <div>
-        <h1>{{ titulo|default:'Nueva persona' }}</h1>
-        <p class="lead">Registra una nueva persona para poder asociarla luego a causas, agenda y documentos de la clínica jurídica.</p>
+<div class="page-header-simple">
+    <div class="breadcrumb">
+        <a href="{% url 'gestion:personas_lista' %}">Personas</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>{% if persona %}Editar persona{% else %}Nueva persona{% endif %}</span>
     </div>
-    <div>
-        <span class="form-tag">Formulario básico</span>
-    </div>
+    <h1 class="page-title">{% if persona %}Editar persona{% else %}Nueva persona{% endif %}</h1>
+    <p class="page-subtitle">
+        {% if persona %}
+            Actualiza los datos de identificación y contacto de la persona
+        {% else %}
+            Completa los datos para registrar una nueva persona vinculada a la clínica
+        {% endif %}
+    </p>
 </div>
 
-<div class="form-card">
-    <form method="post">
-        {% csrf_token %}
-        {% if form.non_field_errors %}
-            <div class="inline-error">{{ form.non_field_errors }}</div>
-        {% endif %}
-        <div class="form-section">
-            <h4>Datos de identificación</h4>
-            <p class="muted-note">Completa la información principal de la persona. Puedes editar estos datos más adelante si es necesario.</p>
-
+<form method="post" class="form-layout">
+    {% csrf_token %}
+    
+    <!-- Identificación -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Identificación</h2>
+            <p class="form-card-subtitle">Datos obligatorios de identificación</p>
+        </div>
+        <div class="form-card-body">
             <div class="form-grid">
-                <div class="form-field">
-                    <label>RUT / RUN</label>
-                    {{ form.run }}
-                    {% if form.run.errors %}
-                        <div class="inline-error">{{ form.run.errors }}</div>
-                    {% endif %}
-                    <div class="form-help">Usar formato con puntos y guion.</div>
+                <div class="form-group">
+                    <label class="form-label">RUT</label>
+                    <input type="text" name="run" value="{{ form.run.value|default:'' }}" 
+                           class="form-input" placeholder="12.345.678-9">
+                    {% if form.run.errors %}<span class="form-error">{{ form.run.errors.0 }}</span>{% endif %}
                 </div>
-
-                <div class="form-field">
-                    <label>Teléfono</label>
-                    {{ form.telefono }}
-                    {% if form.telefono.errors %}
-                        <div class="inline-error">{{ form.telefono.errors }}</div>
-                    {% endif %}
-                    <div class="form-help">Idealmente número de celular de contacto.</div>
+                <div class="form-group">
+                    <label class="form-label">Tipo de persona</label>
+                    <select name="tipo_persona" class="form-input">
+                        <option value="">Persona atendida, Contraparte, Testigo...</option>
+                        {% for value, label in form.tipo_persona.field.choices %}
+                            {% if value %}
+                            <option value="{{ value }}" {% if form.tipo_persona.value == value %}selected{% endif %}>{{ label }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
                 </div>
-
-                <div class="form-field">
-                    <label>Nombre</label>
-                    {{ form.nombres }}
-                    {% if form.nombres.errors %}
-                        <div class="inline-error">{{ form.nombres.errors }}</div>
-                    {% endif %}
+                <div class="form-group">
+                    <label class="form-label">Nombres</label>
+                    <input type="text" name="nombres" value="{{ form.nombres.value|default:'' }}" 
+                           class="form-input" placeholder="Ingresa los nombres">
+                    {% if form.nombres.errors %}<span class="form-error">{{ form.nombres.errors.0 }}</span>{% endif %}
                 </div>
-
-                <div class="form-field">
-                    <label>Apellido</label>
-                    {{ form.apellidos }}
-                    {% if form.apellidos.errors %}
-                        <div class="inline-error">{{ form.apellidos.errors }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="form-field full">
-                    <label>Correo electrónico</label>
-                    {{ form.email }}
-                    {% if form.email.errors %}
-                        <div class="inline-error">{{ form.email.errors }}</div>
-                    {% endif %}
-                    <div class="form-help">Se usará para recordatorios y envío de información.</div>
+                <div class="form-group">
+                    <label class="form-label">Apellidos</label>
+                    <input type="text" name="apellidos" value="{{ form.apellidos.value|default:'' }}" 
+                           class="form-input" placeholder="Ingresa los apellidos">
+                    {% if form.apellidos.errors %}<span class="form-error">{{ form.apellidos.errors.0 }}</span>{% endif %}
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="form-actions">
-            <button type="submit" class="btn-primary">Guardar persona</button>
-            <a href="{% url 'gestion:personas_lista' %}" class="btn-link">Cancelar</a>
-            <div class="muted-note small" style="margin-left:16px">Los datos ingresados son solo para fines académicos dentro del proyecto universitario. No se almacenan casos reales.</div>
+    <!-- Contacto -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Contacto</h2>
+            <p class="form-card-subtitle">Medios para coordinar reuniones y notificaciones</p>
         </div>
-    </form>
-</div>
+        <div class="form-card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" value="{{ form.email.value|default:'' }}" 
+                           class="form-input" placeholder="nombre.apellido@correo.cl">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Teléfono</label>
+                    <input type="text" name="telefono" value="{{ form.telefono.value|default:'' }}" 
+                           class="form-input" placeholder="+56 9 1234 5678">
+                </div>
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label">Dirección</label>
+                <input type="text" name="direccion" value="{{ form.direccion.value|default:'' }}" 
+                       class="form-input" placeholder="Calle, número, depto, comuna">
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Comuna</label>
+                    <input type="text" name="comuna" value="{{ form.comuna.value|default:'' }}" 
+                           class="form-input" placeholder="Ingresa comuna">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Región</label>
+                    <select name="region" class="form-input">
+                        <option value="">Selecciona región</option>
+                        {% for value, label in form.region.field.choices %}
+                            {% if value %}
+                            <option value="{{ value }}" {% if form.region.value == value %}selected{% endif %}>{{ label }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Datos personales -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Datos personales</h2>
+            <p class="form-card-subtitle">Información para caracterizar a la persona</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Fecha nacimiento</label>
+                    <input type="date" name="fecha_nacimiento" value="{{ form.fecha_nacimiento.value|default:'' }}" 
+                           class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Género</label>
+                    <select name="genero" class="form-input">
+                        <option value="">Selecciona género</option>
+                        {% for value, label in form.genero.field.choices %}
+                            {% if value %}
+                            <option value="{{ value }}" {% if form.genero.value == value %}selected{% endif %}>{{ label }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estado civil</label>
+                    <select name="estado_civil" class="form-input">
+                        <option value="">Selecciona estado civil</option>
+                        {% for value, label in form.estado_civil.field.choices %}
+                            {% if value %}
+                            <option value="{{ value }}" {% if form.estado_civil.value == value %}selected{% endif %}>{{ label }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nacionalidad</label>
+                    <input type="text" name="nacionalidad" value="{{ form.nacionalidad.value|default:'Chilena' }}" 
+                           class="form-input" placeholder="Chilena">
+                </div>
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label">Ocupación</label>
+                <input type="text" name="ocupacion" value="{{ form.ocupacion.value|default:'' }}" 
+                       class="form-input" placeholder="Profesión u oficio">
+            </div>
+        </div>
+    </div>
+
+    <!-- Vulnerabilidad -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Vulnerabilidad</h2>
+            <p class="form-card-subtitle">Indica si la persona requiere prioridad por situación especial</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="es_vulnerable" {% if form.es_vulnerable.value %}checked{% endif %}>
+                    <span>¿Es persona vulnerable?</span>
+                </label>
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label">Descripción de vulnerabilidad</label>
+                <textarea name="vulnerabilidad" class="form-input form-textarea" 
+                          placeholder="Describe brevemente la situación de vulnerabilidad">{{ form.vulnerabilidad.value|default:'' }}</textarea>
+                <span class="form-hint">Este campo se utiliza cuando se marca como persona vulnerable.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Representante legal -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Representante legal</h2>
+            <p class="form-card-subtitle">Registra datos de representante si corresponde</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="requiere_representante" {% if form.requiere_representante.value %}checked{% endif %}>
+                    <span>¿Requiere representante?</span>
+                </label>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Nombre del representante</label>
+                    <input type="text" name="representante_nombre" value="{{ form.representante_nombre.value|default:'' }}" 
+                           class="form-input" placeholder="Nombre completo del representante">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">RUT del representante</label>
+                    <input type="text" name="representante_run" value="{{ form.representante_run.value|default:'' }}" 
+                           class="form-input" placeholder="12.345.678-9">
+                </div>
+            </div>
+            <div class="form-group" style="max-width: 50%;">
+                <label class="form-label">Teléfono del representante</label>
+                <input type="text" name="representante_telefono" value="{{ form.representante_telefono.value|default:'' }}" 
+                       class="form-input" placeholder="+56 9 1234 5678">
+            </div>
+            <span class="form-hint">Estos campos se utilizan solo si la persona requiere representante.</span>
+        </div>
+    </div>
+
+    <!-- Otros -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Otros</h2>
+            <p class="form-card-subtitle">Observaciones generales sobre la persona</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-group full-width">
+                <label class="form-label">Observaciones</label>
+                <textarea name="observaciones" class="form-input form-textarea" 
+                          placeholder="Notas internas, contexto adicional, acuerdos relevantes">{{ form.observaciones.value|default:'' }}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer fijo -->
+    <div class="form-footer">
+        <a href="{% url 'gestion:personas_lista' %}" class="btn-secondary">Cancelar</a>
+        <button type="submit" class="btn-primary">Guardar</button>
+    </div>
+</form>
 {% endblock %}

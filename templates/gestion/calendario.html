@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load gestion_tags %}
+{% block title %}Calendario{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div>
+        <h1>Calendario</h1>
+        <p class="lead">Audiencias y eventos programados.</p>
+    </div>
+    <div>
+        {% if puede_crear %}
+        <a href="{% url 'gestion:audiencia_crear' %}" class="btn-primary">Nueva audiencia</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="panel-card">
+    <div class="panel-card-header">
+        <div class="calendario-nav">
+            <a href="?mes={{ mes_anterior }}&anio={{ anio_anterior }}" class="btn-link">← Anterior</a>
+            <h3>{{ nombre_mes }} {{ anio }}</h3>
+            <a href="?mes={{ mes_siguiente }}&anio={{ anio_siguiente }}" class="btn-link">Siguiente →</a>
+        </div>
+    </div>
+
+    <div class="panel-card-body">
+        <table class="calendario-table">
+            <thead>
+                <tr>
+                    <th>Lun</th>
+                    <th>Mar</th>
+                    <th>Mié</th>
+                    <th>Jue</th>
+                    <th>Vie</th>
+                    <th>Sáb</th>
+                    <th>Dom</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for semana in semanas %}
+                <tr>
+                {% for dia in semana %}
+                    <td class="calendario-dia {% if dia == 0 %}dia-vacio{% endif %}{% if dia == hoy.day and mes == hoy.month and anio == hoy.year %} dia-hoy{% endif %}{% if dia in audiencias_por_dia %} dia-con-evento{% endif %}">
+                        {% if dia != 0 %}
+                            <div class="dia-numero">{{ dia }}</div>
+                            {% if dia in audiencias_por_dia %}
+                                <div class="dia-eventos">
+                                {% for aud in audiencias_por_dia|get_item:dia %}
+                                    <a href="{% url 'gestion:causa_detalle' aud.causa.pk %}" class="evento-item evento-{{ aud.estado|lower }}">
+                                        <span class="evento-hora">{{ aud.fecha_hora|time:"H:i" }}</span>
+                                        <span class="evento-titulo">{{ aud.causa.caratula|truncatewords:3 }}</span>
+                                    </a>
+                                {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="panel-card" style="margin-top: 20px;">
+    <div class="panel-card-header">
+        <h3>Leyenda</h3>
+    </div>
+    <div class="panel-card-body">
+        <div class="leyenda">
+            <span class="leyenda-item"><span class="evento-item evento-programada">●</span> Programada</span>
+            <span class="leyenda-item"><span class="evento-item evento-confirmada">●</span> Confirmada</span>
+            <span class="leyenda-item"><span class="evento-item evento-realizada">●</span> Realizada</span>
+            <span class="leyenda-item"><span class="evento-item evento-suspendida">●</span> Suspendida</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

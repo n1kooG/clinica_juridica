@@ -1,0 +1,74 @@
+[
+    {
+        "model": "gestion.estadocausa",
+        "pk": 1,
+        "fields": {
+            "nombre": "En estudio",
+            "descripcion": "Caso recién ingresado, en evaluación de admisibilidad",
+            "color": "gray",
+            "orden": 1,
+            "es_final": false,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.estadocausa",
+        "pk": 2,
+        "fields": {
+            "nombre": "Admitida",
+            "descripcion": "Caso admitido, asignado a estudiante y supervisor",
+            "color": "blue",
+            "orden": 2,
+            "es_final": false,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.estadocausa",
+        "pk": 3,
+        "fields": {
+            "nombre": "En tramitación",
+            "descripcion": "Caso con actividad procesal en curso",
+            "color": "yellow",
+            "orden": 3,
+            "es_final": false,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.estadocausa",
+        "pk": 4,
+        "fields": {
+            "nombre": "Con sentencia",
+            "descripcion": "Caso con sentencia dictada, pendiente de cierre",
+            "color": "green",
+            "orden": 4,
+            "es_final": false,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.estadocausa",
+        "pk": 5,
+        "fields": {
+            "nombre": "Archivada",
+            "descripcion": "Caso cerrado y archivado",
+            "color": "red",
+            "orden": 5,
+            "es_final": true,
+            "activo": true
+        }
+    },
+    {
+        "model": "gestion.estadocausa",
+        "pk": 6,
+        "fields": {
+            "nombre": "No admitida",
+            "descripcion": "Caso rechazado en evaluación inicial",
+            "color": "red",
+            "orden": 6,
+            "es_final": true,
+            "activo": true
+        }
+    }
+]
