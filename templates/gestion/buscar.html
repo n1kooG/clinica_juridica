@@ -1,106 +1,137 @@
 {% extends 'base.html' %}
-{% block title %}Búsqueda{% endblock %}
+{% block title %}Búsqueda Avanzada{% endblock %}
+{% block section_title %}Búsqueda{% endblock %}
 
 {% block content %}
-<div class="content-header">
-    <div>
-        <h1>Búsqueda avanzada</h1>
-        <p class="lead">Busca causas, personas, audiencias y documentos.</p>
-    </div>
+<div class="page-header-simple">
+    <h1 class="page-title">Búsqueda avanzada</h1>
+    <p class="page-subtitle">Busca causas, personas y documentos en todo el sistema</p>
 </div>
 
-<div class="panel-card" style="margin-bottom: 20px;">
-    <div class="panel-card-body">
-        <form method="get" class="busqueda-form">
-            <div class="busqueda-principal">
-                <input type="text" name="q" value="{{ query }}" placeholder="Buscar por nombre, RUT, carátula, RIT..." class="form-input busqueda-input">
-                <button type="submit" class="btn-primary">Buscar</button>
+<!-- Formulario de búsqueda -->
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Criterios de búsqueda</h2>
+    </div>
+    <div class="card-body">
+        <form method="get" class="search-form">
+            <div class="search-main">
+                <div class="search-input-large">
+                    <i class="fas fa-search"></i>
+                    <input type="text" name="q" value="{{ query|default:'' }}" 
+                           placeholder="Ingresa RUT, RIT, nombre, carátula..." class="form-input-large">
+                </div>
+                <button type="submit" class="btn-primary btn-lg">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
             </div>
             
-            <div class="busqueda-filtros">
-                <div class="filtro-grupo">
-                    <label>Buscar en:</label>
-                    <select name="tipo" class="form-input">
-                        <option value="todo" {% if tipo == 'todo' %}selected{% endif %}>Todo</option>
-                        <option value="causas" {% if tipo == 'causas' %}selected{% endif %}>Solo causas</option>
-                        <option value="personas" {% if tipo == 'personas' %}selected{% endif %}>Solo personas</option>
-                        <option value="audiencias" {% if tipo == 'audiencias' %}selected{% endif %}>Solo audiencias</option>
-                        <option value="documentos" {% if tipo == 'documentos' %}selected{% endif %}>Solo documentos</option>
-                    </select>
+            <div class="search-filters">
+                <div class="filter-group">
+                    <label class="filter-label">Buscar en:</label>
+                    <div class="filter-checks">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="en_causas" {% if en_causas or not query %}checked{% endif %}>
+                            <span>Causas</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="en_personas" {% if en_personas or not query %}checked{% endif %}>
+                            <span>Personas</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="en_documentos" {% if en_documentos or not query %}checked{% endif %}>
+                            <span>Documentos</span>
+                        </label>
+                    </div>
                 </div>
                 
-                <div class="filtro-grupo">
-                    <label>Estado:</label>
-                    <select name="estado" class="form-input">
-                        <option value="">Todos</option>
-                        {% for e in estados %}
-                        <option value="{{ e.pk }}" {% if filtros.estado == e.pk|stringformat:"i" %}selected{% endif %}>{{ e.nombre }}</option>
+                <div class="filter-group">
+                    <label class="filter-label">Estado de causa:</label>
+                    <select name="estado" class="form-input form-input-sm">
+                        <option value="">Todos los estados</option>
+                        {% for estado in estados %}
+                        <option value="{{ estado.pk }}" {% if estado_filtro == estado.pk|stringformat:"i" %}selected{% endif %}>
+                            {{ estado.nombre }}
+                        </option>
                         {% endfor %}
                     </select>
                 </div>
                 
-                <div class="filtro-grupo">
-                    <label>Materia:</label>
-                    <select name="materia" class="form-input">
-                        <option value="">Todas</option>
-                        {% for m in materias %}
-                        <option value="{{ m.pk }}" {% if filtros.materia == m.pk|stringformat:"i" %}selected{% endif %}>{{ m.nombre }}</option>
+                <div class="filter-group">
+                    <label class="filter-label">Materia:</label>
+                    <select name="materia" class="form-input form-input-sm">
+                        <option value="">Todas las materias</option>
+                        {% for materia in materias %}
+                        <option value="{{ materia.pk }}" {% if materia_filtro == materia.pk|stringformat:"i" %}selected{% endif %}>
+                            {{ materia.nombre }}
+                        </option>
                         {% endfor %}
                     </select>
                 </div>
                 
-                <div class="filtro-grupo">
-                    <label>Desde:</label>
-                    <input type="date" name="fecha_desde" value="{{ filtros.fecha_desde }}" class="form-input">
+                <div class="filter-group">
+                    <label class="filter-label">Fecha desde:</label>
+                    <input type="date" name="fecha_desde" value="{{ fecha_desde|default:'' }}" class="form-input form-input-sm">
                 </div>
                 
-                <div class="filtro-grupo">
-                    <label>Hasta:</label>
-                    <input type="date" name="fecha_hasta" value="{{ filtros.fecha_hasta }}" class="form-input">
+                <div class="filter-group">
+                    <label class="filter-label">Fecha hasta:</label>
+                    <input type="date" name="fecha_hasta" value="{{ fecha_hasta|default:'' }}" class="form-input form-input-sm">
                 </div>
             </div>
-            
-            {% if query or filtros.estado or filtros.materia or filtros.fecha_desde or filtros.fecha_hasta %}
-            <div style="margin-top: 10px;">
-                <a href="{% url 'gestion:buscar' %}" class="btn-link">Limpiar filtros</a>
-            </div>
-            {% endif %}
         </form>
     </div>
 </div>
 
-{% if total_resultados > 0 %}
-<div class="muted-note" style="margin-bottom: 15px;">
-    {{ total_resultados }} resultado{% if total_resultados != 1 %}s{% endif %} encontrado{% if total_resultados != 1 %}s{% endif %}
+{% if query %}
+<!-- Resumen de resultados -->
+<div class="search-summary">
+    <span class="summary-text">
+        Se encontraron <strong>{{ total_resultados }}</strong> resultados para "<strong>{{ query }}</strong>"
+    </span>
+    {% if total_resultados > 0 %}
+    <a href="{% url 'gestion:buscar' %}" class="summary-clear">Limpiar búsqueda</a>
+    {% endif %}
 </div>
-{% endif %}
 
-{% if causas %}
-<div class="panel-card" style="margin-bottom: 20px;">
-    <div class="panel-card-header">
-        <h3>Causas ({{ causas|length }})</h3>
+<!-- Resultados de Causas -->
+{% if causas_encontradas %}
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">
+                <i class="fas fa-folder-open"></i> Causas
+            </h2>
+            <p class="card-subtitle">{{ causas_encontradas|length }} resultado{{ causas_encontradas|length|pluralize:"s" }}</p>
+        </div>
     </div>
-    <div class="panel-card-body">
-        <table class="causas-table">
+    <div class="card-body card-body-table">
+        <table class="inner-table">
             <thead>
                 <tr>
-                    <th>RIT/RUC</th>
+                    <th>RIT / RUC</th>
                     <th>Carátula</th>
                     <th>Tribunal</th>
-                    <th>Materia</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-            {% for c in causas %}
+            {% for c in causas_encontradas %}
                 <tr>
-                    <td>{{ c.rit|default:c.ruc|default:"-" }}</td>
-                    <td>{{ c.caratula }}</td>
-                    <td>{{ c.tribunal }}</td>
-                    <td>{{ c.materia }}</td>
-                    <td><span class="status-badge {{ c.estado.color }}">{{ c.estado.nombre }}</span></td>
-                    <td><a href="{% url 'gestion:causa_detalle' c.pk %}">Ver</a></td>
+                    <td class="cell-code">{% if c.rit %}{{ c.rit }}{% elif c.ruc %}{{ c.ruc }}{% else %}-{% endif %}</td>
+                    <td class="cell-name">{{ c.caratula|truncatewords:5 }}</td>
+                    <td>{{ c.tribunal|default:"-" }}</td>
+                    <td>
+                        {% if c.estado %}
+                        <span class="status-badge status-{{ c.estado.color }}">{{ c.estado.nombre }}</span>
+                        {% else %}
+                        <span class="status-badge status-gray">Sin estado</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'gestion:causa_detalle' c.pk %}" class="action-link">Ver detalle</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -109,32 +140,38 @@
 </div>
 {% endif %}
 
-{% if personas %}
-<div class="panel-card" style="margin-bottom: 20px;">
-    <div class="panel-card-header">
-        <h3>Personas ({{ personas|length }})</h3>
+<!-- Resultados de Personas -->
+{% if personas_encontradas %}
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">
+                <i class="fas fa-users"></i> Personas
+            </h2>
+            <p class="card-subtitle">{{ personas_encontradas|length }} resultado{{ personas_encontradas|length|pluralize:"s" }}</p>
+        </div>
     </div>
-    <div class="panel-card-body">
-        <table class="causas-table">
+    <div class="card-body card-body-table">
+        <table class="inner-table">
             <thead>
                 <tr>
                     <th>RUN</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Teléfono</th>
+                    <th>Nombre completo</th>
                     <th>Tipo</th>
+                    <th>Contacto</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-            {% for p in personas %}
+            {% for p in personas_encontradas %}
                 <tr>
-                    <td>{{ p.run }}</td>
-                    <td>{{ p.nombres }} {{ p.apellidos }}</td>
-                    <td>{{ p.email|default:"-" }}</td>
-                    <td>{{ p.telefono|default:"-" }}</td>
+                    <td class="cell-code">{{ p.run }}</td>
+                    <td class="cell-name">{{ p.nombres }} {{ p.apellidos }}</td>
                     <td>{{ p.get_tipo_persona_display }}</td>
-                    <td><a href="{% url 'gestion:persona_editar' p.pk %}">Ver</a></td>
+                    <td>{{ p.email|default:p.telefono|default:"-" }}</td>
+                    <td>
+                        <a href="{% url 'gestion:persona_detalle' p.pk %}" class="action-link">Ver ficha</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -143,60 +180,40 @@
 </div>
 {% endif %}
 
-{% if audiencias %}
-<div class="panel-card" style="margin-bottom: 20px;">
-    <div class="panel-card-header">
-        <h3>Audiencias ({{ audiencias|length }})</h3>
+<!-- Resultados de Documentos -->
+{% if documentos_encontrados %}
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">
+                <i class="fas fa-file-alt"></i> Documentos
+            </h2>
+            <p class="card-subtitle">{{ documentos_encontrados|length }} resultado{{ documentos_encontrados|length|pluralize:"s" }}</p>
+        </div>
     </div>
-    <div class="panel-card-body">
-        <table class="causas-table">
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Tipo</th>
-                    <th>Causa</th>
-                    <th>Lugar</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for a in audiencias %}
-                <tr>
-                    <td>{{ a.fecha_hora|date:"d/m/Y H:i" }}</td>
-                    <td>{{ a.get_tipo_evento_display }}</td>
-                    <td><a href="{% url 'gestion:causa_detalle' a.causa.pk %}">{{ a.causa.caratula }}</a></td>
-                    <td>{{ a.lugar|default:"-" }}</td>
-                    <td>{{ a.get_estado_display }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-{% endif %}
-
-{% if documentos %}
-<div class="panel-card" style="margin-bottom: 20px;">
-    <div class="panel-card-header">
-        <h3>Documentos ({{ documentos|length }})</h3>
-    </div>
-    <div class="panel-card-body">
-        <table class="causas-table">
+    <div class="card-body card-body-table">
+        <table class="inner-table">
             <thead>
                 <tr>
                     <th>Título</th>
                     <th>Tipo</th>
                     <th>Causa</th>
                     <th>Fecha</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-            {% for d in documentos %}
+            {% for d in documentos_encontrados %}
                 <tr>
-                    <td>{{ d.titulo }}</td>
-                    <td>{{ d.tipo }}</td>
-                    <td><a href="{% url 'gestion:causa_detalle' d.causa.pk %}">{{ d.causa.caratula }}</a></td>
+                    <td class="cell-name">{{ d.titulo|truncatewords:5 }}</td>
+                    <td>{{ d.tipo|default:"-" }}</td>
+                    <td>
+                        <a href="{% url 'gestion:causa_detalle' d.causa.pk %}">{{ d.causa.caratula|truncatewords:3 }}</a>
+                    </td>
                     <td>{{ d.fecha_subida|date:"d/m/Y" }}</td>
+                    <td>
+                        <a href="{% url 'gestion:documento_detalle' d.pk %}" class="action-link">Ver</a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -205,20 +222,25 @@
 </div>
 {% endif %}
 
-{% if query and total_resultados == 0 %}
-<div class="panel-card">
-    <div class="panel-card-body" style="text-align: center; padding: 40px;">
-        <p style="font-size: 18px; color: #666;">No se encontraron resultados para "{{ query }}"</p>
-        <p class="muted-note">Intenta con otros términos o ajusta los filtros.</p>
+<!-- Sin resultados -->
+{% if not causas_encontradas and not personas_encontradas and not documentos_encontrados %}
+<div class="empty-state">
+    <div class="empty-state-icon">
+        <i class="fas fa-search"></i>
     </div>
+    <h3 class="empty-state-title">No se encontraron resultados</h3>
+    <p class="empty-state-text">Intenta con otros términos de búsqueda o ajusta los filtros.</p>
 </div>
 {% endif %}
 
-{% if not query and not filtros.estado and not filtros.materia and not filtros.fecha_desde and not filtros.fecha_hasta %}
-<div class="panel-card">
-    <div class="panel-card-body" style="text-align: center; padding: 40px;">
-        <p style="font-size: 18px; color: #666;">Ingresa un término de búsqueda o aplica filtros</p>
+{% else %}
+<!-- Estado inicial -->
+<div class="empty-state">
+    <div class="empty-state-icon">
+        <i class="fas fa-search"></i>
     </div>
+    <h3 class="empty-state-title">Realiza una búsqueda</h3>
+    <p class="empty-state-text">Ingresa un término en el campo de búsqueda para encontrar causas, personas o documentos.</p>
 </div>
 {% endif %}
 

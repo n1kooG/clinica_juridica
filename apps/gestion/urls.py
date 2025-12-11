@@ -17,6 +17,8 @@ urlpatterns = [
     path('causas/<int:pk>/editar/', views.causa_editar, name='causa_editar'),
     path('causas/<int:pk>/linea-tiempo/', views.causa_linea_tiempo, name='causa_linea_tiempo'),
     path('causas/asociar-persona/', views.causa_persona_crear, name='causa_persona_crear'),
+    path('causas/persona/<int:pk>/editar/', views.causa_persona_editar, name='causa_persona_editar'),
+    path('causas/persona/<int:pk>/eliminar/', views.causa_persona_eliminar, name='causa_persona_eliminar'),
 
 
     path('audiencias/', views.audiencias_lista, name='audiencias_lista'),
@@ -42,4 +44,20 @@ urlpatterns = [
     path('reportes/', views.reportes, name='reportes'),
     path('reportes/exportar-excel/', views.exportar_causas_excel, name='exportar_causas_excel'),
     path('reportes/exportar-pdf/', views.exportar_causas_pdf, name='exportar_causas_pdf'),
+    
+    path('perfil/', views.perfil, name='perfil'),
+    path('perfil/editar/', views.perfil_editar, name='perfil_editar'),
+    path('perfil/cambiar-password/', views.perfil_cambiar_password, name='perfil_cambiar_password'),
+    
+    path('admin-panel/', views.admin_panel, name='admin_panel'),
+    path('admin-panel/usuarios/', views.admin_usuarios, name='admin_usuarios'),
+    path('admin-panel/usuarios/crear/', views.admin_usuario_crear, name='admin_usuario_crear'),
+    path('admin-panel/usuarios/<int:pk>/editar/', views.admin_usuario_editar, name='admin_usuario_editar'),
+    path('admin-panel/usuarios/<int:pk>/toggle/', views.admin_usuario_toggle, name='admin_usuario_toggle'),
+    path('admin-panel/catalogos/<str:tipo>/', views.admin_catalogo, name='admin_catalogo'),
+    path('admin-panel/catalogos/<str:tipo>/crear/', views.admin_catalogo_crear, name='admin_catalogo_crear'),
+    path('admin-panel/catalogos/<str:tipo>/<int:pk>/editar/', views.admin_catalogo_editar, name='admin_catalogo_editar'),
+    path('admin-panel/catalogos/<str:tipo>/<int:pk>/toggle/', views.admin_catalogo_toggle, name='admin_catalogo_toggle'),
+    
+    path('api/verificar-password/', views.verificar_password_fortaleza, name='verificar_password'),
 ]

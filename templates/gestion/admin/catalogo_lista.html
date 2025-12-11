@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}{{ catalogo_nombre }}{% endblock %}
+{% block section_title %}Administración{% endblock %}
+
+{% block content %}
+<div class="page-header-flex">
+    <div class="page-header-content">
+        <div class="breadcrumb">
+            <a href="{% url 'gestion:admin_panel' %}">Administración</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>{{ catalogo_nombre }}</span>
+        </div>
+        <h1 class="page-title">{{ catalogo_nombre }}</h1>
+        <p class="page-subtitle">Gestiona los registros de este catálogo</p>
+    </div>
+    <a href="{% url 'gestion:admin_catalogo_crear' catalogo_tipo %}" class="btn-primary">
+        <i class="fas fa-plus"></i> Nuevo registro
+    </a>
+</div>
+
+<div class="list-card">
+    <div class="list-card-header">
+        <div class="list-card-title">
+            <span class="title-text">Registros</span>
+            <span class="title-count">{{ items|length }} registros</span>
+        </div>
+        <div class="list-card-search">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Buscar..." class="search-input" id="searchInput">
+        </div>
+    </div>
+
+    <div class="list-card-body">
+        <table class="list-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    {% if catalogo_tipo == 'estados' %}
+                    <th>Color</th>
+                    <th>Orden</th>
+                    <th>¿Es final?</th>
+                    {% elif catalogo_tipo == 'tribunales' %}
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    {% elif catalogo_tipo == 'tipos_documento' %}
+                    <th>Categoría</th>
+                    {% endif %}
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            {% for item in items %}
+                <tr>
+                    <td class="cell-name">{{ item.nombre }}</td>
+                    {% if catalogo_tipo == 'estados' %}
+                    <td>
+                        <span class="color-badge color-badge-{{ item.color }}">{{ item.color }}</span>
+                    </td>
+                    <td>{{ item.orden }}</td>
+                    <td>{% if item.es_final %}<i class="fas fa-check text-green"></i>{% else %}<i class="fas fa-times text-gray"></i>{% endif %}</td>
+                    {% elif catalogo_tipo == 'tribunales' %}
+                    <td>{{ item.direccion|default:"-"|truncatewords:5 }}</td>
+                    <td>{{ item.telefono|default:"-" }}</td>
+                    {% elif catalogo_tipo == 'tipos_documento' %}
+                    <td>{{ item.get_categoria_display|default:"-" }}</td>
+                    {% endif %}
+                    <td>
+                        {% if item.activo %}
+                        <span class="status-badge status-green">Activo</span>
+                        {% else %}
+                        <span class="status-badge status-red">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td class="cell-actions">
+                        <a href="{% url 'gestion:admin_catalogo_editar' catalogo_tipo item.pk %}" class="action-link">Editar</a>
+                        <a href="{% url 'gestion:admin_catalogo_toggle' catalogo_tipo item.pk %}" class="action-link {% if item.activo %}action-link-danger{% endif %}">
+                            {% if item.activo %}Desactivar{% else %}Activar{% endif %}
+                        </a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" class="empty-table">No hay registros en este catálogo.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#tableBody tr');
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+</script>
+{% endblock %}

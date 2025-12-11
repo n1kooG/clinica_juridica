@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% block title %}{% if usuario %}Editar Usuario{% else %}Nuevo Usuario{% endif %}{% endblock %}
+{% block section_title %}Administración{% endblock %}
+
+{% block content %}
+<div class="page-header-simple">
+    <div class="breadcrumb">
+        <a href="{% url 'gestion:admin_panel' %}">Administración</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="{% url 'gestion:admin_usuarios' %}">Usuarios</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>{% if usuario %}Editar{% else %}Nuevo{% endif %}</span>
+    </div>
+    <h1 class="page-title">{% if usuario %}Editar usuario{% else %}Nuevo usuario{% endif %}</h1>
+    <p class="page-subtitle">
+        {% if usuario %}
+            Modifica los datos y permisos del usuario
+        {% else %}
+            Crea una nueva cuenta de usuario en el sistema
+        {% endif %}
+    </p>
+</div>
+
+<form method="post" class="form-layout">
+    {% csrf_token %}
+    
+    <!-- Datos de la cuenta -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Datos de la cuenta</h2>
+            <p class="form-card-subtitle">Información de acceso al sistema</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Nombre de usuario *</label>
+                    <input type="text" name="username" value="{{ usuario.username|default:'' }}" 
+                           class="form-input" placeholder="nombre.usuario" required
+                           {% if usuario %}readonly{% endif %}>
+                    {% if usuario %}
+                    <span class="form-hint">El nombre de usuario no puede ser modificado</span>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Correo electrónico *</label>
+                    <input type="email" name="email" value="{{ usuario.email|default:'' }}" 
+                           class="form-input" placeholder="correo@ejemplo.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" name="first_name" value="{{ usuario.first_name|default:'' }}" 
+                           class="form-input" placeholder="Nombre">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Apellido</label>
+                    <input type="text" name="last_name" value="{{ usuario.last_name|default:'' }}" 
+                           class="form-input" placeholder="Apellido">
+                </div>
+            </div>
+            
+            {% if not usuario %}
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Contraseña *</label>
+                    <input type="password" name="password" class="form-input" 
+                           placeholder="Mínimo 8 caracteres" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirmar contraseña *</label>
+                    <input type="password" name="password_confirm" class="form-input" 
+                           placeholder="Repite la contraseña" required>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Rol y permisos -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Rol y permisos</h2>
+            <p class="form-card-subtitle">Configura el nivel de acceso del usuario</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Rol en el sistema *</label>
+                    <select name="rol" class="form-input" required>
+                        <option value="">Selecciona un rol</option>
+                        <option value="ADMIN" {% if perfil.rol == 'ADMIN' %}selected{% endif %}>Administrador</option>
+                        <option value="DIRECTOR" {% if perfil.rol == 'DIRECTOR' %}selected{% endif %}>Director</option>
+                        <option value="SUPERVISOR" {% if perfil.rol == 'SUPERVISOR' %}selected{% endif %}>Supervisor</option>
+                        <option value="ALUMNO" {% if perfil.rol == 'ALUMNO' %}selected{% endif %}>Alumno</option>
+                        <option value="SECRETARIA" {% if perfil.rol == 'SECRETARIA' %}selected{% endif %}>Secretaria</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Sede</label>
+                    <select name="sede" class="form-input">
+                        <option value="">Sin sede asignada</option>
+                        <option value="SANTIAGO" {% if perfil.sede == 'SANTIAGO' %}selected{% endif %}>Santiago</option>
+                        <option value="CONCEPCION" {% if perfil.sede == 'CONCEPCION' %}selected{% endif %}>Concepción</option>
+                        <option value="VALDIVIA" {% if perfil.sede == 'VALDIVIA' %}selected{% endif %}>Valdivia</option>
+                        <option value="PUERTO_MONTT" {% if perfil.sede == 'PUERTO_MONTT' %}selected{% endif %}>Puerto Montt</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Estado de la cuenta</label>
+                <div class="form-checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="is_active" {% if usuario.is_active or not usuario %}checked{% endif %}>
+                        <span>Usuario activo</span>
+                    </label>
+                    <span class="form-hint">Los usuarios inactivos no pueden acceder al sistema</span>
+                </div>
+            </div>
+            
+            {% if request.user.is_superuser %}
+            <div class="form-group">
+                <label class="form-label">Permisos especiales</label>
+                <div class="form-checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="is_staff" {% if usuario.is_staff %}checked{% endif %}>
+                        <span>Acceso al admin de Django</span>
+                    </label>
+                </div>
+                <div class="form-checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="is_superuser" {% if usuario.is_superuser %}checked{% endif %}>
+                        <span>Superusuario (todos los permisos)</span>
+                    </label>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Información de contacto -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Información de contacto</h2>
+            <p class="form-card-subtitle">Datos adicionales del usuario</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">RUT</label>
+                    <input type="text" name="rut" value="{{ perfil.rut|default:'' }}" 
+                           class="form-input" placeholder="12.345.678-9">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Teléfono</label>
+                    <input type="text" name="telefono" value="{{ perfil.telefono|default:'' }}" 
+                           class="form-input" placeholder="+56 9 1234 5678">
+                </div>
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label">Dirección</label>
+                <input type="text" name="direccion" value="{{ perfil.direccion|default:'' }}" 
+                       class="form-input" placeholder="Calle, número, comuna, ciudad">
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer fijo -->
+    <div class="form-footer">
+        <a href="{% url 'gestion:admin_usuarios' %}" class="btn-secondary">Cancelar</a>
+        <button type="submit" class="btn-primary">
+            {% if usuario %}Guardar cambios{% else %}Crear usuario{% endif %}
+        </button>
+    </div>
+</form>
+{% endblock %}

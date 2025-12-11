@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso denegado - Sistema Clínica Jurídica</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="error-body">
+    <div class="error-container">
+        <div class="error-card">
+            <div class="error-icon error-icon-danger">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h1 class="error-code">403</h1>
+            <h2 class="error-title">Acceso denegado</h2>
+            <p class="error-message">
+                No tienes permisos para acceder a este recurso. Si crees que esto es un error, contacta al administrador.
+            </p>
+            <div class="error-actions">
+                <a href="{% url 'gestion:dashboard' %}" class="btn-primary">
+                    <i class="fas fa-home"></i> Ir al inicio
+                </a>
+                <button onclick="history.back()" class="btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver atrás
+                </button>
+            </div>
+        </div>
+        <div class="error-footer">
+            <p>Sistema Clínica Jurídica · Universidad San Sebastián</p>
+        </div>
+    </div>
+</body>
+</html>

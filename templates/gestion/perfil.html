@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% block title %}Mi Perfil{% endblock %}
+{% block section_title %}Perfil{% endblock %}
+
+{% block content %}
+<div class="page-header-with-actions">
+    <div class="page-header-left">
+        <h1 class="page-title">Mi perfil</h1>
+        <p class="page-subtitle">Visualiza y administra tu información personal</p>
+    </div>
+    <div class="page-header-actions">
+        <a href="{% url 'gestion:perfil_editar' %}" class="btn-primary">
+            <i class="fas fa-edit"></i> Editar perfil
+        </a>
+    </div>
+</div>
+
+<div class="detail-layout">
+    <div class="detail-main">
+        <!-- Información de la cuenta -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Información de la cuenta</h2>
+                <p class="card-subtitle">Datos de acceso al sistema</p>
+            </div>
+            <div class="card-body">
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">Nombre de usuario</span>
+                        <span class="detail-value">{{ user.username }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Correo electrónico</span>
+                        <span class="detail-value">{{ user.email|default:"No registrado" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Nombre</span>
+                        <span class="detail-value">{{ user.first_name|default:"No registrado" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Apellido</span>
+                        <span class="detail-value">{{ user.last_name|default:"No registrado" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Fecha de registro</span>
+                        <span class="detail-value">{{ user.date_joined|date:"d F Y, H:i" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Último acceso</span>
+                        <span class="detail-value">{{ user.last_login|date:"d F Y, H:i"|default:"Nunca" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información del perfil -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Información del perfil</h2>
+                <p class="card-subtitle">Datos profesionales y de contacto</p>
+            </div>
+            <div class="card-body">
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">Rol en el sistema</span>
+                        <span class="detail-value">
+                            <span class="role-tag role-tag-{{ user.perfil.rol|lower }}">
+                                {{ user.perfil.get_rol_display }}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Sede</span>
+                        <span class="detail-value">{{ user.perfil.get_sede_display|default:"No asignada" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">RUT</span>
+                        <span class="detail-value">{{ user.perfil.rut|default:"No registrado" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Teléfono</span>
+                        <span class="detail-value">{{ user.perfil.telefono|default:"No registrado" }}</span>
+                    </div>
+                    <div class="detail-field full-width">
+                        <span class="detail-label">Dirección</span>
+                        <span class="detail-value">{{ user.perfil.direccion|default:"No registrada" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seguridad -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Seguridad</h2>
+                <p class="card-subtitle">Configuración de acceso y contraseña</p>
+            </div>
+            <div class="card-body">
+                <div class="security-item">
+                    <div class="security-info">
+                        <i class="fas fa-lock"></i>
+                        <div>
+                            <span class="security-title">Contraseña</span>
+                            <span class="security-desc">Última actualización desconocida</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'gestion:perfil_cambiar_password' %}" class="btn-secondary btn-sm">
+                        Cambiar contraseña
+                    </a>
+                </div>
+                <div class="security-item">
+                    <div class="security-info">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <span class="security-title">Estado de la cuenta</span>
+                            <span class="security-desc">
+                                {% if user.is_active %}Cuenta activa{% else %}Cuenta desactivada{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    <span class="status-badge {% if user.is_active %}status-green{% else %}status-red{% endif %}">
+                        {% if user.is_active %}Activa{% else %}Inactiva{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-sidebar">
+        <!-- Avatar y resumen -->
+        <div class="card">
+            <div class="card-body">
+                <div class="perfil-avatar-section">
+                    <div class="perfil-avatar">
+                        {{ user.first_name|slice:":1"|upper|default:user.username|slice:":1"|upper }}
+                    </div>
+                    <h3 class="perfil-nombre">{{ user.get_full_name|default:user.username }}</h3>
+                    <span class="perfil-rol">{{ user.perfil.get_rol_display }}</span>
+                    <span class="perfil-email">{{ user.email|default:"Sin email" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Mi actividad</h2>
+            </div>
+            <div class="card-body">
+                <div class="perfil-stats">
+                    <div class="perfil-stat">
+                        <span class="perfil-stat-value">{{ mis_causas }}</span>
+                        <span class="perfil-stat-label">Causas asignadas</span>
+                    </div>
+                    <div class="perfil-stat">
+                        <span class="perfil-stat-value">{{ mis_audiencias }}</span>
+                        <span class="perfil-stat-label">Audiencias próximas</span>
+                    </div>
+                    <div class="perfil-stat">
+                        <span class="perfil-stat-value">{{ mis_documentos }}</span>
+                        <span class="perfil-stat-label">Documentos subidos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actividad reciente -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Actividad reciente</h2>
+            </div>
+            <div class="card-body">
+                {% if actividad_reciente %}
+                <div class="activity-list">
+                    {% for log in actividad_reciente %}
+                    <div class="activity-item">
+                        <div class="activity-title">
+                            {{ log.get_accion_display }} - {{ log.modelo }}
+                        </div>
+                        <div class="activity-meta">
+                            {{ log.fecha|timesince }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="empty-message">Sin actividad reciente.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

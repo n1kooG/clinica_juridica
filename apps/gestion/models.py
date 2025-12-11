@@ -1,5 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
+from .validators import (
+    validar_rut_chileno,
+    validar_telefono_chileno,
+    validar_rit,
+    validar_ruc,
+    validar_fecha_nacimiento,
+)
 
 # CATÁLOGOS 
 class Tribunal(models.Model):
@@ -55,6 +62,12 @@ class Tribunal(models.Model):
         ordering = ['region', 'ciudad', 'tipo', 'nombre']
         verbose_name = 'Tribunal'
         verbose_name_plural = 'Tribunales'
+        indexes = [
+            models.Index(fields=['tipo'], name='tribunal_tipo_idx'),
+            models.Index(fields=['region'], name='tribunal_region_idx'),
+            models.Index(fields=['ciudad'], name='tribunal_ciudad_idx'),
+            models.Index(fields=['activo'], name='tribunal_activo_idx'),
+        ]
 
     def __str__(self):
         return f"{self.nombre} - {self.ciudad}"
@@ -92,7 +105,10 @@ class Materia(models.Model):
         ordering = ['tipo_tribunal', 'nombre']
         verbose_name = 'Materia'
         verbose_name_plural = 'Materias'
-        unique_together = ['nombre', 'tipo_tribunal']
+        indexes = [
+            models.Index(fields=['tipo_tribunal'], name='materia_tipo_idx'),
+            models.Index(fields=['activo'], name='materia_activo_idx'),
+        ]
 
     def __str__(self):
         return f"{self.nombre} ({self.get_tipo_tribunal_display()})"
@@ -121,9 +137,13 @@ class TipoDocumento(models.Model):
     activo = models.BooleanField(default=True, verbose_name='Activo')
 
     class Meta:
-        ordering = ['categoria', 'nombre']
-        verbose_name = 'Tipo de documento'
-        verbose_name_plural = 'Tipos de documento'
+        ordering = ['nombre']
+        verbose_name = 'Tipo de Documento'
+        verbose_name_plural = 'Tipos de Documento'
+        indexes = [
+            models.Index(fields=['categoria'], name='tipo_doc_cat_idx'),
+            models.Index(fields=['activo'], name='tipo_doc_activo_idx'),
+        ]
 
     def __str__(self):
         return f"{self.nombre}"
@@ -160,9 +180,14 @@ class EstadoCausa(models.Model):
     activo = models.BooleanField(default=True, verbose_name='Activo')
 
     class Meta:
-        ordering = ['orden', 'nombre']
-        verbose_name = 'Estado de causa'
-        verbose_name_plural = 'Estados de causa'
+        ordering = ['orden']
+        verbose_name = 'Estado de Causa'
+        verbose_name_plural = 'Estados de Causa'
+        indexes = [
+            models.Index(fields=['orden'], name='estado_orden_idx'),
+            models.Index(fields=['activo'], name='estado_activo_idx'),
+            models.Index(fields=['es_final'], name='estado_final_idx'),
+        ]
 
     def __str__(self):
         return self.nombre
@@ -204,7 +229,13 @@ class Persona(models.Model):
     ]
 
     # Identificación básica
-    run = models.CharField(max_length=12, unique=True, verbose_name='RUN')
+    run = models.CharField(
+        'RUN', 
+        max_length=12, 
+        unique=True,
+        validators=[validar_rut_chileno],
+        help_text='Formato: 12.345.678-9'
+    )
     nombres = models.CharField(max_length=100, verbose_name='Nombres')
     apellidos = models.CharField(max_length=100, verbose_name='Apellidos')
     tipo_persona = models.CharField(
@@ -215,7 +246,12 @@ class Persona(models.Model):
     )
 
     # Datos personales
-    fecha_nacimiento = models.DateField(blank=True, null=True, verbose_name='Fecha de nacimiento')
+    fecha_nacimiento = models.DateField(
+        'Fecha de nacimiento', 
+        null=True, 
+        blank=True,
+        validators=[validar_fecha_nacimiento]
+    )
     genero = models.CharField(
         max_length=2,
         choices=GENERO_CHOICES,
@@ -233,7 +269,13 @@ class Persona(models.Model):
 
     # Contacto
     email = models.EmailField(blank=True, null=True, verbose_name='Correo electrónico')
-    telefono = models.CharField(max_length=20, blank=True, null=True, verbose_name='Teléfono')
+    telefono = models.CharField(
+        'Teléfono', 
+        max_length=20, 
+        blank=True,
+        validators=[validar_telefono_chileno],
+        help_text='Formato: +56 9 1234 5678'
+    )
     
     # Dirección
     direccion = models.CharField(max_length=200, blank=True, null=True, verbose_name='Dirección')
@@ -286,9 +328,16 @@ class Persona(models.Model):
     fecha_registro = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de registro')
 
     class Meta:
-        ordering = ['apellidos', 'nombres']
+        ordering = ['-id']
         verbose_name = 'Persona'
         verbose_name_plural = 'Personas'
+        indexes = [
+            models.Index(fields=['run'], name='persona_run_idx'),
+            models.Index(fields=['nombres', 'apellidos'], name='persona_nombre_idx'),
+            models.Index(fields=['email'], name='persona_email_idx'),
+            models.Index(fields=['tipo_persona'], name='persona_tipo_idx'),
+            models.Index(fields=['activo'], name='persona_activo_idx'),
+        ]
 
     def __str__(self):
         return f"{self.nombres} {self.apellidos} ({self.run})"
@@ -379,8 +428,20 @@ class Consentimiento(models.Model):
         return self.otorgado and self.fecha_revocacion is None
     
 class Causa(models.Model):
-    rit = models.CharField(max_length=50, blank=True, null=True, verbose_name='RIT')
-    ruc = models.CharField(max_length=50, blank=True, null=True, verbose_name='RUC')
+    rit = models.CharField(
+        'RIT', 
+        max_length=20, 
+        blank=True,
+        validators=[validar_rit],
+        help_text='Formato: C-1234-2024'
+    )
+    ruc = models.CharField(
+        'RUC', 
+        max_length=20, 
+        blank=True,
+        validators=[validar_ruc],
+        help_text='Formato: 2400123456-7'
+    )
     tribunal = models.ForeignKey(
         Tribunal,
         on_delete=models.PROTECT,
@@ -394,6 +455,16 @@ class Causa(models.Model):
         verbose_name='Materia'
     )
     caratula = models.CharField(max_length=200, verbose_name='Carátula')
+    descripcion = models.TextField(
+        'Descripción del caso',
+        blank=True,
+        help_text='Antecedentes y contexto del caso'
+    )
+    observaciones = models.TextField(
+        'Observaciones internas',
+        blank=True,
+        help_text='Notas internas para el equipo de la clínica jurídica'
+    )
     estado = models.ForeignKey(
         EstadoCausa,
         on_delete=models.PROTECT,
@@ -414,6 +485,17 @@ class Causa(models.Model):
         ordering = ['-fecha_creacion']
         verbose_name = 'Causa'
         verbose_name_plural = 'Causas'
+        indexes = [
+            models.Index(fields=['rit'], name='causa_rit_idx'),
+            models.Index(fields=['ruc'], name='causa_ruc_idx'),
+            models.Index(fields=['caratula'], name='causa_caratula_idx'),
+            models.Index(fields=['estado'], name='causa_estado_idx'),
+            models.Index(fields=['tribunal'], name='causa_tribunal_idx'),
+            models.Index(fields=['materia'], name='causa_materia_idx'),
+            models.Index(fields=['responsable'], name='causa_responsable_idx'),
+            models.Index(fields=['fecha_creacion'], name='causa_fecha_idx'),
+            models.Index(fields=['-fecha_creacion'], name='causa_fecha_desc_idx'),
+        ]
 
     def __str__(self):
         return f"{self.caratula} ({self.rit or self.ruc or self.id})"
@@ -562,11 +644,19 @@ class Audiencia(models.Model):
         auto_now=True,
         verbose_name='Última modificación'
     )
-
+    
     class Meta:
         ordering = ['-fecha_hora']
         verbose_name = 'Audiencia'
         verbose_name_plural = 'Audiencias'
+        indexes = [
+            models.Index(fields=['causa'], name='audiencia_causa_idx'),
+            models.Index(fields=['fecha_hora'], name='audiencia_fecha_idx'),
+            models.Index(fields=['-fecha_hora'], name='audiencia_fecha_desc_idx'),
+            models.Index(fields=['estado'], name='audiencia_estado_idx'),
+            models.Index(fields=['tipo_evento'], name='audiencia_tipo_idx'),
+            models.Index(fields=['fecha_hora', 'estado'], name='audiencia_fecha_estado_idx'),
+        ]
 
     def __str__(self):
         return f"{self.get_tipo_evento_display()} - {self.fecha_hora.strftime('%d/%m/%Y %H:%M')} ({self.causa})"
@@ -677,6 +767,15 @@ class Documento(models.Model):
         ordering = ['-fecha_subida']
         verbose_name = 'Documento'
         verbose_name_plural = 'Documentos'
+        indexes = [
+            models.Index(fields=['causa'], name='documento_causa_idx'),
+            models.Index(fields=['tipo'], name='documento_tipo_idx'),
+            models.Index(fields=['usuario'], name='documento_usuario_idx'),
+            models.Index(fields=['titulo'], name='documento_titulo_idx'),
+            models.Index(fields=['fecha_subida'], name='documento_fecha_idx'),
+            models.Index(fields=['-fecha_subida'], name='documento_fecha_desc_idx'),
+            models.Index(fields=['estado'], name='documento_estado_idx'),
+        ]
 
     def __str__(self):
         return f"{self.titulo} (v{self.version})"
@@ -783,8 +882,17 @@ class LogAuditoria(models.Model):
 
     class Meta:
         ordering = ['-fecha']
-        verbose_name = 'Log de auditoría'
-        verbose_name_plural = 'Logs de auditoría'
+        verbose_name = 'Log de Auditoría'
+        verbose_name_plural = 'Logs de Auditoría'
+        indexes = [
+            models.Index(fields=['usuario'], name='log_usuario_idx'),
+            models.Index(fields=['accion'], name='log_accion_idx'),
+            models.Index(fields=['modelo'], name='log_modelo_idx'),
+            models.Index(fields=['fecha'], name='log_fecha_idx'),
+            models.Index(fields=['-fecha'], name='log_fecha_desc_idx'),
+            models.Index(fields=['objeto_id'], name='log_objeto_idx'),
+            models.Index(fields=['modelo', 'objeto_id'], name='log_modelo_objeto_idx'),
+        ]
 
     def __str__(self):
         return f"{self.usuario} - {self.get_accion_display()} {self.modelo} - {self.fecha.strftime('%d/%m/%Y %H:%M')}"  

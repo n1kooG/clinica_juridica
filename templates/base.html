@@ -52,6 +52,12 @@
                     <i class="fas fa-history"></i> Auditoría
                 </a>
                 {% endif %}
+
+                {% if user.is_superuser or user.perfil.rol == 'ADMIN' or user.perfil.rol == 'DIRECTOR' %}
+                <a href="{% url 'gestion:admin_panel' %}" class="nav-item {% if 'admin_' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fas fa-cog"></i> Administración
+                </a>
+                {% endif %}
             </nav>
             
             <div class="sidebar-footer">
@@ -70,8 +76,11 @@
                 <div class="topbar-right">
                     {% if user.is_authenticated %}
                         <span class="user-name">{{ user.username }}</span>
-                        <a href="{% url 'cuentas:perfil' %}" class="topbar-link">Perfil</a>
-                        <a href="{% url 'logout' %}" class="topbar-link">Cerrar sesión</a>
+                        <a href="{% url 'gestion:perfil' %}" class="topbar-link">Perfil</a>
+                        <form method="post" action="{% url 'logout' %}" class="logout-form">
+                            {% csrf_token %}
+                            <button type="submit" class="topbar-link logout-btn">Cerrar sesión</button>
+                        </form>
                     {% else %}
                         <a href="{% url 'login' %}" class="topbar-link">Iniciar sesión</a>
                     {% endif %}
@@ -95,6 +104,112 @@
             </main>
         </div>
     </div>
+    
     <script src="{% static 'js/forms.js' %}"></script>
+    <script src="{% static 'js/validaciones.js' %}"></script>
+    
+    <!-- Alerta de inactividad de sesión (ISO 27001 - D2) -->
+    {% if user.is_authenticated %}
+    <script>
+    (function() {
+        var sessionTimeout;
+        var warningTimeout;
+        var TIMEOUT_MINUTES = 30;
+        var WARNING_MINUTES = 28;
+
+        function resetSessionTimer() {
+            clearTimeout(sessionTimeout);
+            clearTimeout(warningTimeout);
+            
+            warningTimeout = setTimeout(function() {
+                showSessionWarning();
+            }, WARNING_MINUTES * 60 * 1000);
+            
+            sessionTimeout = setTimeout(function() {
+                window.location.href = '{% url "logout" %}';
+            }, TIMEOUT_MINUTES * 60 * 1000);
+        }
+
+        function showSessionWarning() {
+            var confirmed = confirm(
+                'Tu sesión está a punto de expirar por inactividad.\n\n' +
+                'Presiona OK para continuar trabajando o Cancelar para cerrar sesión.'
+            );
+            
+            if (confirmed) {
+                fetch('{% url "gestion:dashboard" %}', {
+                    method: 'HEAD',
+                    credentials: 'same-origin'
+                }).then(function() {
+                    resetSessionTimer();
+                });
+            } else {
+                window.location.href = '{% url "logout" %}';
+            }
+        }
+
+        var events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+        for (var i = 0; i < events.length; i++) {
+            document.addEventListener(events[i], resetSessionTimer, true);
+        }
+
+        resetSessionTimer();
+    })();
+    </script>
+    {% endif %}
+    
+    {% block extra_js %}{% endblock %}
+    
+    <script>
+    let sessionTimeout;
+    let warningTimeout;
+    const TIMEOUT_MINUTES = 30;
+    const WARNING_MINUTES = 28;
+
+    function resetSessionTimer() {
+        // Limpiar timers anteriores
+        clearTimeout(sessionTimeout);
+        clearTimeout(warningTimeout);
+        
+        // Timer de advertencia (28 minutos)
+        warningTimeout = setTimeout(() => {
+            showSessionWarning();
+        }, WARNING_MINUTES * 60 * 1000);
+        
+        // Timer de expiración (30 minutos)
+        sessionTimeout = setTimeout(() => {
+            window.location.href = '{% url "logout" %}';
+        }, TIMEOUT_MINUTES * 60 * 1000);
+    }
+
+    function showSessionWarning() {
+        const confirmed = confirm(
+            'Tu sesión está a punto de expirar por inactividad.\n\n' +
+            'Presiona OK para continuar trabajando o Cancelar para cerrar sesión.'
+        );
+        
+        if (confirmed) {
+            // Hacer un request para renovar sesión
+            fetch('{% url "gestion:dashboard" %}', {
+                method: 'HEAD',
+                credentials: 'same-origin'
+            }).then(() => {
+                resetSessionTimer();
+            });
+        } else {
+            window.location.href = '{% url "logout" %}';
+        }
+    }
+
+    // Eventos que resetean el timer
+    {% if user.is_authenticated %}
+    ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'].forEach(event => {
+        document.addEventListener(event, resetSessionTimer, true);
+    });
+
+    // Iniciar timer al cargar
+    resetSessionTimer();
+    {% endif %}
+    </script>
 </body>
 </html>

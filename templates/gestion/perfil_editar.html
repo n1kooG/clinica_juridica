@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Editar Perfil{% endblock %}
+{% block section_title %}Perfil{% endblock %}
+
+{% block content %}
+<div class="page-header-simple">
+    <div class="breadcrumb">
+        <a href="{% url 'gestion:perfil' %}">Mi perfil</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>Editar</span>
+    </div>
+    <h1 class="page-title">Editar perfil</h1>
+    <p class="page-subtitle">Actualiza tu información personal y de contacto</p>
+</div>
+
+<form method="post" class="form-layout">
+    {% csrf_token %}
+    
+    <!-- Información de la cuenta -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Información de la cuenta</h2>
+            <p class="form-card-subtitle">Datos básicos de tu cuenta de usuario</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Nombre de usuario</label>
+                    <input type="text" value="{{ user.username }}" class="form-input" disabled>
+                    <span class="form-hint">El nombre de usuario no puede ser modificado</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Correo electrónico</label>
+                    <input type="email" name="email" value="{{ user.email|default:'' }}" 
+                           class="form-input" placeholder="correo@ejemplo.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" name="first_name" value="{{ user.first_name|default:'' }}" 
+                           class="form-input" placeholder="Tu nombre">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Apellido</label>
+                    <input type="text" name="last_name" value="{{ user.last_name|default:'' }}" 
+                           class="form-input" placeholder="Tu apellido">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información de contacto -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Información de contacto</h2>
+            <p class="form-card-subtitle">Datos para que puedan comunicarse contigo</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">RUT</label>
+                    <input type="text" name="rut" value="{{ user.perfil.rut|default:'' }}" 
+                           class="form-input" placeholder="12.345.678-9">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Teléfono</label>
+                    <input type="text" name="telefono" value="{{ user.perfil.telefono|default:'' }}" 
+                           class="form-input" placeholder="+56 9 1234 5678">
+                </div>
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label">Dirección</label>
+                <input type="text" name="direccion" value="{{ user.perfil.direccion|default:'' }}" 
+                       class="form-input" placeholder="Calle, número, comuna, ciudad">
+            </div>
+        </div>
+    </div>
+
+    <!-- Información del sistema (solo lectura) -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Información del sistema</h2>
+            <p class="form-card-subtitle">Datos asignados por el administrador</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Rol en el sistema</label>
+                    <input type="text" value="{{ user.perfil.get_rol_display }}" class="form-input" disabled>
+                    <span class="form-hint">Contacta al administrador para cambiar tu rol</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Sede</label>
+                    <input type="text" value="{{ user.perfil.get_sede_display|default:'No asignada' }}" class="form-input" disabled>
+                    <span class="form-hint">Contacta al administrador para cambiar tu sede</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer fijo -->
+    <div class="form-footer">
+        <a href="{% url 'gestion:perfil' %}" class="btn-secondary">Cancelar</a>
+        <button type="submit" class="btn-primary">Guardar cambios</button>
+    </div>
+</form>
+{% endblock %}

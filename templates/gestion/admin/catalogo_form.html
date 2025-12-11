@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}{% if item %}Editar{% else %}Nuevo{% endif %} - {{ catalogo_nombre }}{% endblock %}
+{% block section_title %}Administración{% endblock %}
+
+{% block content %}
+<div class="page-header-simple">
+    <div class="breadcrumb">
+        <a href="{% url 'gestion:admin_panel' %}">Administración</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="{% url 'gestion:admin_catalogo' catalogo_tipo %}">{{ catalogo_nombre }}</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>{% if item %}Editar{% else %}Nuevo{% endif %}</span>
+    </div>
+    <h1 class="page-title">{% if item %}Editar registro{% else %}Nuevo registro{% endif %}</h1>
+    <p class="page-subtitle">{{ catalogo_nombre }}</p>
+</div>
+
+<div class="form-container-centered">
+    <form method="post" class="form-layout">
+        {% csrf_token %}
+        
+        <div class="form-card">
+            <div class="form-card-header">
+                <h2 class="form-card-title">Información del registro</h2>
+            </div>
+            <div class="form-card-body">
+                <div class="form-group full-width">
+                    <label class="form-label">Nombre *</label>
+                    <input type="text" name="nombre" value="{{ item.nombre|default:'' }}" 
+                           class="form-input" placeholder="Nombre del registro" required>
+                </div>
+                
+                {% if catalogo_tipo == 'estados' %}
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Color</label>
+                        <select name="color" class="form-input">
+                            <option value="gray" {% if item.color == 'gray' %}selected{% endif %}>Gris</option>
+                            <option value="blue" {% if item.color == 'blue' %}selected{% endif %}>Azul</option>
+                            <option value="green" {% if item.color == 'green' %}selected{% endif %}>Verde</option>
+                            <option value="yellow" {% if item.color == 'yellow' %}selected{% endif %}>Amarillo</option>
+                            <option value="orange" {% if item.color == 'orange' %}selected{% endif %}>Naranja</option>
+                            <option value="red" {% if item.color == 'red' %}selected{% endif %}>Rojo</option>
+                            <option value="purple" {% if item.color == 'purple' %}selected{% endif %}>Morado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Orden</label>
+                        <input type="number" name="orden" value="{{ item.orden|default:'0' }}" 
+                               class="form-input" min="0">
+                    </div>
+                </div>
+                <div class="form-checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="es_final" {% if item.es_final %}checked{% endif %}>
+                        <span>¿Es estado final? (causa terminada)</span>
+                    </label>
+                </div>
+                {% endif %}
+                
+                {% if catalogo_tipo == 'tribunales' %}
+                <div class="form-group full-width">
+                    <label class="form-label">Dirección</label>
+                    <input type="text" name="direccion" value="{{ item.direccion|default:'' }}" 
+                           class="form-input" placeholder="Dirección del tribunal">
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" name="telefono" value="{{ item.telefono|default:'' }}" 
+                               class="form-input" placeholder="+56 2 1234 5678">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" value="{{ item.email|default:'' }}" 
+                               class="form-input" placeholder="correo@tribunal.cl">
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if catalogo_tipo == 'tipos_documento' %}
+                <div class="form-group full-width">
+                    <label class="form-label">Categoría</label>
+                    <select name="categoria" class="form-input">
+                        <option value="">Sin categoría</option>
+                        <option value="JUDICIAL_ENTRADA" {% if item.categoria == 'JUDICIAL_ENTRADA' %}selected{% endif %}>Judicial Entrada</option>
+                        <option value="JUDICIAL_SALIDA" {% if item.categoria == 'JUDICIAL_SALIDA' %}selected{% endif %}>Judicial Salida</option>
+                        <option value="INTERNO" {% if item.categoria == 'INTERNO' %}selected{% endif %}>Interno</option>
+                        <option value="PROBATORIO" {% if item.categoria == 'PROBATORIO' %}selected{% endif %}>Probatorio</option>
+                    </select>
+                </div>
+                {% endif %}
+                
+                {% if catalogo_tipo == 'materias' %}
+                <div class="form-group full-width">
+                    <label class="form-label">Descripción</label>
+                    <textarea name="descripcion" class="form-input form-textarea" 
+                              placeholder="Descripción de la materia">{{ item.descripcion|default:'' }}</textarea>
+                </div>
+                {% endif %}
+                
+                <div class="form-checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="activo" {% if item.activo or not item %}checked{% endif %}>
+                        <span>Registro activo</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer fijo -->
+        <div class="form-footer">
+            <a href="{% url 'gestion:admin_catalogo' catalogo_tipo %}" class="btn-secondary">Cancelar</a>
+            <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

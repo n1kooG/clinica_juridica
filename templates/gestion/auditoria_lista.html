@@ -1,118 +1,193 @@
 {% extends 'base.html' %}
 {% block title %}Auditoría{% endblock %}
+{% block section_title %}Auditoría{% endblock %}
 
 {% block content %}
-<div class="content-header">
-    <div>
-        <h1>Logs de Auditoría</h1>
-        <p class="lead">Registro de todas las acciones realizadas en el sistema.</p>
-    </div>
+<div class="page-header-simple">
+    <h1 class="page-title">Registro de auditoría</h1>
+    <p class="page-subtitle">Historial de acciones realizadas en el sistema</p>
 </div>
 
-<div class="panel-card" style="margin-bottom: 20px;">
-    <div class="panel-card-header">
-        <h3>Filtros</h3>
+<!-- Filtros -->
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Filtros</h2>
     </div>
-    <div class="panel-card-body">
-        <form method="get" class="filtros-form">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; align-items: end;">
-                <div>
-                    <label>Usuario</label>
+    <div class="card-body">
+        <form method="get" class="auditoria-filtros">
+            <div class="filtros-row">
+                <div class="form-group">
+                    <label class="form-label">Usuario</label>
                     <select name="usuario" class="form-input">
-                        <option value="">Todos</option>
-                        {% for u in usuarios %}
-                        <option value="{{ u.pk }}" {% if filtros.usuario == u.pk|stringformat:"i" %}selected{% endif %}>
-                            {{ u.get_full_name|default:u.username }}
+                        <option value="">Todos los usuarios</option>
+                        {% for user in usuarios %}
+                        <option value="{{ user.pk }}" {% if filtros.usuario == user.pk|stringformat:"i" %}selected{% endif %}>
+                            {{ user.get_full_name|default:user.username }}
                         </option>
                         {% endfor %}
                     </select>
                 </div>
-                <div>
-                    <label>Acción</label>
+                
+                <div class="form-group">
+                    <label class="form-label">Acción</label>
                     <select name="accion" class="form-input">
-                        <option value="">Todas</option>
-                        {% for code, nombre in acciones %}
-                        <option value="{{ code }}" {% if filtros.accion == code %}selected{% endif %}>{{ nombre }}</option>
-                        {% endfor %}
+                        <option value="">Todas las acciones</option>
+                        <option value="CREAR" {% if filtros.accion == 'CREAR' %}selected{% endif %}>Crear</option>
+                        <option value="EDITAR" {% if filtros.accion == 'EDITAR' %}selected{% endif %}>Editar</option>
+                        <option value="ELIMINAR" {% if filtros.accion == 'ELIMINAR' %}selected{% endif %}>Eliminar</option>
+                        <option value="VER" {% if filtros.accion == 'VER' %}selected{% endif %}>Ver</option>
+                        <option value="LOGIN" {% if filtros.accion == 'LOGIN' %}selected{% endif %}>Login</option>
+                        <option value="LOGOUT" {% if filtros.accion == 'LOGOUT' %}selected{% endif %}>Logout</option>
                     </select>
                 </div>
-                <div>
-                    <label>Modelo</label>
+                
+                <div class="form-group">
+                    <label class="form-label">Modelo</label>
                     <select name="modelo" class="form-input">
-                        <option value="">Todos</option>
-                        {% for code, nombre in modelos %}
-                        <option value="{{ code }}" {% if filtros.modelo == code %}selected{% endif %}>{{ nombre }}</option>
-                        {% endfor %}
+                        <option value="">Todos los modelos</option>
+                        <option value="CAUSA" {% if filtros.modelo == 'CAUSA' %}selected{% endif %}>Causa</option>
+                        <option value="PERSONA" {% if filtros.modelo == 'PERSONA' %}selected{% endif %}>Persona</option>
+                        <option value="AUDIENCIA" {% if filtros.modelo == 'AUDIENCIA' %}selected{% endif %}>Audiencia</option>
+                        <option value="DOCUMENTO" {% if filtros.modelo == 'DOCUMENTO' %}selected{% endif %}>Documento</option>
+                        <option value="USUARIO" {% if filtros.modelo == 'USUARIO' %}selected{% endif %}>Usuario</option>
                     </select>
                 </div>
-                <div>
-                    <label>Desde</label>
-                    <input type="date" name="fecha_desde" value="{{ filtros.fecha_desde }}" class="form-input">
+                
+                <div class="form-group">
+                    <label class="form-label">Fecha desde</label>
+                    <input type="date" name="fecha_desde" value="{{ filtros.fecha_desde|default:'' }}" class="form-input">
                 </div>
-                <div>
-                    <label>Hasta</label>
-                    <input type="date" name="fecha_hasta" value="{{ filtros.fecha_hasta }}" class="form-input">
+                
+                <div class="form-group">
+                    <label class="form-label">Fecha hasta</label>
+                    <input type="date" name="fecha_hasta" value="{{ filtros.fecha_hasta|default:'' }}" class="form-input">
                 </div>
-                <div>
-                    <button type="submit" class="btn-primary">Filtrar</button>
-                    <a href="{% url 'gestion:auditoria_lista' %}" class="btn-link" style="margin-left: 10px;">Limpiar</a>
+                
+                <div class="form-group filtros-buttons">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-filter"></i> Filtrar
+                    </button>
+                    <a href="{% url 'gestion:auditoria_lista' %}" class="btn-secondary">
+                        <i class="fas fa-times"></i> Limpiar
+                    </a>
                 </div>
             </div>
         </form>
     </div>
 </div>
 
-<div class="panel-card">
-    <div class="panel-card-header">
-        <div>
-            <h3>Registros</h3>
-            <div class="muted-note">Mostrando {{ logs|length }} registros (máximo 500)</div>
+<!-- Resumen -->
+<div class="auditoria-resumen">
+    <div class="auditoria-stat">
+        <i class="fas fa-list-alt"></i>
+        <span class="stat-value">{{ total_registros }}</span>
+        <span class="stat-label">Total registros</span>
+    </div>
+    <div class="auditoria-stat">
+        <i class="fas fa-plus-circle"></i>
+        <span class="stat-value">{{ total_crear }}</span>
+        <span class="stat-label">Creaciones</span>
+    </div>
+    <div class="auditoria-stat">
+        <i class="fas fa-edit"></i>
+        <span class="stat-value">{{ total_editar }}</span>
+        <span class="stat-label">Ediciones</span>
+    </div>
+    <div class="auditoria-stat">
+        <i class="fas fa-trash"></i>
+        <span class="stat-value">{{ total_eliminar }}</span>
+        <span class="stat-label">Eliminaciones</span>
+    </div>
+</div>
+
+<!-- Lista de logs -->
+<div class="card">
+    <div class="card-header">
+        <div class="list-card-title">
+            <span class="title-text">Registros de actividad</span>
+            <span class="title-count">{{ logs|length }} registros mostrados</span>
+        </div>
+        <div class="list-card-search">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Buscar en registros..." class="search-input" id="searchInput">
         </div>
     </div>
-
-    <div class="panel-card-body">
-        <table class="causas-table">
+    <div class="card-body card-body-table">
+        {% if logs %}
+        <table class="inner-table">
             <thead>
                 <tr>
-                    <th>Fecha</th>
+                    <th>Fecha / Hora</th>
                     <th>Usuario</th>
                     <th>Acción</th>
                     <th>Modelo</th>
-                    <th>Objeto</th>
+                    <th>Descripción</th>
                     <th>IP</th>
-                    <th>Detalle</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tableBody">
             {% for log in logs %}
                 <tr>
-                    <td>{{ log.fecha|date:"d/m/Y H:i" }}</td>
-                    <td>{{ log.usuario.get_full_name|default:log.usuario.username|default:"-" }}</td>
+                    <td>
+                        <div class="cell-datetime">
+                            <span class="datetime-date">{{ log.fecha|date:"d/m/Y" }}</span>
+                            <span class="datetime-time">{{ log.fecha|time:"H:i:s" }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="cell-user">
+                            <span class="user-avatar">{{ log.usuario.username|slice:":1"|upper }}</span>
+                            <span class="user-name">{{ log.usuario.get_full_name|default:log.usuario.username }}</span>
+                        </div>
+                    </td>
                     <td>
                         {% if log.accion == 'CREAR' %}
-                            <span class="status-badge green">{{ log.get_accion_display }}</span>
+                            <span class="action-badge action-crear"><i class="fas fa-plus"></i> Crear</span>
                         {% elif log.accion == 'EDITAR' %}
-                            <span class="status-badge blue">{{ log.get_accion_display }}</span>
+                            <span class="action-badge action-editar"><i class="fas fa-edit"></i> Editar</span>
                         {% elif log.accion == 'ELIMINAR' %}
-                            <span class="status-badge red">{{ log.get_accion_display }}</span>
+                            <span class="action-badge action-eliminar"><i class="fas fa-trash"></i> Eliminar</span>
+                        {% elif log.accion == 'VER' %}
+                            <span class="action-badge action-ver"><i class="fas fa-eye"></i> Ver</span>
                         {% elif log.accion == 'LOGIN' %}
-                            <span class="status-badge gray">{{ log.get_accion_display }}</span>
+                            <span class="action-badge action-login"><i class="fas fa-sign-in-alt"></i> Login</span>
                         {% elif log.accion == 'LOGOUT' %}
-                            <span class="status-badge gray">{{ log.get_accion_display }}</span>
+                            <span class="action-badge action-logout"><i class="fas fa-sign-out-alt"></i> Logout</span>
                         {% else %}
-                            <span class="status-badge yellow">{{ log.get_accion_display }}</span>
+                            <span class="action-badge action-otro">{{ log.get_accion_display }}</span>
                         {% endif %}
                     </td>
-                    <td>{{ log.get_modelo_display }}</td>
-                    <td>{{ log.objeto_repr|default:"-"|truncatewords:5 }}</td>
-                    <td>{{ log.ip_address|default:"-" }}</td>
-                    <td><a href="{% url 'gestion:auditoria_detalle' log.pk %}">Ver</a></td>
+                    <td>
+                        <span class="model-badge">{{ log.modelo }}</span>
+                    </td>
+                    <td class="cell-descripcion">{{ log.descripcion|truncatewords:8 }}</td>
+                    <td class="cell-code">{{ log.ip_address|default:"-" }}</td>
+                    <td>
+                        <a href="{% url 'gestion:auditoria_detalle' log.pk %}" class="action-link">Ver detalle</a>
+                    </td>
                 </tr>
-            {% empty %}
-                <tr><td colspan="7">No hay registros de auditoría.</td></tr>
             {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <div class="empty-state-small">
+            <i class="fas fa-history"></i>
+            <p>No hay registros de auditoría que coincidan con los filtros.</p>
+        </div>
+        {% endif %}
     </div>
 </div>
+
+<script>
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#tableBody tr');
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+</script>
+{% include 'components/paginacion.html' %}
 {% endblock %}

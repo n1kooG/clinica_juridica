@@ -16,6 +16,9 @@
     </div>
     <div class="page-header-actions">
         <a href="{% url 'gestion:causas_lista' %}" class="btn-secondary">Volver</a>
+        <a href="{% url 'gestion:causa_editar' causa.pk %}" class="btn-secondary">
+            <i class="fas fa-edit"></i> Editar
+        </a>
         <a href="{% url 'gestion:causa_linea_tiempo' causa.pk %}" class="btn-primary">Línea de tiempo</a>
     </div>
 </div>
@@ -71,7 +74,77 @@
             </div>
         </div>
 
-        <!-- Personas asociadas -->
+        <!-- Información del tribunal -->
+        {% if causa.tribunal %}
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Información del tribunal</h2>
+            </div>
+            <div class="card-body">
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">Nombre</span>
+                        <span class="detail-value">{{ causa.tribunal.nombre }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Tipo</span>
+                        <span class="detail-value">{{ causa.tribunal.get_tipo_display }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Ciudad</span>
+                        <span class="detail-value">{{ causa.tribunal.ciudad }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Región</span>
+                        <span class="detail-value">{{ causa.tribunal.get_region_display }}</span>
+                    </div>
+                    {% if causa.tribunal.direccion %}
+                    <div class="detail-field detail-field-full">
+                        <span class="detail-label">Dirección</span>
+                        <span class="detail-value">{{ causa.tribunal.direccion }}{% if causa.tribunal.comuna %}, {{ causa.tribunal.comuna }}{% endif %}</span>
+                    </div>
+                    {% endif %}
+                    {% if causa.tribunal.telefono %}
+                    <div class="detail-field">
+                        <span class="detail-label">Teléfono</span>
+                        <span class="detail-value">{{ causa.tribunal.telefono }}</span>
+                    </div>
+                    {% endif %}
+                    {% if causa.tribunal.email %}
+                    <div class="detail-field">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">{{ causa.tribunal.email }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Información adicional -->
+        {% if causa.descripcion or causa.observaciones %}
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Información adicional</h2>
+            </div>
+            <div class="card-body">
+                {% if causa.descripcion %}
+                <div class="detail-section">
+                    <h4 class="detail-section-title">Descripción del caso</h4>
+                    <p class="detail-text">{{ causa.descripcion|linebreaks }}</p>
+                </div>
+                {% endif %}
+                {% if causa.observaciones %}
+                <div class="detail-section {% if causa.descripcion %}detail-section-border{% endif %}">
+                    <h4 class="detail-section-title">Observaciones internas</h4>
+                    <p class="detail-text">{{ causa.observaciones|linebreaks }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+<!-- Personas asociadas -->
         <div class="card">
             <div class="card-header">
                 <div>
@@ -90,6 +163,7 @@
                             <th>Persona</th>
                             <th>RUN</th>
                             <th>Rol en la causa</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -102,6 +176,11 @@
                             </td>
                             <td class="cell-code">{{ rel.persona.run }}</td>
                             <td>{{ rel.rol_en_causa }}</td>
+                            <td class="cell-actions">
+                                <a href="{% url 'gestion:causa_persona_editar' rel.pk %}" class="action-link">Editar</a>
+                                <a href="{% url 'gestion:causa_persona_eliminar' rel.pk %}" class="action-link action-link-danger" 
+                                onclick="return confirm('¿Estás seguro de desvincular a esta persona de la causa?')">Eliminar</a>
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>

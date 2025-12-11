@@ -47,7 +47,7 @@ class PersonaForm(forms.ModelForm):
 class CausaForm(forms.ModelForm):
     class Meta:
         model = Causa
-        fields = ['rit', 'ruc', 'tribunal', 'materia', 'caratula', 'estado', 'responsable']
+        fields = ['rit', 'ruc', 'tribunal', 'materia', 'caratula', 'estado', 'responsable', 'descripcion', 'observaciones']
 
 class AudienciaForm(forms.ModelForm):
     class Meta:

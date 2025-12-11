@@ -1,79 +1,145 @@
 {% extends 'base.html' %}
-{% load gestion_tags %}
 {% block title %}Calendario{% endblock %}
+{% block section_title %}Calendario{% endblock %}
 
 {% block content %}
-<div class="content-header">
-    <div>
-        <h1>Calendario</h1>
-        <p class="lead">Audiencias y eventos programados.</p>
+<div class="page-header-with-actions">
+    <div class="page-header-left">
+        <h1 class="page-title">Calendario</h1>
+        <p class="page-subtitle">Visualiza audiencias y eventos programados</p>
     </div>
-    <div>
-        {% if puede_crear %}
-        <a href="{% url 'gestion:audiencia_crear' %}" class="btn-primary">Nueva audiencia</a>
-        {% endif %}
+    <div class="page-header-actions">
+        <a href="{% url 'gestion:audiencia_crear' %}" class="btn-primary">
+            <i class="fas fa-plus"></i> Nueva audiencia
+        </a>
     </div>
 </div>
 
-<div class="panel-card">
-    <div class="panel-card-header">
-        <div class="calendario-nav">
-            <a href="?mes={{ mes_anterior }}&anio={{ anio_anterior }}" class="btn-link">← Anterior</a>
-            <h3>{{ nombre_mes }} {{ anio }}</h3>
-            <a href="?mes={{ mes_siguiente }}&anio={{ anio_siguiente }}" class="btn-link">Siguiente →</a>
+<div class="calendar-layout">
+    <!-- Calendario principal -->
+    <div class="calendar-main">
+        <div class="card">
+            <div class="calendar-header">
+                <div class="calendar-nav">
+                    <a href="?mes={{ mes_anterior|date:'Y-m' }}" class="calendar-nav-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <h2 class="calendar-title">
+                        {{ fecha_actual|date:"F Y" }}
+                    </h2>
+                    <a href="?mes={{ mes_siguiente|date:'Y-m' }}" class="calendar-nav-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+                <button onclick="location.href='{% url 'gestion:calendario' %}'" class="btn-secondary btn-sm">
+                    Hoy
+                </button>
+            </div>
+            
+            <div class="calendar-grid">
+                <!-- Encabezados de días -->
+                <div class="calendar-weekdays">
+                    <div class="calendar-weekday">LUN</div>
+                    <div class="calendar-weekday">MAR</div>
+                    <div class="calendar-weekday">MIÉ</div>
+                    <div class="calendar-weekday">JUE</div>
+                    <div class="calendar-weekday">VIE</div>
+                    <div class="calendar-weekday">SÁB</div>
+                    <div class="calendar-weekday">DOM</div>
+                </div>
+                
+                <!-- Días del mes -->
+                <div class="calendar-days">
+                    {% for semana in semanas %}
+                        {% for dia in semana %}
+                        <div class="calendar-day {% if dia.month != fecha_actual.month %}other-month{% endif %} {% if dia == hoy %}today{% endif %}">
+                            <div class="calendar-day-header">
+                                <span class="calendar-day-number">{{ dia.day }}</span>
+                            </div>
+                            
+                            {% if dia.month == fecha_actual.month %}
+                                {% for key, audiencias in audiencias_por_dia.items %}
+                                    {% if key == dia.day %}
+                                    <div class="calendar-day-events">
+                                        {% for audiencia in audiencias %}
+                                        <div class="calendar-event calendar-event-{{ audiencia.estado|lower }}">
+                                            <span class="calendar-event-time">{{ audiencia.hora }}</span>
+                                            <span class="calendar-event-title">{{ audiencia.causa }}</span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="panel-card-body">
-        <table class="calendario-table">
-            <thead>
-                <tr>
-                    <th>Lun</th>
-                    <th>Mar</th>
-                    <th>Mié</th>
-                    <th>Jue</th>
-                    <th>Vie</th>
-                    <th>Sáb</th>
-                    <th>Dom</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for semana in semanas %}
-                <tr>
-                {% for dia in semana %}
-                    <td class="calendario-dia {% if dia == 0 %}dia-vacio{% endif %}{% if dia == hoy.day and mes == hoy.month and anio == hoy.year %} dia-hoy{% endif %}{% if dia in audiencias_por_dia %} dia-con-evento{% endif %}">
-                        {% if dia != 0 %}
-                            <div class="dia-numero">{{ dia }}</div>
-                            {% if dia in audiencias_por_dia %}
-                                <div class="dia-eventos">
-                                {% for aud in audiencias_por_dia|get_item:dia %}
-                                    <a href="{% url 'gestion:causa_detalle' aud.causa.pk %}" class="evento-item evento-{{ aud.estado|lower }}">
-                                        <span class="evento-hora">{{ aud.fecha_hora|time:"H:i" }}</span>
-                                        <span class="evento-titulo">{{ aud.causa.caratula|truncatewords:3 }}</span>
-                                    </a>
-                                {% endfor %}
-                                </div>
-                            {% endif %}
-                        {% endif %}
-                    </td>
-                {% endfor %}
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<div class="panel-card" style="margin-top: 20px;">
-    <div class="panel-card-header">
-        <h3>Leyenda</h3>
-    </div>
-    <div class="panel-card-body">
-        <div class="leyenda">
-            <span class="leyenda-item"><span class="evento-item evento-programada">●</span> Programada</span>
-            <span class="leyenda-item"><span class="evento-item evento-confirmada">●</span> Confirmada</span>
-            <span class="leyenda-item"><span class="evento-item evento-realizada">●</span> Realizada</span>
-            <span class="leyenda-item"><span class="evento-item evento-suspendida">●</span> Suspendida</span>
+    
+    <!-- Sidebar con próximas audiencias -->
+    <div class="calendar-sidebar">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Próximas audiencias</h3>
+            </div>
+            <div class="card-body">
+                {% if proximas %}
+                <div class="upcoming-list">
+                    {% for audiencia in proximas %}
+                    <div class="upcoming-item">
+                        <div class="upcoming-date">
+                            <span class="upcoming-day">{{ audiencia.fecha_hora|date:"d" }}</span>
+                            <span class="upcoming-month">{{ audiencia.fecha_hora|date:"M" }}</span>
+                        </div>
+                        <div class="upcoming-info">
+                            <div class="upcoming-title">{{ audiencia.causa.caratula|truncatewords:5 }}</div>
+                            <div class="upcoming-time">
+                                <i class="fas fa-clock"></i> {{ audiencia.fecha_hora|date:"H:i" }}
+                            </div>
+                            <div class="upcoming-location">
+                                <i class="fas fa-map-marker-alt"></i> {{ audiencia.lugar|default:"Por definir" }}
+                            </div>
+                        </div>
+                        <span class="status-badge status-{% if audiencia.estado == 'PROGRAMADA' %}orange{% elif audiencia.estado == 'CONFIRMADA' %}blue{% else %}gray{% endif %}">
+                            {{ audiencia.get_estado_display }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="empty-message">No hay audiencias programadas próximamente.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Resumen del mes -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Resumen del mes</h3>
+            </div>
+            <div class="card-body">
+                <div class="calendar-stats">
+                    <div class="calendar-stat">
+                        <span class="calendar-stat-number">{{ total_mes }}</span>
+                        <span class="calendar-stat-label">Total audiencias</span>
+                    </div>
+                    <div class="calendar-stat">
+                        <span class="calendar-stat-number">{{ programadas_mes }}</span>
+                        <span class="calendar-stat-label">Programadas</span>
+                    </div>
+                    <div class="calendar-stat">
+                        <span class="calendar-stat-number">{{ confirmadas_mes }}</span>
+                        <span class="calendar-stat-label">Confirmadas</span>
+                    </div>
+                    <div class="calendar-stat">
+                        <span class="calendar-stat-number">{{ realizadas_mes }}</span>
+                        <span class="calendar-stat-label">Realizadas</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

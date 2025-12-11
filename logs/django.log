@@ -1,0 +1,668 @@
+[2025-12-11 01:18:29] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 01:20:20] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 01:20:21] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 01:20:24] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 01:20:25] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 01:20:27] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 01:20:27] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 01:20:31] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 01:20:31] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 01:20:36] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 01:20:37] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 01:21:03] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 01:21:03] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 01:21:16] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 01:21:17] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 01:21:43] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 01:21:44] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 01:24:32] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 01:24:33] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 01:27:55] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 01:27:57] INFO django.server basehttp "GET /admin-panel/ HTTP/1.1" 200 11269
+[2025-12-11 01:27:57] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 01:27:57] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 8612
+[2025-12-11 01:27:57] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 67567
+[2025-12-11 01:27:57] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 14861
+[2025-12-11 01:28:00] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 6388
+[2025-12-11 01:28:02] INFO django.server basehttp "GET /causas/nueva/ HTTP/1.1" 200 24779
+[2025-12-11 01:28:10] INFO django.server basehttp "POST /causas/nueva/ HTTP/1.1" 200 25083
+[2025-12-11 01:30:29] INFO django.server basehttp "POST /causas/nueva/ HTTP/1.1" 302 0
+[2025-12-11 01:30:29] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 7618
+[2025-12-11 01:30:29] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 01:30:35] INFO django.server basehttp "GET /causas/2/editar/ HTTP/1.1" 200 24824
+[2025-12-11 01:30:49] INFO django.server basehttp "POST /causas/2/editar/ HTTP/1.1" 302 0
+[2025-12-11 01:30:49] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 12152
+[2025-12-11 01:31:13] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 7258
+[2025-12-11 01:31:15] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 11787
+[2025-12-11 01:31:19] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 7258
+[2025-12-11 01:31:21] INFO django.server basehttp "GET /causas/2/editar/ HTTP/1.1" 200 24824
+[2025-12-11 01:31:28] INFO django.server basehttp "POST /causas/2/editar/ HTTP/1.1" 302 0
+[2025-12-11 01:31:28] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 12593
+[2025-12-11 01:31:46] INFO django.server basehttp "GET /causas/2/linea-tiempo/ HTTP/1.1" 200 6831
+[2025-12-11 01:31:46] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 01:32:10] INFO django.server basehttp "GET /auditoria/ HTTP/1.1" 200 40579
+[2025-12-11 01:32:15] INFO django.server basehttp "GET /auditoria/25/ HTTP/1.1" 200 10734
+[2025-12-11 01:32:48] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 12226
+[2025-12-11 01:33:09] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 7258
+[2025-12-11 01:33:09] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 304 0
+[2025-12-11 01:33:13] INFO django.server basehttp "GET /personas/ HTTP/1.1" 200 6642
+[2025-12-11 01:33:13] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 01:33:14] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 5709
+[2025-12-11 01:33:16] INFO django.server basehttp "GET /documentos/ HTTP/1.1" 200 5743
+[2025-12-11 01:33:16] INFO django.server basehttp "GET /buscar/ HTTP/1.1" 200 13517
+[2025-12-11 01:33:17] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 19740
+[2025-12-11 01:33:18] INFO django.server basehttp "GET /reportes/ HTTP/1.1" 200 28072
+[2025-12-11 01:33:20] INFO django.server basehttp "GET /auditoria/ HTTP/1.1" 200 40579
+[2025-12-11 01:33:32] INFO django.server basehttp "GET /auditoria/26/ HTTP/1.1" 200 10734
+[2025-12-11 01:33:39] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 12228
+[2025-12-11 01:34:10] INFO django.server basehttp "POST /logout/ HTTP/1.1" 302 0
+[2025-12-11 01:34:10] INFO django.server basehttp "GET /login/ HTTP/1.1" 200 2904
+[2025-12-11 01:34:14] INFO django.server basehttp "POST /login/ HTTP/1.1" 302 0
+[2025-12-11 01:34:14] INFO django.server basehttp "GET / HTTP/1.1" 200 10266
+[2025-12-11 01:34:19] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 6943
+[2025-12-11 01:34:23] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 11913
+[2025-12-11 01:34:30] INFO django.server basehttp "GET /causas/2/linea-tiempo/ HTTP/1.1" 200 6516
+[2025-12-11 01:34:45] INFO django.server basehttp "GET /causas/2/linea-tiempo/ HTTP/1.1" 200 6516
+[2025-12-11 01:34:48] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 11913
+[2025-12-11 01:34:48] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 01:39:55] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 6943
+[2025-12-11 01:39:55] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 01:39:55] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 304 0
+[2025-12-11 01:39:57] INFO django.server basehttp "GET /causas/2/editar/ HTTP/1.1" 200 24509
+[2025-12-11 01:41:51] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 01:52:11] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 01:52:12] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 01:53:13] INFO django.server basehttp "GET /causas/2/editar/ HTTP/1.1" 200 24509
+[2025-12-11 01:53:13] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 01:53:13] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 8612
+[2025-12-11 01:53:13] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 72617
+[2025-12-11 01:53:13] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 14861
+[2025-12-11 01:53:16] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 6943
+[2025-12-11 01:53:16] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 01:53:18] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 13320
+[2025-12-11 01:53:18] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 01:53:53] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 6943
+[2025-12-11 01:53:53] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 01:53:57] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 13320
+[2025-12-11 01:53:57] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 01:53:58] INFO django.server basehttp "GET /causas/2/linea-tiempo/ HTTP/1.1" 200 12027
+[2025-12-11 01:53:58] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 01:54:14] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 13320
+[2025-12-11 01:54:14] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 01:55:35] INFO django.server basehttp "GET /causas/2/editar/ HTTP/1.1" 200 24509
+[2025-12-11 01:55:35] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 01:56:04] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 6943
+[2025-12-11 01:56:04] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 01:56:05] INFO django.server basehttp "GET /causas/nueva/ HTTP/1.1" 200 24464
+[2025-12-11 01:56:05] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:06:25] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\models.py changed, reloading.
+[2025-12-11 02:06:26] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:06:35] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\forms.py changed, reloading.
+[2025-12-11 02:06:35] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:11:49] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:11:52] INFO django.server basehttp "GET /causas/nueva/ HTTP/1.1" 200 24464
+[2025-12-11 02:11:52] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 02:11:52] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 8612
+[2025-12-11 02:11:52] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 73274
+[2025-12-11 02:11:53] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 14861
+[2025-12-11 02:11:58] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 13370
+[2025-12-11 02:11:58] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:12:18] INFO django.server basehttp "GET /causas/2/editar/ HTTP/1.1" 200 24509
+[2025-12-11 02:12:18] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:12:21] INFO django.server basehttp "POST /causas/2/editar/ HTTP/1.1" 302 0
+[2025-12-11 02:12:21] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 14666
+[2025-12-11 02:12:21] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:13:04] INFO django.server basehttp "GET /causas/2/editar/ HTTP/1.1" 200 24513
+[2025-12-11 02:13:04] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:13:09] INFO django.server basehttp "POST /causas/2/editar/ HTTP/1.1" 302 0
+[2025-12-11 02:13:09] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 15185
+[2025-12-11 02:13:09] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:20:14] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\middleware.py changed, reloading.
+[2025-12-11 02:20:15] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:20:35] INFO django.server basehttp "GET /reportes/ HTTP/1.1" 200 27757
+[2025-12-11 02:20:35] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:20:49] INFO django.server basehttp "GET /reportes/ HTTP/1.1" 200 27757
+[2025-12-11 02:20:49] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 02:20:49] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 8612
+[2025-12-11 02:20:49] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 73274
+[2025-12-11 02:20:49] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 14861
+[2025-12-11 02:20:51] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 5394
+[2025-12-11 02:20:51] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:20:52] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 6943
+[2025-12-11 02:20:52] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:20:54] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 14820
+[2025-12-11 02:20:54] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:20:58] INFO django.server basehttp "GET /causas/2/editar/ HTTP/1.1" 200 24589
+[2025-12-11 02:20:58] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:21:03] INFO django.server basehttp "POST /causas/2/editar/ HTTP/1.1" 302 0
+[2025-12-11 02:21:03] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 15122
+[2025-12-11 02:21:03] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:21:15] INFO django.server basehttp "GET /causas/2/editar/ HTTP/1.1" 200 24518
+[2025-12-11 02:21:15] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:21:18] INFO django.server basehttp "POST /causas/2/editar/ HTTP/1.1" 302 0
+[2025-12-11 02:21:18] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 15422
+[2025-12-11 02:21:18] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:21:31] INFO django.server basehttp "GET /causas/2/editar/ HTTP/1.1" 200 24574
+[2025-12-11 02:21:31] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:21:35] INFO django.server basehttp "POST /causas/2/editar/ HTTP/1.1" 302 0
+[2025-12-11 02:21:35] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 15470
+[2025-12-11 02:21:35] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:22:07] INFO django.server basehttp "GET /causas/2/editar/ HTTP/1.1" 200 24621
+[2025-12-11 02:22:07] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:22:15] INFO django.server basehttp "POST /causas/2/editar/ HTTP/1.1" 302 0
+[2025-12-11 02:22:15] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 15365
+[2025-12-11 02:22:15] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:22:22] INFO django.server basehttp "GET /relaciones/nueva/?causa=2 HTTP/1.1" 200 6361
+[2025-12-11 02:22:22] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:22:39] INFO django.server basehttp "GET /personas/ HTTP/1.1" 200 6206
+[2025-12-11 02:22:39] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:22:44] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 5394
+[2025-12-11 02:22:44] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:22:45] INFO django.server basehttp "GET /documentos/ HTTP/1.1" 200 5428
+[2025-12-11 02:22:45] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:22:45] INFO django.server basehttp "GET /buscar/ HTTP/1.1" 200 13202
+[2025-12-11 02:22:45] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:22:46] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 19425
+[2025-12-11 02:22:46] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:22:47] INFO django.server basehttp "GET /reportes/ HTTP/1.1" 200 27757
+[2025-12-11 02:22:47] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:22:50] INFO django.server basehttp "GET / HTTP/1.1" 200 10250
+[2025-12-11 02:22:50] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:22:52] INFO django.server basehttp "GET /perfil/ HTTP/1.1" 200 12266
+[2025-12-11 02:22:53] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:23:07] INFO django.server basehttp "POST /logout/ HTTP/1.1" 302 0
+[2025-12-11 02:23:07] INFO django.server basehttp "GET /login/ HTTP/1.1" 200 2904
+[2025-12-11 02:23:07] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:23:17] INFO django.server basehttp "POST /login/ HTTP/1.1" 302 0
+[2025-12-11 02:23:17] INFO django.server basehttp "GET / HTTP/1.1" 200 10670
+[2025-12-11 02:23:17] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:23:19] INFO django.server basehttp "GET /admin-panel/ HTTP/1.1" 200 11269
+[2025-12-11 02:23:19] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:23:28] INFO django.server basehttp "GET /admin-panel/catalogos/tipos_documento/ HTTP/1.1" 200 18525
+[2025-12-11 02:23:28] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:23:33] INFO django.server basehttp "GET /admin-panel/catalogos/materias/ HTTP/1.1" 200 31328
+[2025-12-11 02:23:33] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:23:37] INFO django.server basehttp "GET /admin-panel/catalogos/tribunales/ HTTP/1.1" 200 45326
+[2025-12-11 02:23:37] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:23:39] INFO django.server basehttp "GET /admin-panel/catalogos/estados/ HTTP/1.1" 200 11011
+[2025-12-11 02:23:39] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:23:43] INFO django.server basehttp "GET /admin-panel/catalogos/estados/2/editar/ HTTP/1.1" 200 6820
+[2025-12-11 02:23:43] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:23:55] INFO django.server basehttp "GET /admin-panel/catalogos/estados/1/editar/ HTTP/1.1" 200 6822
+[2025-12-11 02:23:55] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:23:59] INFO django.server basehttp "POST /admin-panel/catalogos/estados/1/editar/ HTTP/1.1" 302 0
+[2025-12-11 02:23:59] INFO django.server basehttp "GET /admin-panel/catalogos/estados/ HTTP/1.1" 200 11401
+[2025-12-11 02:23:59] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:24:59] INFO django.server basehttp "GET /admin-panel/ HTTP/1.1" 200 11269
+[2025-12-11 02:24:59] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:25:03] INFO django.server basehttp "GET /admin-panel/usuarios/crear/ HTTP/1.1" 200 10724
+[2025-12-11 02:25:03] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:27:13] INFO django.server basehttp "GET /documentos/ HTTP/1.1" 200 5743
+[2025-12-11 02:27:13] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:27:15] INFO django.server basehttp "GET /documentos/crear/ HTTP/1.1" 200 9961
+[2025-12-11 02:27:15] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:27:43] INFO django.server basehttp "GET /buscar/ HTTP/1.1" 200 13517
+[2025-12-11 02:27:43] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:27:44] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 5709
+[2025-12-11 02:27:44] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:27:45] INFO django.server basehttp "GET /reportes/ HTTP/1.1" 200 28072
+[2025-12-11 02:27:45] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:27:46] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 19740
+[2025-12-11 02:27:46] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:27:46] INFO django.server basehttp "GET /buscar/ HTTP/1.1" 200 13517
+[2025-12-11 02:27:46] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:27:47] INFO django.server basehttp "GET /documentos/ HTTP/1.1" 200 5743
+[2025-12-11 02:27:47] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:27:49] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 5709
+[2025-12-11 02:27:49] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:27:50] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 7258
+[2025-12-11 02:27:50] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:27:50] INFO django.server basehttp "GET / HTTP/1.1" 200 10675
+[2025-12-11 02:27:50] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:30:46] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:30:47] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:34:42] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:34:42] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:34:55] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:34:56] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:35:07] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:35:08] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:35:29] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:35:30] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:42:30] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:42:31] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:42:53] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:42:54] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:43:11] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:43:12] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:44:04] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:44:05] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:44:07] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:44:07] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:44:18] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:44:19] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:44:22] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:44:23] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:44:25] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:44:26] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:44:31] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:44:31] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:44:51] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:44:51] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:45:19] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:45:20] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:47:48] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\models.py changed, reloading.
+[2025-12-11 02:47:49] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:48:00] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\models.py changed, reloading.
+[2025-12-11 02:48:00] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:48:28] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\models.py changed, reloading.
+[2025-12-11 02:48:29] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:48:41] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\models.py changed, reloading.
+[2025-12-11 02:48:41] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:48:46] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\models.py changed, reloading.
+[2025-12-11 02:48:47] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:48:52] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\models.py changed, reloading.
+[2025-12-11 02:48:53] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:49:22] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\models.py changed, reloading.
+[2025-12-11 02:49:22] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:49:57] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\models.py changed, reloading.
+[2025-12-11 02:49:58] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:50:09] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\models.py changed, reloading.
+[2025-12-11 02:50:09] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:50:20] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\models.py changed, reloading.
+[2025-12-11 02:50:21] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:50:33] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\models.py changed, reloading.
+[2025-12-11 02:50:34] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:50:52] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 02:51:09] INFO django.server basehttp "GET / HTTP/1.1" 200 9638
+[2025-12-11 02:51:09] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:51:09] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 304 0
+[2025-12-11 02:51:20] INFO django.server basehttp "GET /personas/nueva/ HTTP/1.1" 200 16461
+[2025-12-11 02:51:20] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:51:23] INFO django.server basehttp "GET /personas/ HTTP/1.1" 200 6521
+[2025-12-11 02:51:23] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:51:26] INFO django.server basehttp "GET / HTTP/1.1" 200 9638
+[2025-12-11 02:51:26] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:51:38] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 6930
+[2025-12-11 02:51:38] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:51:41] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 6339
+[2025-12-11 02:51:41] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:51:44] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 6930
+[2025-12-11 02:51:44] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:51:46] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 15321
+[2025-12-11 02:51:46] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:51:57] INFO django.server basehttp "GET / HTTP/1.1" 200 9638
+[2025-12-11 02:51:57] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:53:49] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 19636
+[2025-12-11 02:53:49] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:54:04] INFO django.server basehttp "GET /audiencias/crear/ HTTP/1.1" 200 9737
+[2025-12-11 02:54:04] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:54:20] INFO django.server basehttp "POST /audiencias/crear/ HTTP/1.1" 302 0
+[2025-12-11 02:54:20] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 7615
+[2025-12-11 02:54:20] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:54:23] INFO django.server basehttp "GET / HTTP/1.1" 200 9875
+[2025-12-11 02:54:23] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:54:26] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 16146
+[2025-12-11 02:54:27] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:54:28] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 19871
+[2025-12-11 02:54:28] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:54:45] INFO django.server basehttp "GET / HTTP/1.1" 200 9875
+[2025-12-11 02:54:45] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:54:58] INFO django.server basehttp "GET /personas/nueva/ HTTP/1.1" 200 16461
+[2025-12-11 02:54:58] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:55:23] INFO django.server basehttp "POST /personas/nueva/ HTTP/1.1" 302 0
+[2025-12-11 02:55:23] INFO django.server basehttp "GET /personas/ HTTP/1.1" 200 7611
+[2025-12-11 02:55:23] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:55:25] INFO django.server basehttp "GET /personas/nueva/ HTTP/1.1" 200 16461
+[2025-12-11 02:55:27] INFO django.server basehttp "GET /personas/ HTTP/1.1" 200 7249
+[2025-12-11 02:55:29] INFO django.server basehttp "GET / HTTP/1.1" 200 9870
+[2025-12-11 02:55:29] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 02:55:33] INFO django.server basehttp "GET / HTTP/1.1" 200 9870
+[2025-12-11 02:55:33] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 02:55:33] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 8612
+[2025-12-11 02:55:33] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 75049
+[2025-12-11 02:55:33] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 14861
+[2025-12-11 02:56:22] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 19871
+[2025-12-11 02:56:23] INFO django.server basehttp "GET /buscar/ HTTP/1.1" 200 13517
+[2025-12-11 02:56:24] INFO django.server basehttp "GET /documentos/ HTTP/1.1" 200 5621
+[2025-12-11 02:56:25] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 7251
+[2025-12-11 02:56:26] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 19871
+[2025-12-11 02:56:28] INFO django.server basehttp "GET /reportes/ HTTP/1.1" 200 28083
+[2025-12-11 02:56:33] INFO django.server basehttp "GET /auditoria/ HTTP/1.1" 200 40251
+[2025-12-11 02:56:40] INFO django.server basehttp "GET / HTTP/1.1" 200 9870
+[2025-12-11 02:57:15] WARNING django.server basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15009
+[2025-12-11 02:57:45] INFO django.server basehttp "GET /perfil/ HTTP/1.1" 200 12598
+[2025-12-11 02:57:45] WARNING django.server basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15009
+[2025-12-11 02:57:54] WARNING django.server basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15009
+[2025-12-11 02:59:01] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 02:59:01] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:00:13] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 03:00:14] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:00:23] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 03:00:24] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:00:35] INFO django.server basehttp "GET / HTTP/1.1" 200 10690
+[2025-12-11 03:00:35] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 03:00:35] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 8612
+[2025-12-11 03:00:35] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 75049
+[2025-12-11 03:00:35] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 14861
+[2025-12-11 03:02:11] INFO django.server basehttp "GET / HTTP/1.1" 200 11126
+[2025-12-11 03:02:11] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 03:02:11] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 8612
+[2025-12-11 03:02:11] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 75049
+[2025-12-11 03:02:12] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 14861
+[2025-12-11 03:04:22] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 03:04:23] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:04:27] INFO django.server basehttp "GET / HTTP/1.1" 200 10740
+[2025-12-11 03:04:28] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 03:04:28] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 8612
+[2025-12-11 03:04:28] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 75049
+[2025-12-11 03:04:28] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 14861
+[2025-12-11 03:04:56] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\clinica_juridica\settings.py changed, reloading.
+[2025-12-11 03:04:57] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:06:11] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\signals.py changed, reloading.
+[2025-12-11 03:06:11] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:06:23] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\signals.py changed, reloading.
+[2025-12-11 03:06:24] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:06:29] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\signals.py changed, reloading.
+[2025-12-11 03:06:30] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:06:54] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\signals.py changed, reloading.
+[2025-12-11 03:06:55] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:07:29] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 03:07:29] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:07:48] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 03:07:48] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:07:55] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 03:07:56] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:08:34] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 03:08:34] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:08:53] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 03:08:54] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:16:30] INFO django.server basehttp "GET /admin-panel/ HTTP/1.1" 200 11269
+[2025-12-11 03:16:30] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 03:16:32] INFO django.server basehttp "GET /admin-panel/usuarios/crear/ HTTP/1.1" 200 10724
+[2025-12-11 03:16:44] INFO django.server basehttp "GET /admin-panel/usuarios/2/editar/ HTTP/1.1" 200 10264
+[2025-12-11 03:16:49] INFO django.server basehttp "GET /perfil/ HTTP/1.1" 200 12600
+[2025-12-11 03:16:51] INFO django.server basehttp "GET /perfil/editar/ HTTP/1.1" 200 8085
+[2025-12-11 03:16:55] INFO django.server basehttp "GET /perfil/cambiar-password/ HTTP/1.1" 200 9040
+[2025-12-11 03:19:02] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\clinica_juridica\settings.py changed, reloading.
+[2025-12-11 03:19:03] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:19:16] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\clinica_juridica\settings.py changed, reloading.
+[2025-12-11 03:19:16] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:23:21] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 03:23:22] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:23:24] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 03:23:25] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:23:28] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 03:23:29] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:23:39] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 03:23:40] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:23:54] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\views.py changed, reloading.
+[2025-12-11 03:23:55] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:24:41] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\urls.py changed, reloading.
+[2025-12-11 03:24:41] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:24:45] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\urls.py changed, reloading.
+[2025-12-11 03:24:46] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:24:47] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\urls.py changed, reloading.
+[2025-12-11 03:24:48] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:25:49] INFO django.server basehttp "GET /perfil/cambiar-password/ HTTP/1.1" 200 11347
+[2025-12-11 03:25:49] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 76089
+[2025-12-11 03:25:49] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 9403
+[2025-12-11 03:27:02] INFO django.server basehttp "GET /admin-panel/ HTTP/1.1" 200 11269
+[2025-12-11 03:27:02] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 03:27:02] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 304 0
+[2025-12-11 03:27:03] INFO django.server basehttp "GET /admin-panel/usuarios/crear/ HTTP/1.1" 200 10724
+[2025-12-11 03:27:11] INFO django.server basehttp "GET / HTTP/1.1" 200 10765
+[2025-12-11 03:41:25] INFO django.server basehttp "GET / HTTP/1.1" 200 10768
+[2025-12-11 03:41:25] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 03:41:25] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 9403
+[2025-12-11 03:41:25] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 76411
+[2025-12-11 03:41:26] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 15144
+[2025-12-11 03:41:27] INFO django.server basehttp "GET /perfil/ HTTP/1.1" 200 12609
+[2025-12-11 03:41:27] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 03:41:31] INFO django.server basehttp "GET /perfil/editar/ HTTP/1.1" 200 8085
+[2025-12-11 03:41:31] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 03:41:34] INFO django.server basehttp "GET /perfil/cambiar-password/ HTTP/1.1" 200 11107
+[2025-12-11 03:41:34] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 03:51:11] INFO django.server basehttp "GET / HTTP/1.1" 200 10768
+[2025-12-11 03:51:11] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 03:51:11] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 304 0
+[2025-12-11 03:51:12] INFO django.server basehttp "GET /personas/ HTTP/1.1" 200 7249
+[2025-12-11 03:51:13] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 6930
+[2025-12-11 03:51:14] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 7251
+[2025-12-11 03:51:15] INFO django.server basehttp "GET /documentos/ HTTP/1.1" 200 5621
+[2025-12-11 03:51:15] INFO django.server basehttp "GET /buscar/ HTTP/1.1" 200 13517
+[2025-12-11 03:51:16] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 19871
+[2025-12-11 03:51:16] INFO django.server basehttp "GET /reportes/ HTTP/1.1" 200 28083
+[2025-12-11 03:51:18] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 19871
+[2025-12-11 03:51:20] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 19871
+[2025-12-11 03:51:20] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 03:51:20] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 9403
+[2025-12-11 03:51:20] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 76411
+[2025-12-11 03:51:20] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 15144
+[2025-12-11 03:51:24] INFO django.server basehttp "GET /calendario/?mes=2025-12 HTTP/1.1" 200 19871
+[2025-12-11 03:52:02] INFO django.server basehttp "GET /reportes/ HTTP/1.1" 200 28083
+[2025-12-11 03:52:09] INFO django.server basehttp "GET /auditoria/ HTTP/1.1" 200 40251
+[2025-12-11 03:52:13] INFO django.server basehttp "GET /reportes/ HTTP/1.1" 200 28083
+[2025-12-11 03:52:44] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 19871
+[2025-12-11 03:52:44] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 03:52:59] WARNING django.server basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15292
+[2025-12-11 03:55:47] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 21313
+[2025-12-11 03:55:47] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 03:55:47] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 76411
+[2025-12-11 03:55:48] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 15144
+[2025-12-11 03:57:03] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 21453
+[2025-12-11 03:57:03] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 03:57:03] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 9403
+[2025-12-11 03:57:03] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 76411
+[2025-12-11 03:57:03] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 15144
+[2025-12-11 03:57:06] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 21453
+[2025-12-11 03:57:11] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 03:57:12] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 21453
+[2025-12-11 03:57:15] WARNING django.server basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15292
+[2025-12-11 03:57:29] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 21453
+[2025-12-11 03:57:29] WARNING django.server basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15292
+[2025-12-11 03:57:29] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 03:57:29] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 9403
+[2025-12-11 03:57:29] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 76411
+[2025-12-11 03:57:30] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 15144
+[2025-12-11 03:57:37] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 21453
+[2025-12-11 03:57:37] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 03:57:37] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 9403
+[2025-12-11 03:57:37] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 76411
+[2025-12-11 03:57:38] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 15144
+[2025-12-11 03:57:49] WARNING django.server basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15292
+[2025-12-11 04:00:55] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\templatetags\gestion_tags.py changed, reloading.
+[2025-12-11 04:00:56] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:00:57] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\templatetags\gestion_tags.py changed, reloading.
+[2025-12-11 04:00:58] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:01:01] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 21453
+[2025-12-11 04:01:01] WARNING django.server basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15292
+[2025-12-11 04:01:01] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 04:01:01] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 76411
+[2025-12-11 04:01:01] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 9403
+[2025-12-11 04:01:02] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 15144
+[2025-12-11 04:01:04] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 21453
+[2025-12-11 04:01:04] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 04:01:04] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 9403
+[2025-12-11 04:01:04] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 76411
+[2025-12-11 04:01:05] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 15144
+[2025-12-11 04:01:12] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\gestion\templatetags\gestion_tags.py changed, reloading.
+[2025-12-11 04:01:12] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:01:39] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 21453
+[2025-12-11 04:01:39] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 76411
+[2025-12-11 04:01:39] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 04:01:39] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 9403
+[2025-12-11 04:01:40] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 15144
+[2025-12-11 04:02:05] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:02:07] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 21453
+[2025-12-11 04:02:07] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 04:02:07] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 76411
+[2025-12-11 04:02:07] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 9403
+[2025-12-11 04:02:08] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 15144
+[2025-12-11 04:02:09] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 21453
+[2025-12-11 04:02:11] INFO django.server basehttp "GET /buscar/ HTTP/1.1" 200 15099
+[2025-12-11 04:02:12] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 21453
+[2025-12-11 04:02:17] INFO django.server basehttp "GET /calendario/?mes=2026-01 HTTP/1.1" 200 20981
+[2025-12-11 04:02:18] INFO django.server basehttp "GET /calendario/?mes=2025-12 HTTP/1.1" 200 21453
+[2025-12-11 04:02:19] INFO django.server basehttp "GET /calendario/?mes=2025-11 HTTP/1.1" 200 20985
+[2025-12-11 04:02:20] INFO django.server basehttp "GET /calendario/?mes=2025-12 HTTP/1.1" 200 21453
+[2025-12-11 04:02:23] WARNING django.server basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 15292
+[2025-12-11 04:04:12] INFO django.server basehttp "GET /calendario/?mes=2025-12 HTTP/1.1" 200 21453
+[2025-12-11 04:04:12] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 04:04:12] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 9403
+[2025-12-11 04:04:12] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 76411
+[2025-12-11 04:04:12] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 15144
+[2025-12-11 04:04:24] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:04:25] INFO django.server basehttp "GET /buscar/ HTTP/1.1" 200 15099
+[2025-12-11 04:04:27] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 21453
+[2025-12-11 04:04:51] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 29297
+[2025-12-11 04:04:54] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 29297
+[2025-12-11 04:04:55] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 04:04:55] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 9403
+[2025-12-11 04:04:55] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 76411
+[2025-12-11 04:04:55] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 15144
+[2025-12-11 04:05:07] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:05:09] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 29297
+[2025-12-11 04:09:47] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 29297
+[2025-12-11 04:09:47] INFO django.server basehttp "GET /static/js/forms.js HTTP/1.1" 200 2975
+[2025-12-11 04:09:47] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 200 9403
+[2025-12-11 04:09:47] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 77670
+[2025-12-11 04:09:47] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 15144
+[2025-12-11 04:10:01] INFO django.server basehttp "GET /buscar/ HTTP/1.1" 200 15099
+[2025-12-11 04:10:01] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 04:10:02] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 29297
+[2025-12-11 04:10:03] INFO django.server basehttp "GET /reportes/ HTTP/1.1" 200 29665
+[2025-12-11 04:10:03] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 04:10:03] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 29297
+[2025-12-11 04:10:59] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\clinica_juridica\settings.py changed, reloading.
+[2025-12-11 04:10:59] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:11:01] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\clinica_juridica\settings.py changed, reloading.
+[2025-12-11 04:11:02] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:11:04] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\clinica_juridica\settings.py changed, reloading.
+[2025-12-11 04:11:05] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:12:40] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\clinica_juridica\settings.py changed, reloading.
+[2025-12-11 04:12:40] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:12:42] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\clinica_juridica\settings.py changed, reloading.
+[2025-12-11 04:12:43] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:13:52] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\cuentas\views.py changed, reloading.
+[2025-12-11 04:13:53] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:14:04] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\cuentas\views.py changed, reloading.
+[2025-12-11 04:14:05] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:14:16] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\cuentas\views.py changed, reloading.
+[2025-12-11 04:14:16] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:14:34] INFO django.utils.autoreload autoreload C:\Users\Usuario\Desktop\clinica_juridica\apps\cuentas\views.py changed, reloading.
+[2025-12-11 04:14:34] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:18:28] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:21:44] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:21:49] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 302 0
+[2025-12-11 04:21:49] INFO django.server basehttp "GET /login/?next=/calendario/ HTTP/1.1" 200 2672
+[2025-12-11 04:21:49] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 200 77670
+[2025-12-11 04:21:50] WARNING django.server basehttp "GET /favicon.ico HTTP/1.1" 404 15144
+[2025-12-11 04:21:52] INFO django.server basehttp "POST /login/?next=/calendario/ HTTP/1.1" 302 0
+[2025-12-11 04:21:52] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 31182
+[2025-12-11 04:21:52] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 304 0
+[2025-12-11 04:21:56] INFO django.server basehttp "GET /auditoria/ HTTP/1.1" 200 43361
+[2025-12-11 04:22:06] INFO django.server basehttp "GET / HTTP/1.1" 200 13876
+[2025-12-11 04:22:23] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 30818
+[2025-12-11 04:23:33] INFO django.server basehttp "GET / HTTP/1.1" 200 13862
+[2025-12-11 04:23:33] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 04:53:04] INFO django.utils.autoreload autoreload Watching for file changes with StatReloader
+[2025-12-11 04:53:07] INFO django.server basehttp "GET /logout/ HTTP/1.1" 302 0
+[2025-12-11 04:53:07] INFO django.server basehttp "GET /login/ HTTP/1.1" 200 2903
+[2025-12-11 04:53:07] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 04:53:14] INFO django.server basehttp "POST /login/ HTTP/1.1" 302 0
+[2025-12-11 04:53:14] INFO django.server basehttp "GET / HTTP/1.1" 200 14235
+[2025-12-11 04:53:14] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 304 0
+[2025-12-11 04:53:24] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 10033
+[2025-12-11 04:53:27] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 19299
+[2025-12-11 04:53:31] INFO django.server basehttp "GET /relaciones/nueva/?causa=2 HTTP/1.1" 200 9779
+[2025-12-11 04:53:49] INFO django.server basehttp "GET /causas/1/ HTTP/1.1" 200 19310
+[2025-12-11 04:53:57] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 10033
+[2025-12-11 04:54:01] INFO django.server basehttp "GET /causas/1/ HTTP/1.1" 200 19310
+[2025-12-11 04:54:05] INFO django.server basehttp "GET /admin-panel/ HTTP/1.1" 200 14372
+[2025-12-11 04:54:12] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 10033
+[2025-12-11 04:54:18] INFO django.server basehttp "GET /causas/1/ HTTP/1.1" 200 19310
+[2025-12-11 04:55:13] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 10354
+[2025-12-11 04:55:18] INFO django.server basehttp "GET /documentos/ HTTP/1.1" 200 8724
+[2025-12-11 04:55:20] INFO django.server basehttp "GET /documentos/?filtro=judicial_entrada HTTP/1.1" 200 8724
+[2025-12-11 04:55:20] INFO django.server basehttp "GET /documentos/?filtro=judicial_salida HTTP/1.1" 200 8724
+[2025-12-11 04:55:21] INFO django.server basehttp "GET /documentos/?filtro=interno HTTP/1.1" 200 8724
+[2025-12-11 04:55:22] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 10354
+[2025-12-11 04:55:24] INFO django.server basehttp "GET /audiencias/?filtro=todas HTTP/1.1" 200 10354
+[2025-12-11 04:55:24] INFO django.server basehttp "GET /audiencias/?filtro=realizadas HTTP/1.1" 200 10354
+[2025-12-11 04:55:25] INFO django.server basehttp "GET /audiencias/?filtro=suspendidas HTTP/1.1" 200 10354
+[2025-12-11 04:55:26] INFO django.server basehttp "GET /audiencias/?filtro=todas HTTP/1.1" 200 10354
+[2025-12-11 04:55:26] INFO django.server basehttp "GET /audiencias/?filtro=proximas HTTP/1.1" 200 10354
+[2025-12-11 04:55:28] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 10033
+[2025-12-11 04:55:29] INFO django.server basehttp "GET /causas/?filtro=todas HTTP/1.1" 200 10033
+[2025-12-11 04:55:29] INFO django.server basehttp "GET /causas/?filtro=archivadas HTTP/1.1" 200 10033
+[2025-12-11 04:55:30] INFO django.server basehttp "GET /causas/?filtro=activas HTTP/1.1" 200 10033
+[2025-12-11 04:55:31] INFO django.server basehttp "GET /causas/?filtro=todas HTTP/1.1" 200 10033
+[2025-12-11 04:55:32] INFO django.server basehttp "GET /causas/?filtro=archivadas HTTP/1.1" 200 10033
+[2025-12-11 04:55:33] INFO django.server basehttp "GET /causas/?filtro=activas HTTP/1.1" 200 10033
+[2025-12-11 04:55:36] INFO django.server basehttp "GET /causas/?filtro=archivadas HTTP/1.1" 200 10033
+[2025-12-11 04:55:39] INFO django.server basehttp "GET /causas/?filtro=activas HTTP/1.1" 200 10033
+[2025-12-11 04:55:40] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 10354
+[2025-12-11 04:55:41] INFO django.server basehttp "GET /audiencias/?filtro=suspendidas HTTP/1.1" 200 10354
+[2025-12-11 04:55:45] INFO django.server basehttp "GET /audiencias/?filtro=realizadas HTTP/1.1" 200 10354
+[2025-12-11 04:55:46] INFO django.server basehttp "GET /audiencias/?filtro=todas HTTP/1.1" 200 10354
+[2025-12-11 04:55:47] INFO django.server basehttp "GET /audiencias/?filtro=proximas HTTP/1.1" 200 10354
+[2025-12-11 04:55:48] INFO django.server basehttp "GET /audiencias/?filtro=todas HTTP/1.1" 200 10354
+[2025-12-11 04:55:48] INFO django.server basehttp "GET /audiencias/?filtro=realizadas HTTP/1.1" 200 10354
+[2025-12-11 04:55:49] INFO django.server basehttp "GET /audiencias/?filtro=suspendidas HTTP/1.1" 200 10354
+[2025-12-11 04:55:50] INFO django.server basehttp "GET /documentos/ HTTP/1.1" 200 8724
+[2025-12-11 04:55:52] INFO django.server basehttp "GET /buscar/ HTTP/1.1" 200 16620
+[2025-12-11 04:55:53] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 30818
+[2025-12-11 04:55:54] INFO django.server basehttp "GET /reportes/ HTTP/1.1" 200 31186
+[2025-12-11 04:55:55] INFO django.server basehttp "GET /auditoria/ HTTP/1.1" 200 43367
+[2025-12-11 04:55:55] INFO django.server basehttp "GET /admin-panel/ HTTP/1.1" 200 14372
+[2025-12-11 04:56:55] INFO django.server basehttp "GET /auditoria/ HTTP/1.1" 200 43367
+[2025-12-11 04:57:10] INFO django.server basehttp "GET /reportes/ HTTP/1.1" 200 31186
+[2025-12-11 04:57:14] INFO django.server basehttp "GET /auditoria/ HTTP/1.1" 200 43367
+[2025-12-11 04:57:23] INFO django.server basehttp "GET /reportes/ HTTP/1.1" 200 31186
+[2025-12-11 04:57:24] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 30818
+[2025-12-11 04:57:28] INFO django.server basehttp "GET /buscar/ HTTP/1.1" 200 16620
+[2025-12-11 04:57:28] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 04:57:35] INFO django.server basehttp "GET /buscar/?q=perezs&en_causas=on&en_personas=on&en_documentos=on&estado=&materia=&fecha_desde=&fecha_hasta= HTTP/1.1" 200 16911
+[2025-12-11 04:57:37] INFO django.server basehttp "GET /buscar/?q=perez&en_causas=on&en_personas=on&en_documentos=on&estado=&materia=&fecha_desde=&fecha_hasta= HTTP/1.1" 200 17969
+[2025-12-11 04:57:40] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 19299
+[2025-12-11 04:57:43] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 10354
+[2025-12-11 04:57:51] INFO django.server basehttp "GET /causas/ HTTP/1.1" 200 10033
+[2025-12-11 04:57:55] INFO django.server basehttp "GET /causas/2/ HTTP/1.1" 200 19299
+[2025-12-11 04:58:03] INFO django.server basehttp "GET /audiencias/crear/?causa=2 HTTP/1.1" 200 12840
+[2025-12-11 04:58:08] INFO django.server basehttp "GET /documentos/crear/?causa=2 HTTP/1.1" 200 13064
+[2025-12-11 04:58:31] INFO django.server basehttp "GET /personas/ HTTP/1.1" 200 10352
+[2025-12-11 04:58:34] INFO django.server basehttp "GET /personas/3/ HTTP/1.1" 200 13859
+[2025-12-11 04:58:39] INFO django.server basehttp "GET / HTTP/1.1" 200 13871
+[2025-12-11 04:58:42] INFO django.server basehttp "GET /admin-panel/ HTTP/1.1" 200 14372
+[2025-12-11 04:58:50] INFO django.server basehttp "GET /admin-panel/usuarios/2/editar/ HTTP/1.1" 200 13367
+[2025-12-11 04:58:57] INFO django.server basehttp "GET /perfil/ HTTP/1.1" 200 15707
+[2025-12-11 05:00:20] INFO django.server basehttp "GET /documentos/ HTTP/1.1" 200 8724
+[2025-12-11 05:00:25] INFO django.server basehttp "GET /buscar/ HTTP/1.1" 200 16620
+[2025-12-11 05:00:27] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 30818
+[2025-12-11 05:00:29] INFO django.server basehttp "GET /calendario/?mes=2026-01 HTTP/1.1" 200 25345
+[2025-12-11 05:00:30] INFO django.server basehttp "GET /calendario/?mes=2026-02 HTTP/1.1" 200 25194
+[2025-12-11 05:00:32] INFO django.server basehttp "GET /calendario/?mes=2026-03 HTTP/1.1" 200 27844
+[2025-12-11 05:00:35] INFO django.server basehttp "GET /calendario/?mes=2026-02 HTTP/1.1" 200 25194
+[2025-12-11 05:00:37] INFO django.server basehttp "GET /calendario/?mes=2026-01 HTTP/1.1" 200 25345
+[2025-12-11 05:00:39] INFO django.server basehttp "GET /calendario/?mes=2025-12 HTTP/1.1" 200 30818
+[2025-12-11 05:00:54] INFO django.server basehttp "GET /audiencias/crear/ HTTP/1.1" 200 12840
+[2025-12-11 05:01:57] INFO django.server basehttp "POST /audiencias/crear/ HTTP/1.1" 302 0
+[2025-12-11 05:01:57] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 11615
+[2025-12-11 05:02:05] INFO django.server basehttp "GET /audiencias/3/ HTTP/1.1" 200 14415
+[2025-12-11 05:02:15] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 11251
+[2025-12-11 05:02:15] INFO django.server basehttp "GET /static/css/styles.css HTTP/1.1" 304 0
+[2025-12-11 05:02:16] INFO django.server basehttp "GET /calendario/ HTTP/1.1" 200 33557
+[2025-12-11 05:02:26] INFO django.server basehttp "GET /audiencias/crear/ HTTP/1.1" 200 12840
+[2025-12-11 05:02:26] INFO django.server basehttp "GET /static/js/validaciones.js HTTP/1.1" 304 0
+[2025-12-11 05:02:32] INFO django.server basehttp "GET /buscar/ HTTP/1.1" 200 16620
+[2025-12-11 05:02:33] INFO django.server basehttp "GET /documentos/ HTTP/1.1" 200 8724
+[2025-12-11 05:02:35] INFO django.server basehttp "GET /audiencias/ HTTP/1.1" 200 11251
+[2025-12-11 05:02:39] INFO django.server basehttp "GET /audiencias/3/ HTTP/1.1" 200 14415
+[2025-12-11 05:02:52] INFO django.server basehttp "GET / HTTP/1.1" 200 13858
+[2025-12-11 05:02:53] INFO django.server basehttp "POST /logout/ HTTP/1.1" 302 0
+[2025-12-11 05:02:53] INFO django.server basehttp "GET /login/ HTTP/1.1" 200 2903
+[2025-12-11 05:02:57] INFO django.server basehttp "POST /login/ HTTP/1.1" 302 0
+[2025-12-11 05:02:57] INFO django.server basehttp "GET / HTTP/1.1" 200 13826
+[2025-12-11 05:03:27] INFO django.server basehttp "POST /logout/ HTTP/1.1" 302 0
+[2025-12-11 05:03:27] INFO django.server basehttp "GET /login/ HTTP/1.1" 200 2903

@@ -1,13 +1,110 @@
-{% extends 'base.html' %}
-{% block title %}Iniciar sesión{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión - Sistema Clínica Jurídica</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="login-body">
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Header -->
+            <div class="login-header">
+                <div class="login-logo">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <h1 class="login-title">Sistema Clínica Jurídica</h1>
+                <p class="login-subtitle">Proyecto de cátedra · 2025</p>
+            </div>
 
-{% block content %}
-<div class="card login-card">
-    <h2>Iniciar sesión</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn-primary">Ingresar</button>
-    </form>
-</div>
-{% endblock %}
+            <!-- Mensajes de error -->
+            {% if error %}
+            <div class="login-alert {% if bloqueado %}login-alert-danger{% endif %}">
+                <i class="fas fa-{% if bloqueado %}lock{% else %}exclamation-circle{% endif %}"></i>
+                <span>{{ error }}</span>
+            </div>
+            {% endif %}
+            
+            {% if messages %}
+            {% for message in messages %}
+            <div class="login-alert {% if message.tags == 'error' %}login-alert-danger{% else %}login-alert-{{ message.tags }}{% endif %}">
+                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <!-- Formulario -->
+            {% if not bloqueado %}
+            <form method="post" class="login-form">
+                {% csrf_token %}
+                
+                <div class="login-field">
+                    <label class="login-label">Usuario</label>
+                    <div class="login-input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" name="username" value="{{ username|default:'' }}" 
+                               class="login-input" placeholder="Ingresa tu usuario" required autofocus>
+                    </div>
+                </div>
+
+                <div class="login-field">
+                    <label class="login-label">Contraseña</label>
+                    <div class="login-input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="password" class="login-input" 
+                               placeholder="Ingresa tu contraseña" required>
+                    </div>
+                </div>
+
+                <div class="login-remember">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="remember">
+                        <span>Recordarme por 7 días</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="login-button">
+                    Iniciar sesión
+                </button>
+            </form>
+            {% else %}
+            <!-- Mensaje de bloqueo -->
+            <div class="login-blocked">
+                <div class="blocked-icon">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <p class="blocked-message">Tu acceso está temporalmente bloqueado por seguridad.</p>
+                <div class="blocked-timer" id="timer">
+                    Tiempo restante: <span id="countdown">{{ tiempo_restante }}</span> segundos
+                </div>
+            </div>
+            
+            <script>
+                let tiempoRestante = {{ tiempo_restante|default:0 }};
+                const countdownEl = document.getElementById('countdown');
+                
+                const timer = setInterval(() => {
+                    tiempoRestante--;
+                    if (tiempoRestante <= 0) {
+                        clearInterval(timer);
+                        location.reload();
+                    } else {
+                        countdownEl.textContent = tiempoRestante;
+                    }
+                }, 1000);
+            </script>
+            {% endif %}
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <p>Universidad San Sebastián</p>
+                <p>Clínica Jurídica</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -2,8 +2,15 @@ from django.db.models.signals import post_save, post_delete, pre_save
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save, post_delete
+from .cache_utils import (
+    invalidar_cache_tribunales,
+    invalidar_cache_materias,
+    invalidar_cache_estados,
+    invalidar_cache_tipos_documento,
+)
 
-from .models import Causa, Persona, Documento, Audiencia, Consentimiento, LogAuditoria
+from .models import Causa, Persona, Documento, Audiencia, Consentimiento, LogAuditoria, Tribunal, Materia, EstadoCausa, TipoDocumento
 
 
 # =============================================================================
@@ -330,3 +337,36 @@ def log_user_logout(sender, request, user, **kwargs):
             user_agent=get_user_agent(request),
             descripcion=f'Cierre de sesión: {user.username}'
         )
+        
+# =============================================================================
+# SIGNALS PARA INVALIDAR CACHÉ
+# =============================================================================
+
+
+
+@receiver(post_save, sender=Tribunal)
+@receiver(post_delete, sender=Tribunal)
+def invalidar_cache_tribunal_signal(sender, instance, **kwargs):
+    """Invalida caché cuando se modifica un tribunal."""
+    invalidar_cache_tribunales()
+
+
+@receiver(post_save, sender=Materia)
+@receiver(post_delete, sender=Materia)
+def invalidar_cache_materia_signal(sender, instance, **kwargs):
+    """Invalida caché cuando se modifica una materia."""
+    invalidar_cache_materias()
+
+
+@receiver(post_save, sender=EstadoCausa)
+@receiver(post_delete, sender=EstadoCausa)
+def invalidar_cache_estado_signal(sender, instance, **kwargs):
+    """Invalida caché cuando se modifica un estado."""
+    invalidar_cache_estados()
+
+
+@receiver(post_save, sender=TipoDocumento)
+@receiver(post_delete, sender=TipoDocumento)
+def invalidar_cache_tipo_doc_signal(sender, instance, **kwargs):
+    """Invalida caché cuando se modifica un tipo de documento."""
+    invalidar_cache_tipos_documento()

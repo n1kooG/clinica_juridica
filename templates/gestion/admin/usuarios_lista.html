@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}Gestión de Usuarios{% endblock %}
+{% block section_title %}Administración{% endblock %}
+
+{% block content %}
+<div class="page-header-flex">
+    <div class="page-header-content">
+        <div class="breadcrumb">
+            <a href="{% url 'gestion:admin_panel' %}">Administración</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Usuarios</span>
+        </div>
+        <h1 class="page-title">Gestión de usuarios</h1>
+        <p class="page-subtitle">Administra los usuarios y sus permisos en el sistema</p>
+    </div>
+    <a href="{% url 'gestion:admin_usuario_crear' %}" class="btn-primary">
+        <i class="fas fa-plus"></i> Nuevo usuario
+    </a>
+</div>
+
+<div class="list-card">
+    <div class="list-card-header">
+        <div class="list-card-title">
+            <span class="title-text">Listado de usuarios</span>
+            <span class="title-count">{{ usuarios|length }} usuarios registrados</span>
+        </div>
+        <div class="list-card-search">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Buscar usuario..." class="search-input" id="searchInput">
+        </div>
+    </div>
+
+    <div class="list-card-filters">
+        <a href="?filtro=todos" class="filter-pill {% if filtro == 'todos' or not filtro %}active{% endif %}">Todos</a>
+        <a href="?filtro=activos" class="filter-pill {% if filtro == 'activos' %}active{% endif %}">Activos</a>
+        <a href="?filtro=inactivos" class="filter-pill {% if filtro == 'inactivos' %}active{% endif %}">Inactivos</a>
+        <a href="?filtro=admin" class="filter-pill {% if filtro == 'admin' %}active{% endif %}">Administradores</a>
+    </div>
+
+    <div class="list-card-body">
+        <table class="list-table">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Sede</th>
+                    <th>Último acceso</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            {% for u in usuarios %}
+                <tr>
+                    <td>
+                        <div class="cell-user">
+                            <span class="user-avatar">{{ u.username|slice:":1"|upper }}</span>
+                            <div class="user-info-cell">
+                                <span class="user-name">{{ u.get_full_name|default:u.username }}</span>
+                                <span class="user-username">@{{ u.username }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ u.email|default:"-" }}</td>
+                    <td>
+                        {% if u.perfil %}
+                        <span class="role-tag role-tag-{{ u.perfil.rol|lower }}">{{ u.perfil.get_rol_display }}</span>
+                        {% else %}
+                        <span class="role-tag">Sin rol</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if u.perfil and u.perfil.sede %}
+                        {{ u.perfil.get_sede_display }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td>{{ u.last_login|date:"d/m/Y H:i"|default:"Nunca" }}</td>
+                    <td>
+                        {% if u.is_active %}
+                        <span class="status-badge status-green">Activo</span>
+                        {% else %}
+                        <span class="status-badge status-red">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td class="cell-actions">
+                        <a href="{% url 'gestion:admin_usuario_editar' u.pk %}" class="action-link">Editar</a>
+                        {% if u.pk != request.user.pk %}
+                        <a href="{% url 'gestion:admin_usuario_toggle' u.pk %}" class="action-link {% if u.is_active %}action-link-danger{% endif %}">
+                            {% if u.is_active %}Desactivar{% else %}Activar{% endif %}
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7" class="empty-table">No hay usuarios registrados.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#tableBody tr');
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+</script>
+{% endblock %}

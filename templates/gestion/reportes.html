@@ -1,146 +1,244 @@
 {% extends 'base.html' %}
 {% block title %}Reportes{% endblock %}
+{% block section_title %}Reportes{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-header-simple">
     <h1 class="page-title">Reportes</h1>
-    <p class="page-description">Genera reportes y exporta información del sistema.</p>
+    <p class="page-subtitle">Genera reportes y exporta información del sistema</p>
 </div>
 
 <!-- Filtros -->
-<div class="card" style="margin-bottom: 20px;">
+<div class="card">
     <div class="card-header">
-        <h2 class="card-title">Filtros del reporte</h2>
+        <h2 class="card-title">Filtros de búsqueda</h2>
+        <p class="card-subtitle">Configura los criterios para generar el reporte</p>
     </div>
     <div class="card-body">
-        <form method="get" class="filtros-form">
-            <div class="filtros-grid">
-                <div class="filtro-grupo">
-                    <label>Estado</label>
+        <form method="get" class="reportes-form">
+            <div class="reportes-grid">
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
                     <select name="estado" class="form-input">
-                        <option value="">Todos</option>
-                        {% for e in estados %}
-                        <option value="{{ e.pk }}" {% if filtros.estado == e.pk|stringformat:"i" %}selected{% endif %}>{{ e.nombre }}</option>
+                        <option value="">Todos los estados</option>
+                        {% for estado in estados %}
+                        <option value="{{ estado.pk }}" {% if filtros.estado == estado.pk|stringformat:"i" %}selected{% endif %}>
+                            {{ estado.nombre }}
+                        </option>
                         {% endfor %}
                     </select>
                 </div>
                 
-                <div class="filtro-grupo">
-                    <label>Materia</label>
+                <div class="form-group">
+                    <label class="form-label">Materia</label>
                     <select name="materia" class="form-input">
-                        <option value="">Todas</option>
-                        {% for m in materias %}
-                        <option value="{{ m.pk }}" {% if filtros.materia == m.pk|stringformat:"i" %}selected{% endif %}>{{ m.nombre }}</option>
+                        <option value="">Todas las materias</option>
+                        {% for materia in materias %}
+                        <option value="{{ materia.pk }}" {% if filtros.materia == materia.pk|stringformat:"i" %}selected{% endif %}>
+                            {{ materia.nombre }}
+                        </option>
                         {% endfor %}
                     </select>
                 </div>
                 
-                <div class="filtro-grupo">
-                    <label>Tribunal</label>
+                <div class="form-group">
+                    <label class="form-label">Tribunal</label>
                     <select name="tribunal" class="form-input">
-                        <option value="">Todos</option>
-                        {% for t in tribunales %}
-                        <option value="{{ t.pk }}" {% if filtros.tribunal == t.pk|stringformat:"i" %}selected{% endif %}>{{ t.nombre }}</option>
+                        <option value="">Todos los tribunales</option>
+                        {% for tribunal in tribunales %}
+                        <option value="{{ tribunal.pk }}" {% if filtros.tribunal == tribunal.pk|stringformat:"i" %}selected{% endif %}>
+                            {{ tribunal.nombre }}
+                        </option>
                         {% endfor %}
                     </select>
                 </div>
                 
-                <div class="filtro-grupo">
-                    <label>Responsable</label>
+                <div class="form-group">
+                    <label class="form-label">Responsable</label>
                     <select name="responsable" class="form-input">
-                        <option value="">Todos</option>
-                        {% for r in responsables %}
-                        <option value="{{ r.pk }}" {% if filtros.responsable == r.pk|stringformat:"i" %}selected{% endif %}>{{ r.get_full_name|default:r.username }}</option>
+                        <option value="">Todos los responsables</option>
+                        {% for user in responsables %}
+                        <option value="{{ user.pk }}" {% if filtros.responsable == user.pk|stringformat:"i" %}selected{% endif %}>
+                            {{ user.get_full_name|default:user.username }}
+                        </option>
                         {% endfor %}
                     </select>
                 </div>
                 
-                <div class="filtro-grupo">
-                    <label>Fecha desde</label>
-                    <input type="date" name="fecha_desde" value="{{ filtros.fecha_desde }}" class="form-input">
+                <div class="form-group">
+                    <label class="form-label">Fecha desde</label>
+                    <input type="date" name="fecha_desde" value="{{ filtros.fecha_desde|default:'' }}" class="form-input">
                 </div>
                 
-                <div class="filtro-grupo">
-                    <label>Fecha hasta</label>
-                    <input type="date" name="fecha_hasta" value="{{ filtros.fecha_hasta }}" class="form-input">
+                <div class="form-group">
+                    <label class="form-label">Fecha hasta</label>
+                    <input type="date" name="fecha_hasta" value="{{ filtros.fecha_hasta|default:'' }}" class="form-input">
                 </div>
             </div>
             
-            <div class="filtros-actions">
-                <button type="submit" class="btn-primary">Aplicar filtros</button>
-                <a href="{% url 'gestion:reportes' %}" class="btn-secondary">Limpiar</a>
+            <div class="reportes-actions">
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-filter"></i> Aplicar filtros
+                </button>
+                <a href="{% url 'gestion:reportes' %}" class="btn-secondary">
+                    <i class="fas fa-times"></i> Limpiar
+                </a>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Resumen -->
-<div class="card" style="margin-bottom: 20px;">
-    <div class="card-header">
-        <h2 class="card-title">Resumen del reporte</h2>
-        <div class="card-actions">
-            <a href="{% url 'gestion:exportar_causas_excel' %}?{{ request.GET.urlencode }}" class="btn-primary">
-                📥 Exportar a Excel
-            </a>
-            <a href="{% url 'gestion:exportar_causas_pdf' %}?{{ request.GET.urlencode }}" class="btn-secondary">
-                📄 Exportar a PDF
-            </a>
+<!-- Resumen de resultados -->
+<div class="reportes-resumen">
+    <div class="resumen-card">
+        <div class="resumen-icon resumen-icon-blue">
+            <i class="fas fa-folder-open"></i>
+        </div>
+        <div class="resumen-content">
+            <span class="resumen-numero">{{ estadisticas.total }}</span>
+            <span class="resumen-label">Total causas</span>
         </div>
     </div>
-    <div class="card-body">
-        <div class="resumen-grid">
-            <div class="resumen-item">
-                <span class="resumen-valor">{{ total }}</span>
-                <span class="resumen-label">Total de causas</span>
-            </div>
-            {% for estado, cantidad in por_estado.items %}
-            <div class="resumen-item">
-                <span class="resumen-valor">{{ cantidad }}</span>
-                <span class="resumen-label">{{ estado }}</span>
-            </div>
-            {% endfor %}
+    
+    <div class="resumen-card">
+        <div class="resumen-icon resumen-icon-yellow">
+            <i class="fas fa-clock"></i>
+        </div>
+        <div class="resumen-content">
+            <span class="resumen-numero">{{ estadisticas.en_tramitacion }}</span>
+            <span class="resumen-label">En tramitación</span>
+        </div>
+    </div>
+    
+    <div class="resumen-card">
+        <div class="resumen-icon resumen-icon-green">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="resumen-content">
+            <span class="resumen-numero">{{ estadisticas.finalizadas }}</span>
+            <span class="resumen-label">Finalizadas</span>
+        </div>
+    </div>
+    
+    <div class="resumen-card">
+        <div class="resumen-icon resumen-icon-purple">
+            <i class="fas fa-percentage"></i>
+        </div>
+        <div class="resumen-content">
+            <span class="resumen-numero">{{ estadisticas.tasa_exito }}%</span>
+            <span class="resumen-label">Tasa de éxito</span>
         </div>
     </div>
 </div>
 
-<!-- Vista previa -->
+<!-- Gráficos -->
+<div class="reportes-graficos">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Distribución por estado</h2>
+        </div>
+        <div class="card-body">
+            <div class="chart-bars">
+                {% for item in causas_por_estado %}
+                <div class="chart-bar-item">
+                    <div class="chart-bar-label">
+                        <span class="chart-bar-name">{{ item.estado__nombre|default:"Sin estado" }}</span>
+                        <span class="chart-bar-count">{{ item.total }}</span>
+                    </div>
+                    <div class="chart-bar-track">
+                        <div class="chart-bar-fill chart-bar-{{ item.estado__color|default:'gray' }}" 
+                             style="width: {{ item.porcentaje }}%"></div>
+                    </div>
+                    <span class="chart-bar-percent">{{ item.porcentaje }}%</span>
+                </div>
+                {% empty %}
+                <p class="empty-message">No hay datos para mostrar.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Distribución por materia</h2>
+        </div>
+        <div class="card-body">
+            <div class="chart-bars">
+                {% for item in causas_por_materia %}
+                <div class="chart-bar-item">
+                    <div class="chart-bar-label">
+                        <span class="chart-bar-name">{{ item.materia__nombre|default:"Sin materia" }}</span>
+                        <span class="chart-bar-count">{{ item.total }}</span>
+                    </div>
+                    <div class="chart-bar-track">
+                        <div class="chart-bar-fill chart-bar-blue" style="width: {{ item.porcentaje }}%"></div>
+                    </div>
+                    <span class="chart-bar-percent">{{ item.porcentaje }}%</span>
+                </div>
+                {% empty %}
+                <p class="empty-message">No hay datos para mostrar.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Vista previa y exportación -->
 <div class="card">
     <div class="card-header">
-        <h2 class="card-title">Vista previa (máximo 100 registros)</h2>
+        <div>
+            <h2 class="card-title">Vista previa de datos</h2>
+            <p class="card-subtitle">Mostrando {{ causas|length }} de {{ estadisticas.total }} causas</p>
+        </div>
+        <div class="card-actions">
+            <a href="{% url 'gestion:exportar_causas_excel' %}?{{ request.GET.urlencode }}" class="btn-success btn-sm">
+                <i class="fas fa-file-excel"></i> Exportar Excel
+            </a>
+            <a href="{% url 'gestion:exportar_causas_pdf' %}?{{ request.GET.urlencode }}" class="btn-danger btn-sm">
+                <i class="fas fa-file-pdf"></i> Exportar PDF
+            </a>
+        </div>
     </div>
-    <div class="card-body" style="overflow-x: auto;">
-        <table class="data-table">
+    <div class="card-body card-body-table">
+        {% if causas %}
+        <table class="inner-table">
             <thead>
                 <tr>
-                    <th>RIT</th>
+                    <th>RIT / RUC</th>
                     <th>Carátula</th>
                     <th>Tribunal</th>
                     <th>Materia</th>
                     <th>Estado</th>
                     <th>Responsable</th>
-                    <th>Fecha</th>
+                    <th>Fecha creación</th>
                 </tr>
             </thead>
             <tbody>
             {% for c in causas %}
                 <tr>
-                    <td>{{ c.rit|default:"-" }}</td>
-                    <td>{{ c.caratula|truncatewords:5 }}</td>
+                    <td class="cell-code">{% if c.rit %}{{ c.rit }}{% elif c.ruc %}{{ c.ruc }}{% else %}-{% endif %}</td>
+                    <td class="cell-name">{{ c.caratula|truncatewords:4 }}</td>
                     <td>{{ c.tribunal|default:"-" }}</td>
                     <td>{{ c.materia|default:"-" }}</td>
-                    <td><span class="status-badge {{ c.estado.color }}">{{ c.estado.nombre }}</span></td>
+                    <td>
+                        {% if c.estado %}
+                        <span class="status-badge status-{{ c.estado.color }}">{{ c.estado.nombre }}</span>
+                        {% else %}
+                        <span class="status-badge status-gray">Sin estado</span>
+                        {% endif %}
+                    </td>
                     <td>{{ c.responsable.get_full_name|default:"-" }}</td>
                     <td>{{ c.fecha_creacion|date:"d/m/Y" }}</td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="7" style="text-align: center; padding: 40px; color: var(--gray-500);">
-                        No hay causas que coincidan con los filtros seleccionados.
-                    </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <div class="empty-state-small">
+            <i class="fas fa-chart-bar"></i>
+            <p>No hay causas que coincidan con los filtros seleccionados.</p>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

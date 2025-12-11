@@ -1,53 +1,186 @@
 {% extends 'base.html' %}
 {% block title %}Detalle de Log{% endblock %}
+{% block section_title %}Auditoría{% endblock %}
 
 {% block content %}
-<div class="content-header">
-    <div>
-        <h1>Detalle de Log #{{ log.pk }}</h1>
-        <p class="lead">{{ log.fecha|date:"d/m/Y H:i:s" }}</p>
+<div class="page-header-with-actions">
+    <div class="page-header-left">
+        <div class="breadcrumb">
+            <a href="{% url 'gestion:auditoria_lista' %}">Auditoría</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Detalle de registro</span>
+        </div>
+        <h1 class="page-title">Registro de auditoría #{{ log.pk }}</h1>
+        <p class="page-subtitle">{{ log.fecha|date:"d F Y, H:i:s" }}</p>
     </div>
-    <div>
-        <a href="{% url 'gestion:auditoria_lista' %}" class="btn-link">← Volver a logs</a>
-    </div>
-</div>
-
-<div class="panel-card" style="margin-bottom: 20px;">
-    <div class="panel-card-header">
-        <h3>Información general</h3>
-    </div>
-    <div class="panel-card-body">
-        <p><strong>Usuario:</strong> {{ log.usuario.get_full_name|default:log.usuario.username|default:"Sistema" }}</p>
-        <p><strong>Acción:</strong> {{ log.get_accion_display }}</p>
-        <p><strong>Modelo:</strong> {{ log.get_modelo_display }}</p>
-        <p><strong>Objeto ID:</strong> {{ log.objeto_id|default:"-" }}</p>
-        <p><strong>Objeto:</strong> {{ log.objeto_repr|default:"-" }}</p>
-        <p><strong>Descripción:</strong> {{ log.descripcion|default:"-" }}</p>
-        <p><strong>IP:</strong> {{ log.ip_address|default:"-" }}</p>
-        <p><strong>User Agent:</strong> {{ log.user_agent|default:"-"|truncatewords:20 }}</p>
+    <div class="page-header-actions">
+        <a href="{% url 'gestion:auditoria_lista' %}" class="btn-secondary">
+            <i class="fas fa-arrow-left"></i> Volver
+        </a>
     </div>
 </div>
 
-{% if log.datos_anteriores %}
-<div class="panel-card" style="margin-bottom: 20px;">
-    <div class="panel-card-header">
-        <h3>Datos anteriores</h3>
+<div class="detail-layout">
+    <div class="detail-main">
+        <!-- Información principal -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Información del evento</h2>
+            </div>
+            <div class="card-body">
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">Fecha y hora</span>
+                        <span class="detail-value">{{ log.fecha|date:"d/m/Y H:i:s" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Usuario</span>
+                        <span class="detail-value">{{ log.usuario.get_full_name|default:log.usuario.username }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Acción</span>
+                        <span class="detail-value">
+                            {% if log.accion == 'CREAR' %}
+                                <span class="action-badge action-crear"><i class="fas fa-plus"></i> Crear</span>
+                            {% elif log.accion == 'EDITAR' %}
+                                <span class="action-badge action-editar"><i class="fas fa-edit"></i> Editar</span>
+                            {% elif log.accion == 'ELIMINAR' %}
+                                <span class="action-badge action-eliminar"><i class="fas fa-trash"></i> Eliminar</span>
+                            {% elif log.accion == 'VER' %}
+                                <span class="action-badge action-ver"><i class="fas fa-eye"></i> Ver</span>
+                            {% elif log.accion == 'LOGIN' %}
+                                <span class="action-badge action-login"><i class="fas fa-sign-in-alt"></i> Login</span>
+                            {% elif log.accion == 'LOGOUT' %}
+                                <span class="action-badge action-logout"><i class="fas fa-sign-out-alt"></i> Logout</span>
+                            {% else %}
+                                <span class="action-badge action-otro">{{ log.get_accion_display }}</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Modelo afectado</span>
+                        <span class="detail-value"><span class="model-badge">{{ log.modelo }}</span></span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">ID del objeto</span>
+                        <span class="detail-value">{{ log.objeto_id|default:"-" }}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Dirección IP</span>
+                        <span class="detail-value">{{ log.ip_address|default:"No registrada" }}</span>
+                    </div>
+                    <div class="detail-field full-width">
+                        <span class="detail-label">Descripción</span>
+                        <span class="detail-value">{{ log.descripcion|default:"Sin descripción" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Datos antes del cambio -->
+        {% if log.datos_anteriores %}
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-history"></i> Datos anteriores</h2>
+                <p class="card-subtitle">Estado del objeto antes de la modificación</p>
+            </div>
+            <div class="card-body">
+                <div class="json-viewer">
+                    <pre>{{ log.datos_anteriores }}</pre>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Datos después del cambio -->
+        {% if log.datos_nuevos %}
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-exchange-alt"></i> Datos nuevos</h2>
+                <p class="card-subtitle">Estado del objeto después de la modificación</p>
+            </div>
+            <div class="card-body">
+                <div class="json-viewer">
+                    <pre>{{ log.datos_nuevos }}</pre>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    <div class="panel-card-body">
-        <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 13px;">{{ log.datos_anteriores|pprint }}</pre>
+
+    <div class="detail-sidebar">
+        <!-- Información del usuario -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Usuario</h2>
+            </div>
+            <div class="card-body">
+                <div class="user-detail">
+                    <div class="user-avatar-large">{{ log.usuario.username|slice:":1"|upper }}</div>
+                    <div class="user-info">
+                        <span class="user-name-large">{{ log.usuario.get_full_name|default:log.usuario.username }}</span>
+                        <span class="user-email">{{ log.usuario.email|default:"Sin email" }}</span>
+                        {% if log.usuario.perfil %}
+                        <span class="user-role">{{ log.usuario.perfil.get_rol_display }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contexto técnico -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Información técnica</h2>
+            </div>
+            <div class="card-body">
+                <div class="contact-quick">
+                    <div class="contact-quick-item">
+                        <span class="contact-quick-label">User Agent</span>
+                        <span class="contact-quick-value text-small">{{ log.user_agent|default:"No registrado"|truncatechars:50 }}</span>
+                    </div>
+                    <div class="contact-quick-item">
+                        <span class="contact-quick-label">Sesión ID</span>
+                        <span class="contact-quick-value">{{ log.session_id|default:"No registrado"|truncatechars:20 }}</span>
+                    </div>
+                    <div class="contact-quick-item">
+                        <span class="contact-quick-label">ID del registro</span>
+                        <span class="contact-quick-value">{{ log.pk }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acciones relacionadas -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Acciones</h2>
+            </div>
+            <div class="card-body">
+                <div class="sidebar-actions">
+                    {% if log.modelo == 'CAUSA' and log.objeto_id %}
+                    <a href="{% url 'gestion:causa_detalle' log.objeto_id %}" class="btn-secondary btn-block">
+                        <i class="fas fa-external-link-alt"></i> Ver causa
+                    </a>
+                    {% elif log.modelo == 'PERSONA' and log.objeto_id %}
+                    <a href="{% url 'gestion:persona_detalle' log.objeto_id %}" class="btn-secondary btn-block">
+                        <i class="fas fa-external-link-alt"></i> Ver persona
+                    </a>
+                    {% elif log.modelo == 'AUDIENCIA' and log.objeto_id %}
+                    <a href="{% url 'gestion:audiencia_detalle' log.objeto_id %}" class="btn-secondary btn-block">
+                        <i class="fas fa-external-link-alt"></i> Ver audiencia
+                    </a>
+                    {% elif log.modelo == 'DOCUMENTO' and log.objeto_id %}
+                    <a href="{% url 'gestion:documento_detalle' log.objeto_id %}" class="btn-secondary btn-block">
+                        <i class="fas fa-external-link-alt"></i> Ver documento
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'gestion:auditoria_lista' %}?usuario={{ log.usuario.pk }}" class="btn-secondary btn-block">
+                        <i class="fas fa-user"></i> Ver actividad del usuario
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-{% endif %}
-
-{% if log.datos_nuevos %}
-<div class="panel-card">
-    <div class="panel-card-header">
-        <h3>Datos nuevos</h3>
-    </div>
-    <div class="panel-card-body">
-        <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 13px;">{{ log.datos_nuevos|pprint }}</pre>
-    </div>
-</div>
-{% endif %}
-
 {% endblock %}

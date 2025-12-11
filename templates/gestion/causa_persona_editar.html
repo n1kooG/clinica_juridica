@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Editar vinculación{% endblock %}
+{% block section_title %}Causas{% endblock %}
+
+{% block content %}
+<div class="page-header-simple">
+    <div class="breadcrumb">
+        <a href="{% url 'gestion:causas_lista' %}">Causas</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="{% url 'gestion:causa_detalle' causa_persona.causa.pk %}">{{ causa_persona.causa.caratula|truncatewords:3 }}</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>Editar vinculación</span>
+    </div>
+    <h1 class="page-title">Editar vinculación de persona</h1>
+    <p class="page-subtitle">Modifica la persona o el rol en la causa</p>
+</div>
+
+<form method="post" class="form-layout">
+    {% csrf_token %}
+    
+    <!-- Información actual -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Vinculación actual</h2>
+            <p class="form-card-subtitle">Modifica la persona asociada o su rol en la causa</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-group full-width">
+                <label class="form-label">Causa</label>
+                <input type="text" class="form-input" value="{{ causa_persona.causa.caratula }}" disabled>
+                <input type="hidden" name="causa" value="{{ causa_persona.causa.pk }}">
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label">Persona</label>
+                <select name="persona" class="form-input" required>
+                    <option value="">Selecciona una persona</option>
+                    {% for p in personas %}
+                        <option value="{{ p.pk }}" {% if causa_persona.persona.pk == p.pk %}selected{% endif %}>
+                            {{ p.nombres }} {{ p.apellidos }} ({{ p.run }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group full-width">
+                <label class="form-label">Rol en la causa</label>
+                <select name="rol_en_causa" class="form-input" required>
+                    <option value="">Selecciona el rol</option>
+                    <option value="Demandante" {% if causa_persona.rol_en_causa == 'Demandante' %}selected{% endif %}>Demandante</option>
+                    <option value="Demandado" {% if causa_persona.rol_en_causa == 'Demandado' %}selected{% endif %}>Demandado</option>
+                    <option value="Solicitante" {% if causa_persona.rol_en_causa == 'Solicitante' %}selected{% endif %}>Solicitante</option>
+                    <option value="Requerido" {% if causa_persona.rol_en_causa == 'Requerido' %}selected{% endif %}>Requerido</option>
+                    <option value="Querellante" {% if causa_persona.rol_en_causa == 'Querellante' %}selected{% endif %}>Querellante</option>
+                    <option value="Querellado" {% if causa_persona.rol_en_causa == 'Querellado' %}selected{% endif %}>Querellado</option>
+                    <option value="Testigo" {% if causa_persona.rol_en_causa == 'Testigo' %}selected{% endif %}>Testigo</option>
+                    <option value="Perito" {% if causa_persona.rol_en_causa == 'Perito' %}selected{% endif %}>Perito</option>
+                    <option value="Tercero" {% if causa_persona.rol_en_causa == 'Tercero' %}selected{% endif %}>Tercero</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer fijo -->
+    <div class="form-footer">
+        <a href="{% url 'gestion:causa_detalle' causa_persona.causa.pk %}" class="btn-secondary">Cancelar</a>
+        <button type="submit" class="btn-primary">Guardar cambios</button>
+    </div>
+</form>
+{% endblock %}

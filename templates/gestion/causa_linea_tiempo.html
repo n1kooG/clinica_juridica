@@ -1,55 +1,186 @@
 {% extends 'base.html' %}
+{% load gestion_tags %}
 {% block title %}Línea de tiempo - {{ causa.caratula }}{% endblock %}
+{% block section_title %}Causas{% endblock %}
 
 {% block content %}
-<div class="content-header">
-    <div>
-        <h1>Línea de tiempo</h1>
-        <p class="lead">{{ causa.caratula }}</p>
+<div class="page-header-with-actions">
+    <div class="page-header-left">
+        <div class="breadcrumb">
+            <a href="{% url 'gestion:causas_lista' %}">Causas</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="{% url 'gestion:causa_detalle' causa.pk %}">{{ causa.caratula|truncatewords:3 }}</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Línea de tiempo</span>
+        </div>
+        <h1 class="page-title">Línea de tiempo</h1>
+        <p class="page-subtitle">Historial completo de la causa {{ causa.caratula }}</p>
     </div>
-    <div>
-        <a href="{% url 'gestion:causa_detalle' causa.pk %}" class="btn-link">← Volver a la causa</a>
+    <div class="page-header-actions">
+        <a href="{% url 'gestion:causa_detalle' causa.pk %}" class="btn-secondary">
+            <i class="fas fa-arrow-left"></i> Volver a la causa
+        </a>
     </div>
 </div>
 
-<div class="panel-card" style="margin-bottom: 20px;">
-    <div class="panel-card-body">
-        <p><strong>Tribunal:</strong> {{ causa.tribunal }}</p>
-        <p><strong>Materia:</strong> {{ causa.materia }}</p>
-        <p><strong>Estado actual:</strong> <span class="status-badge {{ causa.estado.color }}">{{ causa.estado.nombre }}</span></p>
-    </div>
-</div>
-
-<div class="panel-card">
-    <div class="panel-card-header">
-        <h3>Historial de eventos</h3>
-        <div class="muted-note">{{ eventos|length }} eventos registrados</div>
-    </div>
-    <div class="panel-card-body">
-        <div class="timeline">
-            {% for evento in eventos %}
-            <div class="timeline-item">
-                <div class="timeline-marker">
-                    <span class="timeline-icon">{{ evento.icono }}</span>
-                </div>
-                <div class="timeline-content">
-                    <div class="timeline-header">
-                        <span class="timeline-fecha">
-                            {% if evento.tipo == 'CREACION' %}
-                                {{ evento.fecha|date:"d/m/Y" }}
+<div class="timeline-layout">
+    <!-- Panel de información de la causa -->
+    <div class="timeline-sidebar">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Información de la causa</h2>
+            </div>
+            <div class="card-body">
+                <div class="timeline-info-list">
+                    <div class="timeline-info-item">
+                        <span class="timeline-info-label">Carátula</span>
+                        <span class="timeline-info-value">{{ causa.caratula }}</span>
+                    </div>
+                    <div class="timeline-info-item">
+                        <span class="timeline-info-label">RIT</span>
+                        <span class="timeline-info-value">{{ causa.rit|default:"Sin registrar" }}</span>
+                    </div>
+                    <div class="timeline-info-item">
+                        <span class="timeline-info-label">RUC</span>
+                        <span class="timeline-info-value">{{ causa.ruc|default:"Sin registrar" }}</span>
+                    </div>
+                    <div class="timeline-info-item">
+                        <span class="timeline-info-label">Tribunal</span>
+                        <span class="timeline-info-value">{{ causa.tribunal }}</span>
+                    </div>
+                    <div class="timeline-info-item">
+                        <span class="timeline-info-label">Materia</span>
+                        <span class="timeline-info-value">{{ causa.materia }}</span>
+                    </div>
+                    <div class="timeline-info-item">
+                        <span class="timeline-info-label">Estado actual</span>
+                        <span class="timeline-info-value">
+                            {% if causa.estado %}
+                            <span class="status-badge status-{{ causa.estado.color }}">{{ causa.estado.nombre }}</span>
                             {% else %}
-                                {{ evento.fecha|date:"d/m/Y H:i" }}
+                            Sin estado
                             {% endif %}
                         </span>
-                        <span class="timeline-tipo timeline-tipo-{{ evento.tipo|lower }}">{{ evento.tipo }}</span>
                     </div>
-                    <div class="timeline-titulo">{{ evento.titulo }}</div>
-                    <div class="timeline-descripcion">{{ evento.descripcion }}</div>
+                    <div class="timeline-info-item">
+                        <span class="timeline-info-label">Responsable</span>
+                        <span class="timeline-info-value">{{ causa.responsable.get_full_name|default:"Sin asignar" }}</span>
+                    </div>
+                    <div class="timeline-info-item">
+                        <span class="timeline-info-label">Fecha de ingreso</span>
+                        <span class="timeline-info-value">{{ causa.fecha_creacion|date:"d/m/Y" }}</span>
+                    </div>
                 </div>
             </div>
-            {% empty %}
-            <p>No hay eventos registrados para esta causa.</p>
-            {% endfor %}
+        </div>
+
+        <!-- Resumen de eventos -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Resumen</h2>
+            </div>
+            <div class="card-body">
+                <div class="timeline-stats">
+                    <div class="timeline-stat">
+                        <span class="timeline-stat-number">{{ eventos|length }}</span>
+                        <span class="timeline-stat-label">Eventos totales</span>
+                    </div>
+                    <div class="timeline-stat">
+                        <span class="timeline-stat-number">{{ audiencias_count|default:0 }}</span>
+                        <span class="timeline-stat-label">Audiencias</span>
+                    </div>
+                    <div class="timeline-stat">
+                        <span class="timeline-stat-number">{{ documentos_count|default:0 }}</span>
+                        <span class="timeline-stat-label">Documentos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timeline principal -->
+    <div class="timeline-main">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Historial de eventos</h2>
+                    <p class="card-subtitle">{{ eventos|length }} eventos registrados en orden cronológico</p>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if eventos %}
+                <div class="timeline">
+                    {% for evento in eventos %}
+                    <div class="timeline-item">
+                        <div class="timeline-marker">
+                            <div class="timeline-icon timeline-icon-{{ evento.tipo|lower }}">
+                                {% if evento.tipo == 'CREACION' %}
+                                    <i class="fas fa-plus"></i>
+                                {% elif evento.tipo == 'AUDIENCIA' %}
+                                    <i class="fas fa-gavel"></i>
+                                {% elif evento.tipo == 'DOCUMENTO' %}
+                                    <i class="fas fa-file-alt"></i>
+                                {% elif evento.tipo == 'CAMBIO_ESTADO' %}
+                                    <i class="fas fa-exchange-alt"></i>
+                                {% elif evento.tipo == 'EDICION' %}
+                                    <i class="fas fa-edit"></i>
+                                {% elif evento.tipo == 'PERSONA' %}
+                                    <i class="fas fa-user"></i>
+                                {% else %}
+                                    <i class="fas fa-circle"></i>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <span class="timeline-date">
+                                    {% if evento.tipo == 'CREACION' %}
+                                        {{ evento.fecha|date:"d/m/Y" }}
+                                    {% else %}
+                                        {{ evento.fecha|date:"d/m/Y H:i" }}
+                                    {% endif %}
+                                </span>
+                                <span class="timeline-badge timeline-badge-{{ evento.tipo|lower }}">
+                                    {% if evento.tipo == 'CREACION' %}
+                                        Creación
+                                    {% elif evento.tipo == 'AUDIENCIA' %}
+                                        Audiencia
+                                    {% elif evento.tipo == 'DOCUMENTO' %}
+                                        Documento
+                                    {% elif evento.tipo == 'CAMBIO_ESTADO' %}
+                                        Cambio de estado
+                                    {% elif evento.tipo == 'EDICION' %}
+                                        Edición
+                                    {% elif evento.tipo == 'PERSONA' %}
+                                        Persona
+                                    {% else %}
+                                        {{ evento.tipo }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <h4 class="timeline-title">{{ evento.titulo }}</h4>
+                            {% if evento.descripcion %}
+                            <p class="timeline-description">{{ evento.descripcion }}</p>
+                            {% endif %}
+                            {% if evento.usuario %}
+                            <div class="timeline-meta">
+                                <i class="fas fa-user"></i> {{ evento.usuario }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3 class="empty-state-title">Sin eventos registrados</h3>
+                    <p class="empty-state-text">Aún no hay eventos en el historial de esta causa.</p>
+                </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>

@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% block title %}Panel de Administración{% endblock %}
+{% block section_title %}Administración{% endblock %}
+
+{% block content %}
+<div class="page-header-simple">
+    <h1 class="page-title">Panel de administración</h1>
+    <p class="page-subtitle">Gestiona usuarios, catálogos y configuración del sistema</p>
+</div>
+
+<!-- Resumen -->
+<div class="admin-resumen">
+    <div class="admin-stat-card">
+        <div class="admin-stat-icon admin-stat-blue">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="admin-stat-info">
+            <span class="admin-stat-value">{{ total_usuarios }}</span>
+            <span class="admin-stat-label">Usuarios</span>
+        </div>
+        <a href="{% url 'gestion:admin_usuarios' %}" class="admin-stat-link">Gestionar</a>
+    </div>
+    
+    <div class="admin-stat-card">
+        <div class="admin-stat-icon admin-stat-green">
+            <i class="fas fa-folder-open"></i>
+        </div>
+        <div class="admin-stat-info">
+            <span class="admin-stat-value">{{ total_causas }}</span>
+            <span class="admin-stat-label">Causas</span>
+        </div>
+        <a href="{% url 'gestion:causas_lista' %}" class="admin-stat-link">Ver todas</a>
+    </div>
+    
+    <div class="admin-stat-card">
+        <div class="admin-stat-icon admin-stat-purple">
+            <i class="fas fa-user-friends"></i>
+        </div>
+        <div class="admin-stat-info">
+            <span class="admin-stat-value">{{ total_personas }}</span>
+            <span class="admin-stat-label">Personas</span>
+        </div>
+        <a href="{% url 'gestion:personas_lista' %}" class="admin-stat-link">Ver todas</a>
+    </div>
+    
+    <div class="admin-stat-card">
+        <div class="admin-stat-icon admin-stat-orange">
+            <i class="fas fa-history"></i>
+        </div>
+        <div class="admin-stat-info">
+            <span class="admin-stat-value">{{ total_logs }}</span>
+            <span class="admin-stat-label">Logs de auditoría</span>
+        </div>
+        <a href="{% url 'gestion:auditoria_lista' %}" class="admin-stat-link">Ver logs</a>
+    </div>
+</div>
+
+<!-- Secciones de administración -->
+<div class="admin-sections">
+    <!-- Usuarios -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title"><i class="fas fa-users"></i> Gestión de Usuarios</h2>
+                <p class="card-subtitle">Administra los usuarios del sistema</p>
+            </div>
+            <a href="{% url 'gestion:admin_usuario_crear' %}" class="btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Nuevo usuario
+            </a>
+        </div>
+        <div class="card-body card-body-table">
+            <table class="inner-table">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for u in usuarios_recientes %}
+                    <tr>
+                        <td class="cell-user">
+                            <span class="user-avatar">{{ u.username|slice:":1"|upper }}</span>
+                            <span>{{ u.get_full_name|default:u.username }}</span>
+                        </td>
+                        <td>{{ u.email|default:"-" }}</td>
+                        <td>
+                            {% if u.perfil %}
+                            <span class="role-tag role-tag-{{ u.perfil.rol|lower }}">{{ u.perfil.get_rol_display }}</span>
+                            {% else %}
+                            <span class="role-tag">Sin rol</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if u.is_active %}
+                            <span class="status-badge status-green">Activo</span>
+                            {% else %}
+                            <span class="status-badge status-red">Inactivo</span>
+                            {% endif %}
+                        </td>
+                        <td class="cell-actions">
+                            <a href="{% url 'gestion:admin_usuario_editar' u.pk %}" class="action-link">Editar</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="empty-table">No hay usuarios registrados.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if usuarios_recientes|length >= 5 %}
+        <div class="card-footer">
+            <a href="{% url 'gestion:admin_usuarios' %}">Ver todos los usuarios →</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Catálogos -->
+    <div class="admin-catalogos">
+        <h2 class="section-title">Catálogos del Sistema</h2>
+        <p class="section-subtitle">Configura las opciones disponibles en formularios</p>
+        
+        <div class="catalogos-grid">
+            <!-- Estados de Causa -->
+            <div class="catalogo-card">
+                <div class="catalogo-header">
+                    <div class="catalogo-icon catalogo-icon-blue">
+                        <i class="fas fa-flag"></i>
+                    </div>
+                    <div class="catalogo-info">
+                        <h3>Estados de Causa</h3>
+                        <span>{{ total_estados }} registros</span>
+                    </div>
+                </div>
+                <div class="catalogo-actions">
+                    <a href="{% url 'gestion:admin_catalogo' 'estados' %}" class="btn-secondary btn-sm">Gestionar</a>
+                </div>
+            </div>
+            
+            <!-- Materias -->
+            <div class="catalogo-card">
+                <div class="catalogo-header">
+                    <div class="catalogo-icon catalogo-icon-green">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <div class="catalogo-info">
+                        <h3>Materias</h3>
+                        <span>{{ total_materias }} registros</span>
+                    </div>
+                </div>
+                <div class="catalogo-actions">
+                    <a href="{% url 'gestion:admin_catalogo' 'materias' %}" class="btn-secondary btn-sm">Gestionar</a>
+                </div>
+            </div>
+            
+            <!-- Tribunales -->
+            <div class="catalogo-card">
+                <div class="catalogo-header">
+                    <div class="catalogo-icon catalogo-icon-purple">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <div class="catalogo-info">
+                        <h3>Tribunales</h3>
+                        <span>{{ total_tribunales }} registros</span>
+                    </div>
+                </div>
+                <div class="catalogo-actions">
+                    <a href="{% url 'gestion:admin_catalogo' 'tribunales' %}" class="btn-secondary btn-sm">Gestionar</a>
+                </div>
+            </div>
+            
+            <!-- Tipos de Documento -->
+            <div class="catalogo-card">
+                <div class="catalogo-header">
+                    <div class="catalogo-icon catalogo-icon-orange">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="catalogo-info">
+                        <h3>Tipos de Documento</h3>
+                        <span>{{ total_tipos_documento }} registros</span>
+                    </div>
+                </div>
+                <div class="catalogo-actions">
+                    <a href="{% url 'gestion:admin_catalogo' 'tipos_documento' %}" class="btn-secondary btn-sm">Gestionar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
