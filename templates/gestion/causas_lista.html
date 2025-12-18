@@ -8,7 +8,7 @@
         <h1 class="page-title">Causas</h1>
         <p class="page-subtitle">Seguimiento de causas y consultas jurídicas</p>
     </div>
-    {% if puede_crear %}
+    {% if permisos.puede_crear_causa %}
     <a href="{% url 'gestion:causa_crear' %}" class="btn-primary">
         <i class="fas fa-plus"></i> Nueva causa
     </a>
@@ -65,7 +65,7 @@
                     </td>
                     <td class="cell-actions">
                         <a href="{% url 'gestion:causa_detalle' c.pk %}" class="action-link">Ver</a>
-                        {% if puede_editar %}
+                        {% if permisos.puede_editar_causa %}
                         <a href="{% url 'gestion:causa_editar' c.pk %}" class="action-link">Editar</a>
                         {% endif %}
                     </td>

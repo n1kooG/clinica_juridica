@@ -8,7 +8,7 @@
         <h1 class="page-title">Agenda</h1>
         <p class="page-subtitle">Audiencias y eventos programados de la clínica jurídica</p>
     </div>
-    {% if puede_crear %}
+    {% if permisos.puede_crear_audiencia %}
     <a href="{% url 'gestion:audiencia_crear' %}" class="btn-primary">
         <i class="fas fa-plus"></i> Nueva audiencia
     </a>
@@ -79,7 +79,7 @@
                     </td>
                     <td class="cell-actions">
                         <a href="{% url 'gestion:audiencia_detalle' a.pk %}" class="action-link">Ver</a>
-                        {% if puede_editar %}
+                        {% if permisos.puede_editar_audiencia %}
                         <a href="{% url 'gestion:audiencia_editar' a.pk %}" class="action-link">Editar</a>
                         {% endif %}
                     </td>

@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}Consentimientos{% endblock %}
+{% block section_title %}Consentimientos{% endblock %}
+
+{% block content %}
+<div class="page-header-flex">
+    <div class="page-header-content">
+        <h1 class="page-title">Consentimientos</h1>
+        <p class="page-subtitle">Gestión de consentimientos informados</p>
+    </div>
+    <a href="{% url 'gestion:consentimiento_crear' %}" class="btn-primary">
+        <i class="fas fa-plus"></i> Nuevo consentimiento
+    </a>
+</div>
+
+<div class="list-card">
+    <div class="list-card-header">
+        <div class="list-card-title">
+            <span class="title-text">Listado de consentimientos</span>
+            <span class="title-count">consentimientos registrados</span>
+        </div>
+        <div class="list-card-search">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Buscar por persona o tipo" class="search-input" id="searchInput">
+        </div>
+    </div>
+
+    <div class="list-card-filters">
+        <a href="{% url 'gestion:consentimientos_lista' %}" class="filter-pill {% if not estado_filtro %}active{% endif %}">Todos</a>
+        <a href="?estado=otorgado" class="filter-pill {% if estado_filtro == 'otorgado' %}active{% endif %}">Otorgados</a>
+        <a href="?estado=pendiente" class="filter-pill {% if estado_filtro == 'pendiente' %}active{% endif %}">Pendientes</a>
+        <a href="?estado=revocado" class="filter-pill {% if estado_filtro == 'revocado' %}active{% endif %}">Revocados</a>
+    </div>
+
+    <div class="list-card-body">
+        {% if consentimientos %}
+        <table class="list-table">
+            <thead>
+                <tr>
+                    <th>Fecha / Hora</th>
+                    <th>Tipo</th>
+                    <th>Persona</th>
+                    <th>RUN</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            {% for c in consentimientos %}
+                <tr>
+                    <td>
+                        <div class="date-display">
+                            <span class="date-main">{{ c.fecha_registro|date:"d M Y" }}</span>
+                            <span class="date-time">{{ c.fecha_registro|date:"H:i" }} hrs</span>
+                        </div>
+                    </td>
+                    <td>{{ c.get_tipo_display }}</td>
+                    <td>
+                        <a href="{% url 'gestion:persona_detalle' c.persona.pk %}" class="link-primary">
+                            {{ c.persona.nombres }} {{ c.persona.apellidos }}
+                        </a>
+                    </td>
+                    <td>{{ c.persona.run }}</td>
+                    <td>
+                        {% if c.fecha_revocacion %}
+                            <span class="status-badge status-red">Revocado</span>
+                        {% elif c.otorgado %}
+                            <span class="status-badge status-green">Otorgado</span>
+                        {% else %}
+                            <span class="status-badge status-yellow">Pendiente</span>
+                        {% endif %}
+                    </td>
+                    <td class="actions-cell">
+                        <a href="{% url 'gestion:consentimiento_detalle' c.pk %}" class="action-link">Ver</a>
+                        <a href="{% url 'gestion:consentimiento_editar' c.pk %}" class="action-link">Editar</a>
+                        {% if c.otorgado and not c.fecha_revocacion %}
+                        <a href="{% url 'gestion:consentimiento_revocar' c.pk %}" class="action-link action-danger">Revocar</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% if consentimientos.has_other_pages %}
+        <div class="pagination-wrapper">
+            <nav class="pagination">
+                {% if consentimientos.has_previous %}
+                <a href="?page={{ consentimientos.previous_page_number }}&estado={{ estado_filtro }}" class="pagination-link">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                {% endif %}
+                <span class="pagination-info">
+                    Página {{ consentimientos.number }} de {{ consentimientos.paginator.num_pages }}
+                </span>
+                {% if consentimientos.has_next %}
+                <a href="?page={{ consentimientos.next_page_number }}&estado={{ estado_filtro }}" class="pagination-link">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                {% endif %}
+            </nav>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-file-signature"></i>
+            </div>
+            <h3 class="empty-state-title">No hay consentimientos registrados</h3>
+            <p class="empty-state-text">Comienza registrando el primer consentimiento informado.</p>
+            <a href="{% url 'gestion:consentimiento_crear' %}" class="btn-primary">
+                <i class="fas fa-plus"></i> Nuevo consentimiento
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.getElementById('searchInput').addEventListener('input', function() {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#tableBody tr');
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+</script>
+{% endblock %}

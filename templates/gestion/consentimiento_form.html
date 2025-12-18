@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block title %}{% if consentimiento %}Editar consentimiento{% else %}Nuevo consentimiento{% endif %}{% endblock %}
+{% block section_title %}Consentimientos{% endblock %}
+
+{% block content %}
+<div class="page-header-simple">
+    <div class="breadcrumb">
+        <a href="{% url 'gestion:consentimientos_lista' %}">Consentimientos</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>{% if consentimiento %}Editar{% else %}Nuevo{% endif %}</span>
+    </div>
+    <h1 class="page-title">{% if consentimiento %}Editar consentimiento{% else %}Nuevo consentimiento{% endif %}</h1>
+    <p class="page-subtitle">
+        {% if consentimiento %}
+            Actualiza la información del consentimiento
+        {% else %}
+            Registra un nuevo consentimiento informado
+        {% endif %}
+    </p>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="form-layout">
+    {% csrf_token %}
+    
+    <!-- Información del consentimiento -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Información del consentimiento</h2>
+            <p class="form-card-subtitle">Datos del consentimiento informado</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Persona *</label>
+                    <select name="persona" class="form-input" required>
+                        <option value="">Selecciona una persona</option>
+                        {% for p in personas %}
+                            <option value="{{ p.pk }}" 
+                                {% if form.persona.value|stringformat:"i" == p.pk|stringformat:"i" or persona_preseleccionada|stringformat:"i" == p.pk|stringformat:"i" %}selected{% endif %}>
+                                {{ p.apellidos }}, {{ p.nombres }} ({{ p.run }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.persona.errors %}<span class="form-error">{{ form.persona.errors.0 }}</span>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tipo de consentimiento *</label>
+                    <select name="tipo" class="form-input" required>
+                        <option value="">Selecciona el tipo</option>
+                        {% for value, label in tipos %}
+                            <option value="{{ value }}" {% if form.tipo.value == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if form.tipo.errors %}<span class="form-error">{{ form.tipo.errors.0 }}</span>{% endif %}
+                </div>
+            </div>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">¿Consentimiento otorgado?</label>
+                    <div class="form-checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="otorgado" {% if form.otorgado.value %}checked{% endif %}>
+                            <span>Sí, el consentimiento ha sido otorgado</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fecha de otorgamiento</label>
+                    <input type="date" name="fecha_otorgamiento" value="{{ form.fecha_otorgamiento.value|date:'Y-m-d'|default:'' }}" class="form-input">
+                    <span class="form-hint">Requerida si el consentimiento fue otorgado</span>
+                    {% if form.fecha_otorgamiento.errors %}<span class="form-error">{{ form.fecha_otorgamiento.errors.0 }}</span>{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documento de respaldo -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Documento de respaldo</h2>
+            <p class="form-card-subtitle">Adjunta el consentimiento firmado (opcional)</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-group full-width">
+                <label class="form-label">Archivo</label>
+                <div class="file-upload-area">
+                    <input type="file" name="documento_respaldo" id="documento_respaldo" class="file-input" accept=".pdf,.jpg,.jpeg,.png">
+                    <label for="documento_respaldo" class="file-upload-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Haz clic para seleccionar un archivo</span>
+                        <span class="file-hint">PDF, JPG o PNG (máx. 5MB)</span>
+                    </label>
+                    <span class="file-name" id="fileName"></span>
+                </div>
+                {% if consentimiento and consentimiento.documento_respaldo %}
+                <div class="current-file">
+                    <span>Archivo actual: </span>
+                    <a href="{{ consentimiento.documento_respaldo.url }}" target="_blank">
+                        <i class="fas fa-file"></i> Ver documento
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Observaciones -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <h2 class="form-card-title">Observaciones</h2>
+            <p class="form-card-subtitle">Notas adicionales sobre el consentimiento</p>
+        </div>
+        <div class="form-card-body">
+            <div class="form-group full-width">
+                <label class="form-label">Observaciones</label>
+                <textarea name="observaciones" class="form-input form-textarea" rows="4" 
+                    placeholder="Observaciones adicionales sobre este consentimiento">{{ form.observaciones.value|default:'' }}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer fijo -->
+    <div class="form-footer">
+        <a href="{% url 'gestion:consentimientos_lista' %}" class="btn-secondary">Cancelar</a>
+        <button type="submit" class="btn-primary">
+            {% if consentimiento %}Guardar cambios{% else %}Registrar consentimiento{% endif %}
+        </button>
+    </div>
+</form>
+
+<script>
+document.getElementById('documento_respaldo').addEventListener('change', function() {
+    const fileName = this.files[0] ? this.files[0].name : '';
+    document.getElementById('fileName').textContent = fileName;
+});
+</script>
+{% endblock %}

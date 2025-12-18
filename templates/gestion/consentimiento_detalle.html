@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% block title %}Consentimiento - {{ consentimiento.persona }}{% endblock %}
+{% block section_title %}Consentimientos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-content">
+        <div class="breadcrumb">
+            <a href="{% url 'gestion:consentimientos_lista' %}">Consentimientos</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Detalle</span>
+        </div>
+        <h1 class="page-title">{{ consentimiento.get_tipo_display }}</h1>
+        <p class="page-subtitle">
+            {{ consentimiento.persona.nombres }} {{ consentimiento.persona.apellidos }}
+        </p>
+    </div>
+    <div class="page-header-actions">
+        <a href="{% url 'gestion:consentimiento_editar' consentimiento.pk %}" class="btn-secondary">
+            <i class="fas fa-edit"></i> Editar
+        </a>
+        {% if consentimiento.otorgado and not consentimiento.fecha_revocacion %}
+        <a href="{% url 'gestion:consentimiento_revocar' consentimiento.pk %}" class="btn-danger">
+            <i class="fas fa-ban"></i> Revocar
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="detail-grid">
+    <!-- Estado del consentimiento -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Estado actual</h2>
+        </div>
+        <div class="card-body">
+            <div class="status-display">
+                {% if consentimiento.fecha_revocacion %}
+                    <span class="status-badge status-badge-lg status-red">
+                        <i class="fas fa-ban"></i> Revocado
+                    </span>
+                    <p class="status-date">Revocado el {{ consentimiento.fecha_revocacion|date:"d/m/Y" }}</p>
+                {% elif consentimiento.otorgado %}
+                    <span class="status-badge status-badge-lg status-green">
+                        <i class="fas fa-check-circle"></i> Otorgado
+                    </span>
+                    <p class="status-date">Otorgado el {{ consentimiento.fecha_otorgamiento|date:"d/m/Y" }}</p>
+                {% else %}
+                    <span class="status-badge status-badge-lg status-yellow">
+                        <i class="fas fa-clock"></i> Pendiente
+                    </span>
+                    <p class="status-date">Aún no ha sido otorgado</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Información del consentimiento -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Información del consentimiento</h2>
+        </div>
+        <div class="card-body">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Persona</span>
+                    <span class="info-value">
+                        <a href="{% url 'gestion:persona_detalle' consentimiento.persona.pk %}">
+                            {{ consentimiento.persona.nombres }} {{ consentimiento.persona.apellidos }}
+                        </a>
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">RUN</span>
+                    <span class="info-value">{{ consentimiento.persona.run }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Tipo de consentimiento</span>
+                    <span class="info-value">{{ consentimiento.get_tipo_display }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Fecha de registro</span>
+                    <span class="info-value">{{ consentimiento.fecha_registro|date:"d/m/Y H:i" }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Registrado por</span>
+                    <span class="info-value">
+                        {{ consentimiento.registrado_por.get_full_name|default:consentimiento.registrado_por.username }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documento de respaldo -->
+    {% if consentimiento.documento_respaldo %}
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Documento de respaldo</h2>
+        </div>
+        <div class="card-body">
+            <div class="document-preview">
+                <a href="{{ consentimiento.documento_respaldo.url }}" target="_blank" class="document-link">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Ver documento firmado</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Observaciones -->
+    {% if consentimiento.observaciones %}
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Observaciones</h2>
+        </div>
+        <div class="card-body">
+            <p class="text-content">{{ consentimiento.observaciones }}</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.status-display {
+    text-align: center;
+    padding: 20px;
+}
+.status-badge-lg {
+    font-size: 1.1rem;
+    padding: 10px 20px;
+}
+.status-date {
+    margin-top: 10px;
+    color: #666;
+}
+.document-preview {
+    text-align: center;
+    padding: 20px;
+}
+.document-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 25px;
+    background: #f0f4f8;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #2563eb;
+    transition: background 0.2s;
+}
+.document-link:hover {
+    background: #e2e8f0;
+}
+.document-link i {
+    font-size: 1.5rem;
+}
+</style>
+{% endblock %}

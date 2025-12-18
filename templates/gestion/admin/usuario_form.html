@@ -88,10 +88,11 @@
                     <select name="rol" class="form-input" required>
                         <option value="">Selecciona un rol</option>
                         <option value="ADMIN" {% if perfil.rol == 'ADMIN' %}selected{% endif %}>Administrador</option>
-                        <option value="DIRECTOR" {% if perfil.rol == 'DIRECTOR' %}selected{% endif %}>Director</option>
-                        <option value="SUPERVISOR" {% if perfil.rol == 'SUPERVISOR' %}selected{% endif %}>Supervisor</option>
-                        <option value="ALUMNO" {% if perfil.rol == 'ALUMNO' %}selected{% endif %}>Alumno</option>
-                        <option value="SECRETARIA" {% if perfil.rol == 'SECRETARIA' %}selected{% endif %}>Secretaria</option>
+                        <option value="DIRECTOR" {% if perfil.rol == 'DIRECTOR' %}selected{% endif %}>Director/a Clínica</option>
+                        <option value="SUPERVISOR" {% if perfil.rol == 'SUPERVISOR' %}selected{% endif %}>Abogado/a Supervisor/a</option>
+                        <option value="ESTUDIANTE" {% if perfil.rol == 'ESTUDIANTE' or perfil.rol == 'ALUMNO' %}selected{% endif %}>Estudiante/Clínico</option>
+                        <option value="SECRETARIA" {% if perfil.rol == 'SECRETARIA' %}selected{% endif %}>Secretaría/Apoyo</option>
+                        <option value="EXTERNO" {% if perfil.rol == 'EXTERNO' %}selected{% endif %}>Persona Atendida (externo)</option>
                     </select>
                 </div>
                 <div class="form-group">

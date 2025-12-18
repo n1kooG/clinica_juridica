@@ -14,8 +14,11 @@
         <p class="page-subtitle">Visualiza y edita los datos principales de la persona</p>
     </div>
     <div class="page-header-actions">
+        <a href="{% url 'gestion:persona_consentimientos' persona.pk %}" class="btn-secondary">
+            <i class="fas fa-file-signature"></i> Consentimientos
+        </a>
         <a href="{% url 'gestion:personas_lista' %}" class="btn-secondary">Volver a listado</a>
-        {% if puede_editar %}
+        {% if permisos.puede_editar_persona %}
         <a href="{% url 'gestion:persona_editar' persona.pk %}" class="btn-primary">Editar persona</a>
         {% endif %}
     </div>

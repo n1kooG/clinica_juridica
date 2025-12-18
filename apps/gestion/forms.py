@@ -1,5 +1,5 @@
 from django import forms
-from .models import Persona, Causa, Audiencia, Documento, CausaPersona
+from .models import Persona, Causa, Audiencia, Documento, CausaPersona, Consentimiento
 import re
 from django.core.exceptions import ValidationError
 
@@ -92,3 +92,31 @@ class CausaPersonaForm(forms.ModelForm):
     class Meta:
         model = CausaPersona
         fields = ['causa', 'persona', 'rol_en_causa']
+
+
+class ConsentimientoForm(forms.ModelForm):
+    class Meta:
+        model = Consentimiento
+        fields = [
+            'persona', 'tipo', 'otorgado', 'fecha_otorgamiento',
+            'documento_respaldo', 'observaciones'
+        ]
+        widgets = {
+            'fecha_otorgamiento': forms.DateInput(attrs={'type': 'date', 'class': 'form-input'}),
+            'observaciones': forms.Textarea(attrs={'class': 'form-input', 'rows': 3, 'placeholder': 'Observaciones adicionales'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Hacer documento_respaldo opcional explícitamente
+        self.fields['documento_respaldo'].required = False
+
+    def clean(self):
+        cleaned_data = super().clean()
+        otorgado = cleaned_data.get('otorgado')
+        fecha_otorgamiento = cleaned_data.get('fecha_otorgamiento')
+        
+        if otorgado and not fecha_otorgamiento:
+            raise ValidationError('Si el consentimiento fue otorgado, debe indicar la fecha de otorgamiento.')
+        
+        return cleaned_data

@@ -34,6 +34,9 @@
                 <a href="{% url 'gestion:documentos_lista' %}" class="nav-item {% if 'documento' in request.resolver_match.url_name %}active{% endif %}">
                     <i class="fas fa-file-alt"></i> Documentos
                 </a>
+                <a href="{% url 'gestion:consentimientos_lista' %}" class="nav-item {% if 'consentimiento' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fas fa-file-signature"></i> Consentimientos
+                </a>
                 <a href="{% url 'gestion:buscar' %}" class="nav-item {% if request.resolver_match.url_name == 'buscar' %}active{% endif %}">
                     <i class="fas fa-search"></i> Búsqueda
                 </a>

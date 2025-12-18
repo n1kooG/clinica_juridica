@@ -34,6 +34,13 @@ class Perfil(models.Model):
         default='ESTUDIANTE',
         verbose_name='Rol'
     )
+    rut = models.CharField(
+        max_length=12,
+        blank=True,
+        null=True,
+        verbose_name='RUT',
+        help_text='Formato: 12.345.678-9'
+    )
     sede = models.CharField(
         max_length=20,
         choices=SEDE_CHOICES,
@@ -46,6 +53,12 @@ class Perfil(models.Model):
         blank=True,
         null=True,
         verbose_name='Teléfono'
+    )
+    direccion = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+        verbose_name='Dirección'
     )
     activo = models.BooleanField(
         default=True,

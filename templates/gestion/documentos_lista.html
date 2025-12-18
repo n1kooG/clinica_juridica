@@ -8,7 +8,7 @@
         <h1 class="page-title">Documentos</h1>
         <p class="page-subtitle">Gestión documental de las causas de la clínica jurídica</p>
     </div>
-    {% if puede_crear %}
+    {% if permisos.puede_subir_documento %}
     <a href="{% url 'gestion:documento_crear' %}" class="btn-primary">
         <i class="fas fa-upload"></i> Subir documento
     </a>

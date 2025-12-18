@@ -8,7 +8,7 @@
         <h1 class="page-title">Personas</h1>
         <p class="page-subtitle">Gestión de personas vinculadas a consultas y causas</p>
     </div>
-    {% if puede_crear %}
+    {% if permisos.puede_crear_persona %}
     <a href="{% url 'gestion:persona_crear' %}" class="btn-primary">
         <i class="fas fa-user-plus"></i> Nueva persona
     </a>

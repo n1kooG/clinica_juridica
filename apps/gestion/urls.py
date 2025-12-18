@@ -36,6 +36,14 @@ urlpatterns = [
 
     path('buscar/', views.buscar, name='buscar'),
     
+    # Consentimientos
+    path('consentimientos/', views.consentimientos_lista, name='consentimientos_lista'),
+    path('consentimientos/nuevo/', views.consentimiento_crear, name='consentimiento_crear'),
+    path('consentimientos/<int:pk>/', views.consentimiento_detalle, name='consentimiento_detalle'),
+    path('consentimientos/<int:pk>/editar/', views.consentimiento_editar, name='consentimiento_editar'),
+    path('consentimientos/<int:pk>/revocar/', views.consentimiento_revocar, name='consentimiento_revocar'),
+    path('personas/<int:pk>/consentimientos/', views.persona_consentimientos, name='persona_consentimientos'),
+    
     path('auditoria/', views.auditoria_lista, name='auditoria_lista'),
     path('auditoria/<int:pk>/', views.auditoria_detalle, name='auditoria_detalle'),
     

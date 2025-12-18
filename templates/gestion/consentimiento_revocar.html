@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block title %}Revocar consentimiento{% endblock %}
+{% block section_title %}Consentimientos{% endblock %}
+
+{% block content %}
+<div class="page-header-simple">
+    <div class="breadcrumb">
+        <a href="{% url 'gestion:consentimientos_lista' %}">Consentimientos</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="{% url 'gestion:consentimiento_detalle' consentimiento.pk %}">Detalle</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>Revocar</span>
+    </div>
+    <h1 class="page-title">Revocar consentimiento</h1>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="confirm-dialog">
+            <div class="confirm-icon warning">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 class="confirm-title">¿Estás seguro de revocar este consentimiento?</h2>
+            <p class="confirm-text">
+                Esta acción registrará la revocación del siguiente consentimiento:
+            </p>
+            
+            <div class="confirm-details">
+                <div class="detail-row">
+                    <span class="detail-label">Persona:</span>
+                    <span class="detail-value">{{ consentimiento.persona.nombres }} {{ consentimiento.persona.apellidos }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Tipo:</span>
+                    <span class="detail-value">{{ consentimiento.get_tipo_display }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Fecha de otorgamiento:</span>
+                    <span class="detail-value">{{ consentimiento.fecha_otorgamiento|date:"d/m/Y" }}</span>
+                </div>
+            </div>
+            
+            <p class="confirm-warning">
+                <i class="fas fa-info-circle"></i>
+                La fecha de revocación será la fecha actual. Esta acción quedará registrada en el sistema.
+            </p>
+            
+            <div class="confirm-actions">
+                <a href="{% url 'gestion:consentimiento_detalle' consentimiento.pk %}" class="btn-secondary">
+                    Cancelar
+                </a>
+                <form method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-danger">
+                        <i class="fas fa-ban"></i> Confirmar revocación
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.confirm-dialog {
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+}
+.confirm-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2rem;
+}
+.confirm-icon.warning {
+    background: #fef3c7;
+    color: #d97706;
+}
+.confirm-title {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+.confirm-text {
+    color: #666;
+    margin-bottom: 20px;
+}
+.confirm-details {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+.detail-row:last-child {
+    border-bottom: none;
+}
+.detail-label {
+    font-weight: 500;
+    color: #64748b;
+}
+.confirm-warning {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+.confirm-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.btn-danger {
+    background: #dc2626;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+.btn-danger:hover {
+    background: #b91c1c;
+}
+</style>
+{% endblock %}

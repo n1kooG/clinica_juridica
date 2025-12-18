@@ -57,7 +57,14 @@ def objeto_a_dict(obj, campos_excluidos=None):
         elif hasattr(valor, 'pk'):  # ForeignKey
             valor = str(valor)
         elif hasattr(valor, 'url'):  # FileField
-            valor = valor.url if valor else None
+            # Verificar si el archivo realmente existe antes de acceder a url
+            try:
+                if valor and valor.name:
+                    valor = valor.url
+                else:
+                    valor = None
+            except (ValueError, AttributeError):
+                valor = None
         
         datos[nombre] = valor
     

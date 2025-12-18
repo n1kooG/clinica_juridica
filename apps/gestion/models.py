@@ -417,7 +417,6 @@ class Consentimiento(models.Model):
         ordering = ['-fecha_registro']
         verbose_name = 'Consentimiento'
         verbose_name_plural = 'Consentimientos'
-        unique_together = ['persona', 'tipo']
 
     def __str__(self):
         estado = "Otorgado" if self.otorgado else "No otorgado"

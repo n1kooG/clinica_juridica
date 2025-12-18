@@ -3,3 +3,17 @@
 [2025-12-11 02:21:18] WARNING seguridad middleware Posible intento XSS detectado - IP: 127.0.0.1, Usuario: Abogado, Campo: observaciones, Valor: <script>alert('hackeado')</script>...
 [2025-12-11 02:21:35] WARNING seguridad middleware Posible intento XSS detectado - IP: 127.0.0.1, Usuario: Abogado, Campo: descripcion, Valor: <script>alert('hackeado')</script>...
 [2025-12-11 02:21:35] WARNING seguridad middleware Posible intento XSS detectado - IP: 127.0.0.1, Usuario: Abogado, Campo: observaciones, Valor: <script>alert('hackeado')</script>...
+[2025-12-18 00:09:19] WARNING seguridad permissions Acceso denegado - Usuario: Thomyork, Permiso: puede_gestionar_usuarios, Rol: DIRECTOR, Vista: admin_usuario_crear
+[2025-12-18 00:09:29] WARNING seguridad permissions Acceso denegado - Usuario: Thomyork, Permiso: puede_gestionar_catalogos, Rol: DIRECTOR, Vista: admin_catalogo
+[2025-12-18 00:09:32] WARNING seguridad permissions Acceso denegado - Usuario: Thomyork, Permiso: puede_gestionar_catalogos, Rol: DIRECTOR, Vista: admin_catalogo
+[2025-12-18 00:09:45] WARNING seguridad permissions Acceso denegado - Usuario: Thomyork, Permiso: puede_gestionar_catalogos, Rol: DIRECTOR, Vista: admin_catalogo
+[2025-12-18 00:09:48] WARNING seguridad permissions Acceso denegado - Usuario: Thomyork, Permiso: puede_gestionar_catalogos, Rol: DIRECTOR, Vista: admin_catalogo
+[2025-12-18 00:09:54] WARNING seguridad permissions Acceso denegado - Usuario: Thomyork, Permiso: puede_gestionar_usuarios, Rol: DIRECTOR, Vista: admin_usuario_crear
+[2025-12-18 00:09:57] WARNING seguridad permissions Acceso denegado - Usuario: Thomyork, Permiso: puede_gestionar_usuarios, Rol: DIRECTOR, Vista: admin_usuarios
+[2025-12-18 00:10:15] WARNING seguridad permissions Acceso denegado - Usuario: Thomyork, Permiso: puede_crear_audiencia, Rol: DIRECTOR, Vista: audiencia_crear
+[2025-12-18 01:09:45] WARNING seguridad permissions Acceso denegado - Usuario: Thomyork, Permiso: puede_editar_causa, Rol: ALUMNO, Vista: causa_editar
+[2025-12-18 01:09:53] WARNING seguridad permissions Acceso denegado - Usuario: Thomyork, Permiso: puede_editar_causa, Rol: ALUMNO, Vista: causa_persona_crear
+[2025-12-18 01:09:56] WARNING seguridad permissions Acceso denegado - Usuario: Thomyork, Permiso: puede_subir_documento, Rol: ALUMNO, Vista: documento_crear
+[2025-12-18 01:09:57] WARNING seguridad permissions Acceso denegado - Usuario: Thomyork, Permiso: puede_crear_audiencia, Rol: ALUMNO, Vista: audiencia_crear
+[2025-12-18 01:24:58] WARNING seguridad permissions Acceso denegado - Usuario: Thomyork, Permiso: puede_editar_causa, Rol: ALUMNO, Vista: causa_editar
+[2025-12-18 01:25:03] WARNING seguridad permissions Acceso denegado - Usuario: Thomyork, Permiso: puede_editar_causa, Rol: ALUMNO, Vista: causa_editar

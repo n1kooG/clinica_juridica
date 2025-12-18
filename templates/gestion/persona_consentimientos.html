@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% block title %}Consentimientos - {{ persona.nombres }} {{ persona.apellidos }}{% endblock %}
+{% block section_title %}Personas{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-content">
+        <div class="breadcrumb">
+            <a href="{% url 'gestion:personas_lista' %}">Personas</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="{% url 'gestion:persona_detalle' persona.pk %}">{{ persona.apellidos }}, {{ persona.nombres }}</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Consentimientos</span>
+        </div>
+        <h1 class="page-title">Consentimientos de {{ persona.nombres }} {{ persona.apellidos }}</h1>
+        <p class="page-subtitle">RUN: {{ persona.run }}</p>
+    </div>
+    <div class="page-header-actions">
+        <a href="{% url 'gestion:consentimiento_crear' %}?persona={{ persona.pk }}" class="btn-primary">
+            <i class="fas fa-plus"></i> Nuevo consentimiento
+        </a>
+    </div>
+</div>
+
+<!-- Resumen de consentimientos -->
+<div class="stats-grid mb-4">
+    <div class="stat-card">
+        <div class="stat-icon stat-icon-green">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-content">
+            <span class="stat-value">{{ consentimientos|length }}</span>
+            <span class="stat-label">Total registrados</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon stat-icon-blue">
+            <i class="fas fa-file-signature"></i>
+        </div>
+        <div class="stat-content">
+            {% with otorgados=consentimientos|dictsort:"otorgado"|last %}
+            <span class="stat-value">
+                {% for c in consentimientos %}{% if c.otorgado and not c.fecha_revocacion %}1{% endif %}{% endfor %}
+            </span>
+            {% endwith %}
+            <span class="stat-label">Vigentes</span>
+        </div>
+    </div>
+</div>
+
+<!-- Lista de consentimientos -->
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Historial de consentimientos</h2>
+    </div>
+    <div class="card-body">
+        {% if consentimientos %}
+        <div class="consent-list">
+            {% for c in consentimientos %}
+            <div class="consent-item">
+                <div class="consent-status">
+                    {% if c.fecha_revocacion %}
+                        <span class="status-badge status-red">Revocado</span>
+                    {% elif c.otorgado %}
+                        <span class="status-badge status-green">Otorgado</span>
+                    {% else %}
+                        <span class="status-badge status-yellow">Pendiente</span>
+                    {% endif %}
+                </div>
+                <div class="consent-info">
+                    <h3 class="consent-type">{{ c.get_tipo_display }}</h3>
+                    <p class="consent-meta">
+                        {% if c.fecha_otorgamiento %}
+                            Otorgado el {{ c.fecha_otorgamiento|date:"d/m/Y" }}
+                        {% else %}
+                            Registrado el {{ c.fecha_registro|date:"d/m/Y" }}
+                        {% endif %}
+                        {% if c.fecha_revocacion %}
+                            • Revocado el {{ c.fecha_revocacion|date:"d/m/Y" }}
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="consent-actions">
+                    <a href="{% url 'gestion:consentimiento_detalle' c.pk %}" class="action-link" title="Ver detalle">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="{% url 'gestion:consentimiento_editar' c.pk %}" class="action-link" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    {% if c.otorgado and not c.fecha_revocacion %}
+                    <a href="{% url 'gestion:consentimiento_revocar' c.pk %}" class="action-link text-danger" title="Revocar">
+                        <i class="fas fa-ban"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-file-signature"></i>
+            </div>
+            <h3 class="empty-state-title">No hay consentimientos registrados</h3>
+            <p class="empty-state-text">Esta persona no tiene consentimientos registrados aún.</p>
+            <a href="{% url 'gestion:consentimiento_crear' %}?persona={{ persona.pk }}" class="btn-primary">
+                <i class="fas fa-plus"></i> Registrar consentimiento
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.consent-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.consent-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+.consent-status {
+    flex-shrink: 0;
+}
+.consent-info {
+    flex-grow: 1;
+}
+.consent-type {
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0 0 4px;
+}
+.consent-meta {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+}
+.consent-actions {
+    display: flex;
+    gap: 8px;
+}
+.text-danger {
+    color: #dc2626 !important;
+}
+</style>
+{% endblock %}

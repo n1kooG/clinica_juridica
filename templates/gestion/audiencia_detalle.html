@@ -15,7 +15,7 @@
     </div>
     <div class="page-header-actions">
         <a href="{% url 'gestion:audiencias_lista' %}" class="btn-secondary">Volver</a>
-        {% if puede_editar %}
+        {% if permisos.puede_editar_audiencia %}
         <a href="{% url 'gestion:audiencia_editar' audiencia.pk %}" class="btn-primary">Editar audiencia</a>
         {% endif %}
     </div>

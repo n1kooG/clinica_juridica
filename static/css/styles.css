@@ -1350,23 +1350,25 @@ a:hover {
 
 .stat-bar-container {
     height: 8px;
-    background: var(--gray-100);
+    background: #e2e8f0;
     border-radius: 4px;
     overflow: hidden;
+    flex: 1;
 }
 
 .stat-bar {
     height: 100%;
     border-radius: 4px;
+    transition: width 0.3s ease;
 }
 
-.stat-bar-blue { background: var(--primary); }
-.stat-bar-green { background: var(--green); }
-.stat-bar-yellow { background: var(--yellow); }
-.stat-bar-red { background: var(--red); }
-.stat-bar-gray { background: var(--gray-400); }
-.stat-bar-orange { background: var(--orange); }
-.stat-bar-purple { background: var(--purple); }
+.stat-bar-blue { background: #3b82f6; }
+.stat-bar-green { background: #22c55e; }
+.stat-bar-yellow { background: #eab308; }
+.stat-bar-red { background: #ef4444; }
+.stat-bar-gray { background: #9ca3af; }
+.stat-bar-orange { background: #f97316; }
+.stat-bar-purple { background: #a855f7; }
 
 .stat-percent {
     font-size: 14px;
@@ -2594,7 +2596,7 @@ a:hover {
 
 .chart-bar-track {
     height: 8px;
-    background: var(--gray-100);
+    background: #e2e8f0;
     border-radius: 4px;
     overflow: hidden;
 }
@@ -2605,13 +2607,13 @@ a:hover {
     transition: width 0.3s ease;
 }
 
-.chart-bar-blue { background: var(--primary); }
-.chart-bar-green { background: var(--green); }
-.chart-bar-yellow { background: var(--yellow); }
-.chart-bar-orange { background: var(--orange); }
-.chart-bar-red { background: var(--red); }
-.chart-bar-purple { background: var(--purple); }
-.chart-bar-gray { background: var(--gray-400); }
+.chart-bar-blue { background: #3b82f6; }
+.chart-bar-green { background: #22c55e; }
+.chart-bar-yellow { background: #eab308; }
+.chart-bar-orange { background: #f97316; }
+.chart-bar-red { background: #ef4444; }
+.chart-bar-purple { background: #a855f7; }
+.chart-bar-gray { background: #9ca3af; }
 
 .chart-bar-percent {
     font-size: 12px;

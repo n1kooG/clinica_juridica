@@ -21,14 +21,25 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 
-from .models import Persona, Causa, Audiencia, Documento, CausaPersona, LogAuditoria, EstadoCausa, Materia, Tribunal, TipoDocumento
+from .models import Persona, Causa, Audiencia, Documento, CausaPersona, LogAuditoria, EstadoCausa, Materia, Tribunal, TipoDocumento, Consentimiento
 from .forms import (
     PersonaForm, CausaForm, AudienciaForm,
-    DocumentoForm, CausaPersonaForm
+    DocumentoForm, CausaPersonaForm, ConsentimientoForm
 )
 
-from .decorators import permiso_requerido, solo_roles_permitidos
-from .permissions import tiene_permiso as usuario_tiene_permiso
+from .permissions import (
+    permiso_requerido, 
+    solo_roles_permitidos,
+    tiene_permiso,
+    es_admin,
+    es_externo,
+    obtener_rol_usuario,
+    puede_ver_causa,
+    puede_editar_causa,
+)
+
+# Alias para compatibilidad
+usuario_tiene_permiso = tiene_permiso
 
 from datetime import datetime, timedelta, date
 from django.utils import timezone
@@ -58,14 +69,28 @@ def dashboard(request):
     
     hoy = timezone.now().date()
     
+    # FILTRO POR ROL: Base queryset según rol
+    rol_usuario = obtener_rol_usuario(request.user)
+    es_estudiante = rol_usuario == 'ESTUDIANTE'
+    
+    # Base querysets filtrados para estudiante
+    if es_estudiante:
+        causas_qs = Causa.objects.filter(responsable=request.user)
+        audiencias_qs = Audiencia.objects.filter(causa__responsable=request.user)
+        documentos_qs = Documento.objects.filter(causa__responsable=request.user)
+    else:
+        causas_qs = Causa.objects.all()
+        audiencias_qs = Audiencia.objects.all()
+        documentos_qs = Documento.objects.all()
+    
     # Estadísticas generales
-    total_causas = Causa.objects.count()
-    total_personas = Persona.objects.count()
-    total_audiencias = Audiencia.objects.count()
-    total_documentos = Documento.objects.count()
+    total_causas = causas_qs.count()
+    total_personas = Persona.objects.count()  # Personas no se filtran
+    total_audiencias = audiencias_qs.count()
+    total_documentos = documentos_qs.count()
     
     # Causas por estado (con objetos completos para el template)
-    causas_por_estado_raw = Causa.objects.values(
+    causas_por_estado_raw = causas_qs.values(
         'estado__nombre', 'estado__color'
     ).annotate(count=Count('id')).order_by('-count')
     
@@ -83,7 +108,7 @@ def dashboard(request):
             })
     
     # Próximas audiencias
-    proximas_audiencias = Audiencia.objects.select_related(
+    proximas_audiencias = audiencias_qs.select_related(
         'causa', 'causa__tribunal'
     ).filter(
         fecha_hora__gte=timezone.now(),
@@ -91,26 +116,32 @@ def dashboard(request):
     ).order_by('fecha_hora')[:5]
     
     # Causas recientes
-    causas_recientes = Causa.objects.select_related(
+    causas_recientes = causas_qs.select_related(
         'tribunal', 'materia', 'estado', 'responsable'
     ).order_by('-fecha_creacion')[:5]
     
-    # Personas recientes
+    # Personas recientes (no filtradas - todos ven todas)
     personas_recientes = Persona.objects.order_by('-id')[:5]
     
     # Actividad reciente
-    actividad_reciente = LogAuditoria.objects.select_related(
-        'usuario'
-    ).order_by('-fecha')[:10]
+    if es_estudiante:
+        # Estudiante solo ve actividad de sus causas
+        actividad_reciente = LogAuditoria.objects.select_related(
+            'usuario'
+        ).filter(usuario=request.user).order_by('-fecha')[:10]
+    else:
+        actividad_reciente = LogAuditoria.objects.select_related(
+            'usuario'
+        ).order_by('-fecha')[:10]
     
     # Audiencias del mes
-    audiencias_mes = Audiencia.objects.filter(
+    audiencias_mes = audiencias_qs.filter(
         fecha_hora__year=hoy.year,
         fecha_hora__month=hoy.month
     ).count()
     
     # Documentos del mes
-    documentos_mes = Documento.objects.filter(
+    documentos_mes = documentos_qs.filter(
         fecha_subida__year=hoy.year,
         fecha_subida__month=hoy.month
     ).count()
@@ -174,6 +205,7 @@ def personas_lista(request):
     return render(request, 'gestion/personas_lista.html', context)
 
 
+@permiso_requerido('puede_crear_persona')
 @login_required
 def persona_crear(request):
     if request.method == 'POST':
@@ -244,7 +276,12 @@ def persona_detalle(request, pk):
 def causas_lista(request):
     causas = Causa.objects.select_related('tribunal', 'materia', 'estado', 'responsable').order_by('-fecha_creacion')
     
-    # Filtros
+    # FILTRO POR ROL: Estudiante solo ve causas asignadas a él
+    rol_usuario = obtener_rol_usuario(request.user)
+    if rol_usuario == 'ESTUDIANTE':
+        causas = causas.filter(responsable=request.user)
+    
+    # Filtros de búsqueda
     q = request.GET.get('q', '').strip()
     estado = request.GET.get('estado', '')
     materia = request.GET.get('materia', '')
@@ -284,13 +321,19 @@ def causas_lista(request):
     }
     return render(request, 'gestion/causas_lista.html', context)
 
-
+@permiso_requerido('puede_crear_causa')
 @login_required
 def causa_crear(request):
+    rol_usuario = obtener_rol_usuario(request.user)
+    
     if request.method == 'POST':
         form = CausaForm(request.POST)
         if form.is_valid():
-            form.save()
+            causa = form.save(commit=False)
+            # Si es estudiante, se autoasigna la causa
+            if rol_usuario == 'ESTUDIANTE':
+                causa.responsable = request.user
+            causa.save()
             messages.success(request, 'Causa creada exitosamente.')
             return redirect('gestion:causas_lista')
     else:
@@ -303,12 +346,21 @@ def causa_crear(request):
         'materias': Materia.objects.filter(activo=True).order_by('nombre'),
         'estados': EstadoCausa.objects.filter(activo=True).order_by('orden'),
         'responsables': User.objects.filter(is_active=True).order_by('first_name', 'username'),
+        'es_estudiante': rol_usuario == 'ESTUDIANTE',
+        'usuario_actual': request.user,
     }
     return render(request, 'gestion/causa_form.html', context)
 
 @permiso_requerido('puede_editar_causa')
 def causa_editar(request, pk):
     causa = get_object_or_404(Causa, pk=pk)
+    
+    # VALIDACIÓN: Estudiante solo puede editar sus propias causas
+    rol_usuario = obtener_rol_usuario(request.user)
+    if rol_usuario == 'ESTUDIANTE' and causa.responsable != request.user:
+        messages.error(request, 'Solo puedes editar las causas que tienes asignadas.')
+        return redirect('gestion:causas_lista')
+    
     if request.method == 'POST':
         form = CausaForm(request.POST, instance=causa)
         if form.is_valid():
@@ -335,6 +387,12 @@ def causa_detalle(request, pk):
         Causa.objects.select_related('tribunal', 'materia', 'estado', 'responsable'),
         pk=pk
     )
+    
+    # VALIDACIÓN: Estudiante solo puede ver sus propias causas
+    rol_usuario = obtener_rol_usuario(request.user)
+    if rol_usuario == 'ESTUDIANTE' and causa.responsable != request.user:
+        messages.error(request, 'Solo puedes ver las causas que tienes asignadas.')
+        return redirect('gestion:causas_lista')
     
     # Personas asociadas (optimizado)
     personas_asociadas = CausaPersona.objects.select_related(
@@ -379,8 +437,16 @@ def causa_detalle(request, pk):
     return render(request, 'gestion/causa_detalle.html', context)
 
 @login_required
+@login_required
 def causa_persona_crear(request):
     causa_preseleccionada = request.GET.get('causa', '')
+    
+    # FILTRO POR ROL: Estudiante solo ve sus causas
+    rol_usuario = obtener_rol_usuario(request.user)
+    if rol_usuario == 'ESTUDIANTE':
+        causas_disponibles = Causa.objects.filter(responsable=request.user).exclude(estado__es_final=True).order_by('-fecha_creacion')
+    else:
+        causas_disponibles = Causa.objects.exclude(estado__es_final=True).order_by('-fecha_creacion')
     
     if request.method == 'POST':
         form = CausaPersonaForm(request.POST)
@@ -397,8 +463,8 @@ def causa_persona_crear(request):
     
     context = {
         'form': form,
-        'causas': Causa.objects.exclude(estado__es_final=True).order_by('-fecha_creacion'),
-        'personas': Persona.objects.filter(activo=True).order_by('apellidos', 'nombres'),
+        'causas': causas_disponibles,
+        'personas': Persona.objects.all().order_by('apellidos', 'nombres'),
         'causa_preseleccionada': causa_preseleccionada,
     }
     return render(request, 'gestion/causa_persona_form.html', context)
@@ -440,9 +506,14 @@ def causa_persona_eliminar(request, pk):
 
 @login_required
 def audiencias_lista(request):
-    audiencias = Audiencia.objects.select_related('causa', 'causa__tribunal').order_by('-fecha_hora')
+    audiencias = Audiencia.objects.select_related('causa', 'causa__tribunal', 'causa__responsable').order_by('-fecha_hora')
     
-    # Filtros
+    # FILTRO POR ROL: Estudiante solo ve audiencias de sus causas
+    rol_usuario = obtener_rol_usuario(request.user)
+    if rol_usuario == 'ESTUDIANTE':
+        audiencias = audiencias.filter(causa__responsable=request.user)
+    
+    # Filtros de búsqueda
     estado = request.GET.get('estado', '')
     fecha_desde = request.GET.get('fecha_desde', '')
     fecha_hasta = request.GET.get('fecha_hasta', '')
@@ -503,9 +574,16 @@ def audiencia_crear(request):
     else:
         form = AudienciaForm()
     
+    # FILTRO POR ROL: Estudiante solo ve sus causas
+    rol_usuario = obtener_rol_usuario(request.user)
+    if rol_usuario == 'ESTUDIANTE':
+        causas_disponibles = Causa.objects.filter(responsable=request.user).exclude(estado__es_final=True).order_by('-fecha_creacion')
+    else:
+        causas_disponibles = Causa.objects.exclude(estado__es_final=True).order_by('-fecha_creacion')
+    
     context = {
         'form': form,
-        'causas': Causa.objects.exclude(estado__es_final=True).order_by('-fecha_creacion'),
+        'causas': causas_disponibles,
         'causa_preseleccionada': causa_preseleccionada,
     }
     return render(request, 'gestion/audiencia_form.html', context)
@@ -514,6 +592,12 @@ def audiencia_crear(request):
 @permiso_requerido('puede_editar_audiencia')
 def audiencia_editar(request, pk):
     audiencia = get_object_or_404(Audiencia, pk=pk)
+    
+    # VALIDACIÓN: Estudiante solo puede editar audiencias de sus causas
+    rol_usuario = obtener_rol_usuario(request.user)
+    if rol_usuario == 'ESTUDIANTE' and audiencia.causa.responsable != request.user:
+        messages.error(request, 'Solo puedes editar audiencias de tus causas asignadas.')
+        return redirect('gestion:audiencias_lista')
     
     if request.method == 'POST':
         form = AudienciaForm(request.POST, instance=audiencia)
@@ -524,10 +608,16 @@ def audiencia_editar(request, pk):
     else:
         form = AudienciaForm(instance=audiencia)
     
+    # FILTRO POR ROL: Estudiante solo ve sus causas
+    if rol_usuario == 'ESTUDIANTE':
+        causas_disponibles = Causa.objects.filter(responsable=request.user).order_by('-fecha_creacion')
+    else:
+        causas_disponibles = Causa.objects.all().order_by('-fecha_creacion')
+    
     context = {
         'form': form,
         'audiencia': audiencia,
-        'causas': Causa.objects.all().order_by('-fecha_creacion'),
+        'causas': causas_disponibles,
     }
     return render(request, 'gestion/audiencia_form.html', context)
 
@@ -537,9 +627,14 @@ def audiencia_editar(request, pk):
 
 @login_required
 def documentos_lista(request):
-    documentos = Documento.objects.select_related('causa', 'tipo', 'usuario').order_by('-fecha_subida')
+    documentos = Documento.objects.select_related('causa', 'causa__responsable', 'tipo', 'usuario').order_by('-fecha_subida')
     
-    # Filtros
+    # FILTRO POR ROL: Estudiante solo ve documentos de sus causas
+    rol_usuario = obtener_rol_usuario(request.user)
+    if rol_usuario == 'ESTUDIANTE':
+        documentos = documentos.filter(causa__responsable=request.user)
+    
+    # Filtros de búsqueda
     q = request.GET.get('q', '').strip()
     tipo = request.GET.get('tipo', '')
     
@@ -617,9 +712,16 @@ def documento_crear(request):
             for error in errores:
                 messages.error(request, error)
             
+            # FILTRO POR ROL: Estudiante solo ve sus causas
+            rol_usuario = obtener_rol_usuario(request.user)
+            if rol_usuario == 'ESTUDIANTE':
+                causas_disponibles = Causa.objects.filter(responsable=request.user).order_by('-fecha_creacion')
+            else:
+                causas_disponibles = Causa.objects.all().order_by('-fecha_creacion')
+            
             return render(request, 'gestion/documento_form.html', {
-                'causas': Causa.objects.all().order_by('-fecha_creacion'),
-                'tipos': TipoDocumento.objects.filter(activo=True),
+                'causas': causas_disponibles,
+                'tipos_documento': TipoDocumento.objects.filter(activo=True),
                 'causa_preseleccionada': causa_id,
             })
         
@@ -647,9 +749,16 @@ def documento_crear(request):
             return redirect('gestion:causa_detalle', pk=causa_id)
         return redirect('gestion:documentos_lista')
     
+    # FILTRO POR ROL: Estudiante solo ve sus causas
+    rol_usuario = obtener_rol_usuario(request.user)
+    if rol_usuario == 'ESTUDIANTE':
+        causas_disponibles = Causa.objects.filter(responsable=request.user).order_by('-fecha_creacion')
+    else:
+        causas_disponibles = Causa.objects.all().order_by('-fecha_creacion')
+    
     context = {
-        'causas': Causa.objects.all().order_by('-fecha_creacion'),
-        'tipos': TipoDocumento.objects.filter(activo=True),
+        'causas': causas_disponibles,
+        'tipos_documento': TipoDocumento.objects.filter(activo=True),
         'causa_preseleccionada': causa_id,
     }
     return render(request, 'gestion/documento_form.html', context)
@@ -657,21 +766,6 @@ def documento_crear(request):
 # =============================================================================
 # RELACIÓN CAUSA - PERSONA
 # =============================================================================
-
-@permiso_requerido('puede_editar_causa')
-def causa_persona_crear(request):
-    if request.method == 'POST':
-        form = CausaPersonaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Persona asociada a la causa correctamente.')
-            return redirect('gestion:causas_lista')
-        else:
-            messages.error(request, 'No se pudo asociar la persona. Revisa los errores del formulario.')
-    else:
-        form = CausaPersonaForm()
-    return render(request, 'gestion/causa_persona_form.html', {'form': form, 'titulo': 'Asociar persona a causa'})
-
 
 # =============================================================================
 # BÚSQUEDA
@@ -688,14 +782,29 @@ def buscar(request):
     fecha_desde = request.GET.get('fecha_desde', '')
     fecha_hasta = request.GET.get('fecha_hasta', '')
     
+    # Si no hay ningún checkbox marcado y hay query, buscar en todos
+    if query and not en_causas and not en_personas and not en_documentos:
+        en_causas = True
+        en_personas = True
+        en_documentos = True
+    
     causas_encontradas = []
     personas_encontradas = []
     documentos_encontrados = []
     
+    # FILTRO POR ROL: Estudiante solo ve sus datos
+    rol_usuario = obtener_rol_usuario(request.user)
+    es_estudiante = rol_usuario == 'ESTUDIANTE'
+    
     if query:
         # Búsqueda en causas
         if en_causas:
-            causas = Causa.objects.select_related('tribunal', 'materia', 'estado')
+            causas = Causa.objects.select_related('tribunal', 'materia', 'estado', 'responsable')
+            
+            # Filtro estudiante
+            if es_estudiante:
+                causas = causas.filter(responsable=request.user)
+            
             causas = causas.filter(
                 Q(rit__icontains=query) |
                 Q(ruc__icontains=query) |
@@ -711,7 +820,7 @@ def buscar(request):
             if fecha_hasta:
                 causas = causas.filter(fecha_creacion__lte=fecha_hasta)
             
-            causas_encontradas = causas[:50]
+            causas_encontradas = list(causas[:50])
         
         # Búsqueda en personas
         if en_personas:
@@ -721,16 +830,22 @@ def buscar(request):
                 Q(apellidos__icontains=query) |
                 Q(email__icontains=query)
             )
-            personas_encontradas = personas[:50]
+            personas_encontradas = list(personas[:50])
         
         # Búsqueda en documentos
         if en_documentos:
-            documentos = Documento.objects.select_related('causa', 'tipo').filter(
+            documentos = Documento.objects.select_related('causa', 'causa__responsable', 'tipo')
+            
+            # Filtro estudiante
+            if es_estudiante:
+                documentos = documentos.filter(causa__responsable=request.user)
+            
+            documentos = documentos.filter(
                 Q(titulo__icontains=query) |
                 Q(descripcion__icontains=query) |
                 Q(numero_documento__icontains=query)
             )
-            documentos_encontrados = documentos[:50]
+            documentos_encontrados = list(documentos[:50])
     
     total_resultados = len(causas_encontradas) + len(personas_encontradas) + len(documentos_encontrados)
     
@@ -752,6 +867,7 @@ def buscar(request):
     }
     return render(request, 'gestion/buscar.html', context)
 
+@permiso_requerido('puede_ver_auditoria')
 @login_required
 def auditoria_lista(request):
     # Verificar permisos
@@ -821,14 +937,9 @@ def auditoria_lista(request):
     return render(request, 'gestion/auditoria_lista.html', context)
 
 
+@permiso_requerido('puede_ver_auditoria')
 @login_required
 def auditoria_detalle(request, pk):
-    # Verificar permisos
-    if hasattr(request.user, 'perfil'):
-        if request.user.perfil.rol not in ['ADMIN', 'DIRECTOR', 'SUPERVISOR']:
-            messages.error(request, 'No tienes permisos para ver este registro.')
-            return redirect('gestion:dashboard')
-    
     log = get_object_or_404(LogAuditoria, pk=pk)
     
     context = {
@@ -918,7 +1029,6 @@ def causa_linea_tiempo(request, pk):
 
 
 @login_required
-@login_required
 def calendario(request):
     import calendar
     from calendar import monthrange
@@ -1005,6 +1115,7 @@ def calendario(request):
 # REPORTES
 # =============================================================================
 
+@permiso_requerido('puede_ver_reportes')
 @login_required
 def reportes(request):
     # Filtros
@@ -1038,21 +1149,35 @@ def reportes(request):
     total = causas.count()
     
     # Causas por estado (para gráfico)
-    causas_por_estado = causas.values(
+    causas_por_estado_qs = causas.values(
         'estado__nombre', 'estado__color'
     ).annotate(total=Count('id')).order_by('-total')
     
+    # Convertir a lista y calcular porcentajes
+    causas_por_estado = []
+    for item in causas_por_estado_qs:
+        porcentaje = round((item['total'] / total * 100) if total > 0 else 0, 1)
+        causas_por_estado.append({
+            'estado__nombre': item['estado__nombre'],
+            'estado__color': item['estado__color'],
+            'total': item['total'],
+            'porcentaje': porcentaje
+        })
+    
     # Causas por materia (para gráfico)
-    causas_por_materia = causas.values(
+    causas_por_materia_qs = causas.values(
         'materia__nombre'
     ).annotate(total=Count('id')).order_by('-total')[:5]
     
-    # Calcular porcentajes
-    for item in causas_por_estado:
-        item['porcentaje'] = round((item['total'] / total * 100) if total > 0 else 0, 1)
-    
-    for item in causas_por_materia:
-        item['porcentaje'] = round((item['total'] / total * 100) if total > 0 else 0, 1)
+    # Convertir a lista y calcular porcentajes
+    causas_por_materia = []
+    for item in causas_por_materia_qs:
+        porcentaje = round((item['total'] / total * 100) if total > 0 else 0, 1)
+        causas_por_materia.append({
+            'materia__nombre': item['materia__nombre'],
+            'total': item['total'],
+            'porcentaje': porcentaje
+        })
     
     # Causas en tramitación vs finalizadas
     en_tramitacion = causas.filter(estado__es_final=False).count()
@@ -1386,21 +1511,9 @@ def perfil_cambiar_password(request):
 # PANEL DE ADMINISTRACIÓN
 # ============================================================================
 
-def es_admin(user):
-    """Verifica si el usuario es administrador"""
-    if user.is_superuser:
-        return True
-    if hasattr(user, 'perfil') and user.perfil.rol in ['ADMIN', 'DIRECTOR']:
-        return True
-    return False
-
-
+@permiso_requerido('puede_ver_panel_admin')
 @login_required
 def admin_panel(request):
-    if not es_admin(request.user):
-        messages.error(request, 'No tienes permisos para acceder al panel de administración.')
-        return redirect('gestion:dashboard')
-    
     context = {
         'total_usuarios': User.objects.count(),
         'total_causas': Causa.objects.count(),
@@ -1415,12 +1528,9 @@ def admin_panel(request):
     return render(request, 'gestion/admin/panel.html', context)
 
 
-@login_required
+@permiso_requerido('puede_gestionar_usuarios')
 @login_required
 def admin_usuarios(request):
-    if not es_admin(request.user):
-        messages.error(request, 'No tienes permisos para acceder a esta sección.')
-        return redirect('gestion:dashboard')
     
     # Optimizado con select_related
     usuarios = User.objects.select_related('perfil').order_by('-date_joined')
@@ -1466,12 +1576,9 @@ def admin_usuarios(request):
     return render(request, 'gestion/admin/usuarios_lista.html', context)
 
 
+@permiso_requerido('puede_gestionar_usuarios')
 @login_required
 def admin_usuario_crear(request):
-    if not es_admin(request.user):
-        messages.error(request, 'No tienes permisos para crear usuarios.')
-        return redirect('gestion:dashboard')
-    
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()
         email = request.POST.get('email', '').strip()
@@ -1518,12 +1625,9 @@ def admin_usuario_crear(request):
     return render(request, 'gestion/admin/usuario_form.html')
 
 
+@permiso_requerido('puede_gestionar_usuarios')
 @login_required
 def admin_usuario_editar(request, pk):
-    if not es_admin(request.user):
-        messages.error(request, 'No tienes permisos para editar usuarios.')
-        return redirect('gestion:dashboard')
-    
     usuario = get_object_or_404(User, pk=pk)
     perfil = usuario.perfil if hasattr(usuario, 'perfil') else None
     
@@ -1603,12 +1707,9 @@ CATALOGOS = {
 }
 
 
+@permiso_requerido('puede_gestionar_catalogos')
 @login_required
 def admin_catalogo(request, tipo):
-    if not es_admin(request.user):
-        messages.error(request, 'No tienes permisos para acceder a esta sección.')
-        return redirect('gestion:dashboard')
-    
     if tipo not in CATALOGOS:
         messages.error(request, 'Catálogo no encontrado.')
         return redirect('gestion:admin_panel')
@@ -1624,12 +1725,9 @@ def admin_catalogo(request, tipo):
     return render(request, 'gestion/admin/catalogo_lista.html', context)
 
 
+@permiso_requerido('puede_gestionar_catalogos')
 @login_required
 def admin_catalogo_crear(request, tipo):
-    if not es_admin(request.user):
-        messages.error(request, 'No tienes permisos para esta acción.')
-        return redirect('gestion:dashboard')
-    
     if tipo not in CATALOGOS:
         messages.error(request, 'Catálogo no encontrado.')
         return redirect('gestion:admin_panel')
@@ -1666,12 +1764,9 @@ def admin_catalogo_crear(request, tipo):
     return render(request, 'gestion/admin/catalogo_form.html', context)
 
 
+@permiso_requerido('puede_gestionar_catalogos')
 @login_required
 def admin_catalogo_editar(request, tipo, pk):
-    if not es_admin(request.user):
-        messages.error(request, 'No tienes permisos para esta acción.')
-        return redirect('gestion:dashboard')
-    
     if tipo not in CATALOGOS:
         messages.error(request, 'Catálogo no encontrado.')
         return redirect('gestion:admin_panel')
@@ -1709,12 +1804,9 @@ def admin_catalogo_editar(request, tipo, pk):
     return render(request, 'gestion/admin/catalogo_form.html', context)
 
 
+@permiso_requerido('puede_gestionar_catalogos')
 @login_required
 def admin_catalogo_toggle(request, tipo, pk):
-    if not es_admin(request.user):
-        messages.error(request, 'No tienes permisos para esta acción.')
-        return redirect('gestion:dashboard')
-    
     if tipo not in CATALOGOS:
         messages.error(request, 'Catálogo no encontrado.')
         return redirect('gestion:admin_panel')
@@ -1761,3 +1853,165 @@ def verificar_password_fortaleza(request):
             'valida': False,
             'errores': e.messages
         })
+
+# =============================================================================
+# CONSENTIMIENTOS
+# =============================================================================
+
+@login_required
+def consentimientos_lista(request):
+    """Lista de todos los consentimientos"""
+    consentimientos = Consentimiento.objects.select_related('persona', 'registrado_por').order_by('-fecha_registro')
+    
+    # Filtros
+    persona_id = request.GET.get('persona', '')
+    tipo = request.GET.get('tipo', '')
+    estado = request.GET.get('estado', '')  # otorgado, revocado, pendiente
+    
+    if persona_id:
+        consentimientos = consentimientos.filter(persona_id=persona_id)
+    if tipo:
+        consentimientos = consentimientos.filter(tipo=tipo)
+    if estado:
+        if estado == 'otorgado':
+            consentimientos = consentimientos.filter(otorgado=True, fecha_revocacion__isnull=True)
+        elif estado == 'revocado':
+            consentimientos = consentimientos.filter(fecha_revocacion__isnull=False)
+        elif estado == 'pendiente':
+            consentimientos = consentimientos.filter(otorgado=False, fecha_revocacion__isnull=True)
+    
+    # Paginación
+    paginator = Paginator(consentimientos, 20)
+    page = request.GET.get('page', 1)
+    try:
+        consentimientos = paginator.page(page)
+    except (PageNotAnInteger, EmptyPage):
+        consentimientos = paginator.page(1)
+    
+    context = {
+        'consentimientos': consentimientos,
+        'personas': Persona.objects.all().order_by('apellidos', 'nombres'),
+        'tipos': Consentimiento.TIPO_CHOICES,
+        'persona_filtro': persona_id,
+        'tipo_filtro': tipo,
+        'estado_filtro': estado,
+    }
+    return render(request, 'gestion/consentimientos_lista.html', context)
+
+
+@login_required
+def consentimiento_crear(request):
+    """Crear nuevo consentimiento"""
+    persona_id = request.GET.get('persona', '')
+    
+    if request.method == 'POST':
+        # Crear consentimiento manualmente para evitar problemas con archivo vacío
+        persona_id_post = request.POST.get('persona')
+        tipo = request.POST.get('tipo')
+        otorgado = request.POST.get('otorgado') == 'on'
+        fecha_otorgamiento = request.POST.get('fecha_otorgamiento') or None
+        observaciones = request.POST.get('observaciones', '')
+        
+        # Validaciones
+        errores = []
+        if not persona_id_post:
+            errores.append('Debe seleccionar una persona.')
+        if not tipo:
+            errores.append('Debe seleccionar un tipo de consentimiento.')
+        if otorgado and not fecha_otorgamiento:
+            errores.append('Si el consentimiento fue otorgado, debe indicar la fecha.')
+        
+        if errores:
+            for error in errores:
+                messages.error(request, error)
+        else:
+            # Crear el consentimiento sin documento primero
+            consentimiento = Consentimiento.objects.create(
+                persona_id=persona_id_post,
+                tipo=tipo,
+                otorgado=otorgado,
+                fecha_otorgamiento=fecha_otorgamiento,
+                observaciones=observaciones,
+                registrado_por=request.user
+            )
+            
+            # Solo actualizar con archivo si se subió uno
+            if request.FILES.get('documento_respaldo'):
+                consentimiento.documento_respaldo = request.FILES['documento_respaldo']
+                consentimiento.save(update_fields=['documento_respaldo'])
+                messages.success(request, 'Consentimiento registrado exitosamente.')
+            else:
+                messages.success(request, 'Consentimiento registrado exitosamente (sin documento adjunto).')
+            
+            return redirect('gestion:consentimientos_lista')
+    
+    context = {
+        'personas': Persona.objects.all().order_by('apellidos', 'nombres'),
+        'tipos': Consentimiento.TIPO_CHOICES,
+        'persona_preseleccionada': persona_id,
+    }
+    return render(request, 'gestion/consentimiento_form.html', context)
+
+
+@login_required
+def consentimiento_detalle(request, pk):
+    """Ver detalle de un consentimiento"""
+    consentimiento = get_object_or_404(Consentimiento, pk=pk)
+    
+    context = {
+        'consentimiento': consentimiento,
+    }
+    return render(request, 'gestion/consentimiento_detalle.html', context)
+
+
+@login_required
+def consentimiento_editar(request, pk):
+    """Editar un consentimiento"""
+    consentimiento = get_object_or_404(Consentimiento, pk=pk)
+    
+    if request.method == 'POST':
+        form = ConsentimientoForm(request.POST, request.FILES, instance=consentimiento)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Consentimiento actualizado exitosamente.')
+            return redirect('gestion:consentimiento_detalle', pk=pk)
+    else:
+        form = ConsentimientoForm(instance=consentimiento)
+    
+    context = {
+        'form': form,
+        'consentimiento': consentimiento,
+        'personas': Persona.objects.all().order_by('apellidos', 'nombres'),
+        'tipos': Consentimiento.TIPO_CHOICES,
+    }
+    return render(request, 'gestion/consentimiento_form.html', context)
+
+
+@login_required
+def consentimiento_revocar(request, pk):
+    """Revocar un consentimiento"""
+    consentimiento = get_object_or_404(Consentimiento, pk=pk)
+    
+    if request.method == 'POST':
+        consentimiento.fecha_revocacion = date.today()
+        consentimiento.save()
+        messages.success(request, 'Consentimiento revocado exitosamente.')
+        return redirect('gestion:consentimiento_detalle', pk=pk)
+    
+    context = {
+        'consentimiento': consentimiento,
+    }
+    return render(request, 'gestion/consentimiento_revocar.html', context)
+
+
+@login_required
+def persona_consentimientos(request, pk):
+    """Ver consentimientos de una persona específica"""
+    persona = get_object_or_404(Persona, pk=pk)
+    consentimientos = persona.consentimientos.all().order_by('-fecha_registro')
+    
+    context = {
+        'persona': persona,
+        'consentimientos': consentimientos,
+    }
+    return render(request, 'gestion/persona_consentimientos.html', context)
