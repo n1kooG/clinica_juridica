@@ -92,8 +92,6 @@ def validar_rut_chileno(rut):
             _('El dígito verificador del RUT es inválido.'),
             code='rut_dv_invalido'
         )
-    
-    return True
 
 
 def formatear_rut(rut):

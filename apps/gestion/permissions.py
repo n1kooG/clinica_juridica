@@ -551,9 +551,7 @@ def puede_editar_causa(usuario, causa):
     
     # Solo Admin y Supervisor pueden editar causas
     if rol in ['ADMIN', 'SUPERVISOR']:
-        # Supervisor solo edita las asignadas o donde es supervisor
-        if rol == 'SUPERVISOR':
-            return causa.responsable == usuario or causa.supervisor == usuario
+        # Supervisor puede editar cualquier causa (según matriz de permisos)
         return True
     
     return False

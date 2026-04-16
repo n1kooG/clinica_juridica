@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Entorno virtual
+venv/
+env/
+.venv/
+
+# Django
+*.sqlite3
+*.log
+logs/
+media/
+staticfiles/
+
+# Variables de entorno — NUNCA commitear
+.env
+.env.*
+!.env.example
+
+# Editores / OS
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude
+.claude/

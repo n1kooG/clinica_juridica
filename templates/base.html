@@ -4,100 +4,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Clínica Jurídica{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>{% block title %}Clínica Jurídica{% endblock %} — Sistema de Gestión</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
+
+        <!-- ===== SIDEBAR ===== -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Brand header -->
             <div class="sidebar-header">
-                <h1 class="sidebar-title">Sistema Clínica Jurídica</h1>
-                <p class="sidebar-subtitle">Proyecto de cátedra 2025</p>
+                <div class="sidebar-logo-icon">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <div class="sidebar-brand-text">
+                    <span class="sidebar-title">Clínica Jurídica</span>
+                    <span class="sidebar-subtitle">Sistema de Gestión</span>
+                </div>
             </div>
-            
+
             {% if user.is_authenticated %}
             <nav class="sidebar-nav">
-                <a href="{% url 'gestion:dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-                    <i class="fas fa-home"></i> Inicio
+
+                <!-- GESTIÓN -->
+                <span class="nav-section-label">Gestión</span>
+
+                <a href="{% url 'gestion:dashboard' %}"
+                   class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <i class="fas fa-th-large"></i> Inicio
                 </a>
-                <a href="{% url 'gestion:personas_lista' %}" class="nav-item {% if 'persona' in request.resolver_match.url_name %}active{% endif %}">
+
+                <a href="{% url 'gestion:personas_lista' %}"
+                   class="nav-item {% if 'persona' in request.resolver_match.url_name %}active{% endif %}">
                     <i class="fas fa-users"></i> Personas
                 </a>
-                <a href="{% url 'gestion:causas_lista' %}" class="nav-item {% if 'causa' in request.resolver_match.url_name %}active{% endif %}">
+
+                <a href="{% url 'gestion:causas_lista' %}"
+                   class="nav-item {% if 'causa' in request.resolver_match.url_name %}active{% endif %}">
                     <i class="fas fa-folder-open"></i> Causas
                 </a>
-                <a href="{% url 'gestion:audiencias_lista' %}" class="nav-item {% if 'audiencia' in request.resolver_match.url_name %}active{% endif %}">
-                    <i class="fas fa-calendar-alt"></i> Agenda
-                </a>
-                <a href="{% url 'gestion:documentos_lista' %}" class="nav-item {% if 'documento' in request.resolver_match.url_name %}active{% endif %}">
-                    <i class="fas fa-file-alt"></i> Documentos
-                </a>
-                <a href="{% url 'gestion:consentimientos_lista' %}" class="nav-item {% if 'consentimiento' in request.resolver_match.url_name %}active{% endif %}">
+
+                <a href="{% url 'gestion:consentimientos_lista' %}"
+                   class="nav-item {% if 'consentimiento' in request.resolver_match.url_name %}active{% endif %}">
                     <i class="fas fa-file-signature"></i> Consentimientos
                 </a>
-                <a href="{% url 'gestion:buscar' %}" class="nav-item {% if request.resolver_match.url_name == 'buscar' %}active{% endif %}">
+
+                <!-- AGENDA -->
+                <span class="nav-section-label">Agenda</span>
+
+                <a href="{% url 'gestion:audiencias_lista' %}"
+                   class="nav-item {% if 'audiencia' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fas fa-gavel"></i> Audiencias
+                </a>
+
+                <a href="{% url 'gestion:calendario' %}"
+                   class="nav-item {% if request.resolver_match.url_name == 'calendario' %}active{% endif %}">
+                    <i class="fas fa-calendar-alt"></i> Calendario
+                </a>
+
+                <!-- DOCUMENTOS -->
+                <span class="nav-section-label">Documentos</span>
+
+                <a href="{% url 'gestion:documentos_lista' %}"
+                   class="nav-item {% if 'documento' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fas fa-file-alt"></i> Documentos
+                </a>
+
+                <a href="{% url 'gestion:buscar' %}"
+                   class="nav-item {% if request.resolver_match.url_name == 'buscar' %}active{% endif %}">
                     <i class="fas fa-search"></i> Búsqueda
                 </a>
-                <a href="{% url 'gestion:calendario' %}" class="nav-item {% if request.resolver_match.url_name == 'calendario' %}active{% endif %}">
-                    <i class="fas fa-calendar"></i> Calendario
-                </a>
-                
+
+                <!-- REPORTES Y SISTEMA (condicionales por rol) -->
                 {% if user.perfil.rol == 'ADMIN' or user.perfil.rol == 'DIRECTOR' or user.perfil.rol == 'SUPERVISOR' %}
-                <a href="{% url 'gestion:reportes' %}" class="nav-item {% if 'reporte' in request.resolver_match.url_name %}active{% endif %}">
+                <span class="nav-section-label">Reportes</span>
+                <a href="{% url 'gestion:reportes' %}"
+                   class="nav-item {% if 'reporte' in request.resolver_match.url_name %}active{% endif %}">
                     <i class="fas fa-chart-bar"></i> Reportes
-                </a>
-                {% endif %}
-                
-                {% if user.perfil.rol == 'ADMIN' or user.perfil.rol == 'DIRECTOR' %}
-                <a href="{% url 'gestion:auditoria_lista' %}" class="nav-item {% if 'auditoria' in request.resolver_match.url_name %}active{% endif %}">
-                    <i class="fas fa-history"></i> Auditoría
                 </a>
                 {% endif %}
 
                 {% if user.is_superuser or user.perfil.rol == 'ADMIN' or user.perfil.rol == 'DIRECTOR' %}
-                <a href="{% url 'gestion:admin_panel' %}" class="nav-item {% if 'admin_' in request.resolver_match.url_name %}active{% endif %}">
-                    <i class="fas fa-cog"></i> Administración
+                <span class="nav-section-label">Sistema</span>
+                <a href="{% url 'gestion:auditoria_lista' %}"
+                   class="nav-item {% if 'auditoria' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fas fa-shield-alt"></i> Auditoría
+                </a>
+                <a href="{% url 'gestion:admin_panel' %}"
+                   class="nav-item {% if 'admin_' in request.resolver_match.url_name %}active{% endif %}">
+                    <i class="fas fa-sliders-h"></i> Administración
                 </a>
                 {% endif %}
+
             </nav>
-            
-            <div class="sidebar-footer">
-                Universidad San Sebastián
+
+            <!-- User block -->
+            <div class="sidebar-user">
+                <div class="sidebar-user-avatar" id="sidebar-avatar">
+                    {{ user.username.0|upper }}
+                </div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name">{{ user.get_full_name|default:user.username }}</div>
+                    <div class="sidebar-user-role">
+                        {% if user.perfil.rol %}{{ user.perfil.get_rol_display }}{% else %}Usuario{% endif %}
+                    </div>
+                </div>
             </div>
             {% endif %}
         </aside>
 
-        <!-- Main content -->
+        <!-- ===== MAIN ===== -->
         <div class="main-wrapper">
-            <!-- Top bar -->
+
+            <!-- Topbar -->
             <header class="topbar">
                 <div class="topbar-left">
+                    <!-- Mobile hamburger -->
+                    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Abrir menú" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
                     <span class="topbar-section">{% block section_title %}{% endblock %}</span>
                 </div>
+
                 <div class="topbar-right">
                     {% if user.is_authenticated %}
-                        <span class="user-name">{{ user.username }}</span>
-                        <a href="{% url 'gestion:perfil' %}" class="topbar-link">Perfil</a>
+                        <a href="{% url 'gestion:perfil' %}" class="topbar-user">
+                            <div class="topbar-avatar" id="topbar-avatar">
+                                {{ user.username.0|upper }}
+                            </div>
+                            <span>{{ user.get_full_name|default:user.username }}</span>
+                        </a>
                         <form method="post" action="{% url 'logout' %}" class="logout-form">
                             {% csrf_token %}
-                            <button type="submit" class="topbar-link logout-btn">Cerrar sesión</button>
+                            <button type="submit" class="topbar-logout">
+                                <i class="fas fa-sign-out-alt"></i> Salir
+                            </button>
                         </form>
                     {% else %}
-                        <a href="{% url 'login' %}" class="topbar-link">Iniciar sesión</a>
+                        <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Iniciar sesión</a>
                     {% endif %}
                 </div>
             </header>
 
-            <!-- Content area -->
+            <!-- Content -->
             <main class="content">
                 {% if messages %}
-                <div class="messages">
+                <div id="messages">
                     {% for message in messages %}
                     <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                        <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+                        <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' or message.tags == 'danger' %}exclamation-circle{% elif message.tags == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
+                        <span>{{ message }}</span>
+                        <button class="alert-close" onclick="this.parentElement.remove()" aria-label="Cerrar">&times;</button>
                     </div>
                     {% endfor %}
                 </div>
@@ -107,112 +169,62 @@
             </main>
         </div>
     </div>
-    
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
     <script src="{% static 'js/forms.js' %}"></script>
     <script src="{% static 'js/validaciones.js' %}"></script>
-    
-    <!-- Alerta de inactividad de sesión (ISO 27001 - D2) -->
+
+    <!-- Session inactivity timer (ISO 27001 - D2) -->
     {% if user.is_authenticated %}
     <script>
     (function() {
         var sessionTimeout;
         var warningTimeout;
-        var TIMEOUT_MINUTES = 30;
-        var WARNING_MINUTES = 28;
+        var TIMEOUT_MS = 30 * 60 * 1000;
+        var WARNING_MS = 28 * 60 * 1000;
 
-        function resetSessionTimer() {
+        function resetTimer() {
             clearTimeout(sessionTimeout);
             clearTimeout(warningTimeout);
-            
-            warningTimeout = setTimeout(function() {
-                showSessionWarning();
-            }, WARNING_MINUTES * 60 * 1000);
-            
+            warningTimeout = setTimeout(showWarning, WARNING_MS);
             sessionTimeout = setTimeout(function() {
                 window.location.href = '{% url "logout" %}';
-            }, TIMEOUT_MINUTES * 60 * 1000);
+            }, TIMEOUT_MS);
         }
 
-        function showSessionWarning() {
-            var confirmed = confirm(
+        function showWarning() {
+            var ok = confirm(
                 'Tu sesión está a punto de expirar por inactividad.\n\n' +
-                'Presiona OK para continuar trabajando o Cancelar para cerrar sesión.'
+                'Presiona Aceptar para continuar o Cancelar para cerrar sesión.'
             );
-            
-            if (confirmed) {
-                fetch('{% url "gestion:dashboard" %}', {
-                    method: 'HEAD',
-                    credentials: 'same-origin'
-                }).then(function() {
-                    resetSessionTimer();
-                });
+            if (ok) {
+                fetch('{% url "gestion:dashboard" %}', { method: 'HEAD', credentials: 'same-origin' })
+                    .then(resetTimer);
             } else {
                 window.location.href = '{% url "logout" %}';
             }
         }
 
-        var events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
-        for (var i = 0; i < events.length; i++) {
-            document.addEventListener(events[i], resetSessionTimer, true);
-        }
-
-        resetSessionTimer();
+        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'].forEach(function(e) {
+            document.addEventListener(e, resetTimer, true);
+        });
+        resetTimer();
     })();
     </script>
     {% endif %}
-    
-    {% block extra_js %}{% endblock %}
-    
+
+    <!-- Mobile sidebar toggle -->
     <script>
-    let sessionTimeout;
-    let warningTimeout;
-    const TIMEOUT_MINUTES = 30;
-    const WARNING_MINUTES = 28;
-
-    function resetSessionTimer() {
-        // Limpiar timers anteriores
-        clearTimeout(sessionTimeout);
-        clearTimeout(warningTimeout);
-        
-        // Timer de advertencia (28 minutos)
-        warningTimeout = setTimeout(() => {
-            showSessionWarning();
-        }, WARNING_MINUTES * 60 * 1000);
-        
-        // Timer de expiración (30 minutos)
-        sessionTimeout = setTimeout(() => {
-            window.location.href = '{% url "logout" %}';
-        }, TIMEOUT_MINUTES * 60 * 1000);
+    function toggleSidebar() {
+        var sidebar = document.getElementById('sidebar');
+        var overlay = document.getElementById('sidebar-overlay');
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('visible');
     }
-
-    function showSessionWarning() {
-        const confirmed = confirm(
-            'Tu sesión está a punto de expirar por inactividad.\n\n' +
-            'Presiona OK para continuar trabajando o Cancelar para cerrar sesión.'
-        );
-        
-        if (confirmed) {
-            // Hacer un request para renovar sesión
-            fetch('{% url "gestion:dashboard" %}', {
-                method: 'HEAD',
-                credentials: 'same-origin'
-            }).then(() => {
-                resetSessionTimer();
-            });
-        } else {
-            window.location.href = '{% url "logout" %}';
-        }
-    }
-
-    // Eventos que resetean el timer
-    {% if user.is_authenticated %}
-    ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'].forEach(event => {
-        document.addEventListener(event, resetSessionTimer, true);
-    });
-
-    // Iniciar timer al cargar
-    resetSessionTimer();
-    {% endif %}
     </script>
+
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -2,7 +2,7 @@ from django.db.models.signals import post_save, post_delete, pre_save
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save, post_delete
+from django.db.models.fields.files import FieldFile
 from .cache_utils import (
     invalidar_cache_tribunales,
     invalidar_cache_materias,
@@ -56,13 +56,9 @@ def objeto_a_dict(obj, campos_excluidos=None):
             valor = valor.isoformat()
         elif hasattr(valor, 'pk'):  # ForeignKey
             valor = str(valor)
-        elif hasattr(valor, 'url'):  # FileField
-            # Verificar si el archivo realmente existe antes de acceder a url
+        elif isinstance(valor, FieldFile):  # FileField — hasattr no captura ValueError
             try:
-                if valor and valor.name:
-                    valor = valor.url
-                else:
-                    valor = None
+                valor = valor.url if (valor and valor.name) else None
             except (ValueError, AttributeError):
                 valor = None
         
@@ -134,10 +130,11 @@ def registrar_log(accion, modelo, objeto=None, objeto_id=None, objeto_repr=None,
 
 
 # =============================================================================
-# ALMACÉN TEMPORAL PARA DATOS ANTERIORES
+# ALMACÉN TEMPORAL PARA DATOS ANTERIORES (thread-safe)
 # =============================================================================
 
-_pre_save_data = {}
+import threading
+_pre_save_data = threading.local()
 
 
 # =============================================================================
@@ -149,7 +146,9 @@ def causa_pre_save(sender, instance, **kwargs):
     if instance.pk:
         try:
             original = Causa.objects.get(pk=instance.pk)
-            _pre_save_data[f'causa_{instance.pk}'] = objeto_a_dict(original)
+            if not hasattr(_pre_save_data, 'store'):
+                _pre_save_data.store = {}
+            _pre_save_data.store[f'causa_{instance.pk}'] = objeto_a_dict(original)
         except Causa.DoesNotExist:
             pass
 
@@ -166,7 +165,8 @@ def causa_post_save(sender, instance, created, **kwargs):
         )
     else:
         key = f'causa_{instance.pk}'
-        datos_anteriores = _pre_save_data.pop(key, None)
+        store = getattr(_pre_save_data, 'store', {})
+        datos_anteriores = store.pop(key, None)
         registrar_log(
             accion='EDITAR',
             modelo='CAUSA',
@@ -198,7 +198,9 @@ def persona_pre_save(sender, instance, **kwargs):
     if instance.pk:
         try:
             original = Persona.objects.get(pk=instance.pk)
-            _pre_save_data[f'persona_{instance.pk}'] = objeto_a_dict(original)
+            if not hasattr(_pre_save_data, 'store'):
+                _pre_save_data.store = {}
+            _pre_save_data.store[f'persona_{instance.pk}'] = objeto_a_dict(original)
         except Persona.DoesNotExist:
             pass
 
@@ -215,7 +217,8 @@ def persona_post_save(sender, instance, created, **kwargs):
         )
     else:
         key = f'persona_{instance.pk}'
-        datos_anteriores = _pre_save_data.pop(key, None)
+        store = getattr(_pre_save_data, 'store', {})
+        datos_anteriores = store.pop(key, None)
         registrar_log(
             accion='EDITAR',
             modelo='PERSONA',

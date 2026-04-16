@@ -88,6 +88,11 @@ class RateLimiter:
         
         return False, self.max_intentos - intentos, 0
     
+    def obtener_intentos(self, identifier, action='default'):
+        """Retorna el número de intentos fallidos actuales."""
+        cache_key = self.get_cache_key(identifier, action)
+        return cache.get(cache_key, 0)
+
     def limpiar(self, identifier, action='default'):
         """Limpia los contadores para un identificador (ej: después de login exitoso)."""
         cache_key = self.get_cache_key(identifier, action)
