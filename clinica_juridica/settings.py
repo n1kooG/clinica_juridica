@@ -1,12 +1,13 @@
 from pathlib import Path
+from decouple import config, Csv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'cambia-esta-clave-en-produccion'
+SECRET_KEY = config('DJANGO_SECRET_KEY')
 
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -51,9 +52,17 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SAVE_EVERY_REQUEST = True
 
 # Configuración de cookies de sesión (seguridad)
-SESSION_COOKIE_HTTPONLY = True  # No accesible desde JavaScript
-SESSION_COOKIE_SECURE = False   # True en producción (HTTPS)
-SESSION_COOKIE_SAMESITE = 'Lax'  # Protección CSRF
+SESSION_COOKIE_HTTPONLY = True       # No accesible desde JavaScript
+SESSION_COOKIE_SECURE = not DEBUG   # True en producción (HTTPS)
+SESSION_COOKIE_SAMESITE = 'Lax'     # Protección CSRF
+
+# Cookies CSRF y HTTPS — se activan automáticamente en producción
+CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_HTTPONLY = True
+SECURE_SSL_REDIRECT = not DEBUG
+SECURE_HSTS_SECONDS = 0 if DEBUG else 31536000  # 1 año en producción
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG
 
 # Nombre de la cookie de sesión
 SESSION_COOKIE_NAME = 'clinica_juridica_sessionid'

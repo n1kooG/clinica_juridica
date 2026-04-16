@@ -1,1 +1,9 @@
-Django>=4.2,<5
+asgiref==3.11.1
+charset-normalizer==3.4.7
+Django==4.2.30
+python-decouple==3.8
+et_xmlfile==2.0.0
+openpyxl==3.1.5
+pillow==12.2.0
+reportlab==4.4.10
+sqlparse==0.5.5

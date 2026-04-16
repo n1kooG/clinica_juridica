@@ -59,15 +59,6 @@ def login_view(request):
             # Limpiar intentos fallidos
             login_limiter.limpiar(ip_address, action)
             
-            # Registrar login en auditoría
-            LogAuditoria.objects.create(
-                usuario=user,
-                accion='LOGIN',
-                modelo='USER',
-                objeto_id=user.id,
-                descripcion=f'Inicio de sesión exitoso desde IP: {ip_address}'
-            )
-            
             # Inicializar sesión
             from django.utils import timezone
             request.session['last_activity'] = timezone.now().isoformat()
@@ -77,7 +68,10 @@ def login_view(request):
             
             messages.success(request, f'¡Bienvenido, {user.get_full_name() or user.username}!')
             
-            next_url = request.GET.get('next', 'gestion:dashboard')
+            from django.utils.http import url_has_allowed_host_and_scheme
+            next_url = request.GET.get('next', '')
+            if not next_url or not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+                next_url = 'gestion:dashboard'
             return redirect(next_url)
         else:
             # Login fallido
@@ -108,11 +102,11 @@ def logout_view(request):
         LogAuditoria.objects.create(
             usuario=request.user,
             accion='LOGOUT',
-            modelo='USER',
+            modelo='USUARIO',
             objeto_id=request.user.id,
             descripcion=f'Cierre de sesión desde IP: {get_client_ip(request)}'
         )
-    
+
     logout(request)
     messages.success(request, 'Has cerrado sesión exitosamente.')
     return redirect('login')

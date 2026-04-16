@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Q, Count 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -93,12 +93,14 @@ def dashboard(request):
     causas_por_estado_raw = causas_qs.values(
         'estado__nombre', 'estado__color'
     ).annotate(count=Count('id')).order_by('-count')
-    
+
+    # Pre-fetch estados en una sola query para evitar N+1
+    estados_map = {e.nombre: e for e in EstadoCausa.objects.filter(activo=True)}
+
     # Convertir a lista y calcular porcentajes
     causas_por_estado = []
     for item in causas_por_estado_raw:
-        # Obtener el objeto estado para el template
-        estado_obj = EstadoCausa.objects.filter(nombre=item['estado__nombre']).first()
+        estado_obj = estados_map.get(item['estado__nombre'])
         if estado_obj:
             porcentaje = round((item['count'] / total_causas * 100) if total_causas > 0 else 0, 1)
             causas_por_estado.append({
@@ -733,7 +735,7 @@ def documento_crear(request):
             descripcion=descripcion,
             archivo=archivo,
             usuario=request.user,
-            estado=request.POST.get('estado', 'PENDIENTE'),
+            estado=request.POST.get('estado', 'FINAL'),
             es_confidencial=request.POST.get('es_confidencial') == 'on',
             folio=request.POST.get('folio', ''),
             fecha_emision=request.POST.get('fecha_emision') or None,
@@ -1858,10 +1860,32 @@ def verificar_password_fortaleza(request):
 # CONSENTIMIENTOS
 # =============================================================================
 
+def _puede_acceder_consentimiento(user, consentimiento):
+    """
+    Verifica que el usuario puede acceder a un consentimiento.
+    ADMIN/SUPERVISOR: acceso total.
+    ESTUDIANTE: solo si la persona del consentimiento está vinculada a una causa suya.
+    """
+    rol = obtener_rol_usuario(user)
+    if user.is_superuser or rol in ['ADMIN', 'SUPERVISOR']:
+        return True
+    return CausaPersona.objects.filter(
+        persona=consentimiento.persona,
+        causa__responsable=user
+    ).exists()
+
+
 @login_required
 def consentimientos_lista(request):
     """Lista de todos los consentimientos"""
-    consentimientos = Consentimiento.objects.select_related('persona', 'registrado_por').order_by('-fecha_registro')
+    rol = obtener_rol_usuario(request.user)
+    if request.user.is_superuser or rol in ['ADMIN', 'SUPERVISOR']:
+        consentimientos = Consentimiento.objects.select_related('persona', 'registrado_por').order_by('-fecha_registro')
+    else:
+        # ESTUDIANTE: solo personas de sus causas
+        consentimientos = Consentimiento.objects.filter(
+            persona__causapersona__causa__responsable=request.user
+        ).select_related('persona', 'registrado_por').distinct().order_by('-fecha_registro')
     
     # Filtros
     persona_id = request.GET.get('persona', '')
@@ -1957,7 +1981,9 @@ def consentimiento_crear(request):
 def consentimiento_detalle(request, pk):
     """Ver detalle de un consentimiento"""
     consentimiento = get_object_or_404(Consentimiento, pk=pk)
-    
+    if not _puede_acceder_consentimiento(request.user, consentimiento):
+        raise PermissionDenied
+
     context = {
         'consentimiento': consentimiento,
     }
@@ -1968,7 +1994,9 @@ def consentimiento_detalle(request, pk):
 def consentimiento_editar(request, pk):
     """Editar un consentimiento"""
     consentimiento = get_object_or_404(Consentimiento, pk=pk)
-    
+    if not _puede_acceder_consentimiento(request.user, consentimiento):
+        raise PermissionDenied
+
     if request.method == 'POST':
         form = ConsentimientoForm(request.POST, request.FILES, instance=consentimiento)
         if form.is_valid():
@@ -1977,7 +2005,7 @@ def consentimiento_editar(request, pk):
             return redirect('gestion:consentimiento_detalle', pk=pk)
     else:
         form = ConsentimientoForm(instance=consentimiento)
-    
+
     context = {
         'form': form,
         'consentimiento': consentimiento,
@@ -1991,13 +2019,20 @@ def consentimiento_editar(request, pk):
 def consentimiento_revocar(request, pk):
     """Revocar un consentimiento"""
     consentimiento = get_object_or_404(Consentimiento, pk=pk)
-    
+    if not _puede_acceder_consentimiento(request.user, consentimiento):
+        raise PermissionDenied
+
+    # BUG-15: evitar doble revocación
+    if consentimiento.fecha_revocacion:
+        messages.warning(request, 'Este consentimiento ya fue revocado anteriormente.')
+        return redirect('gestion:consentimiento_detalle', pk=pk)
+
     if request.method == 'POST':
         consentimiento.fecha_revocacion = date.today()
         consentimiento.save()
         messages.success(request, 'Consentimiento revocado exitosamente.')
         return redirect('gestion:consentimiento_detalle', pk=pk)
-    
+
     context = {
         'consentimiento': consentimiento,
     }
